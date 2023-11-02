@@ -31,6 +31,7 @@ public class SampleRespositoryTests {
 		log.info("=== insert start");
 		repository.save(entity);
 		log.info("=== entity.id : {}", entity.getId());
+		log.info("=== entity.toString() : {}", entity.toString());
 		log.info("=== insert end");
 		log.info("===============================");
 		assertThat(repository.findById(entity.getId()).orElse(null).getName()).isEqualTo("백승권");
