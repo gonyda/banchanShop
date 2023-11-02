@@ -43,8 +43,21 @@ public class SampleRespositoryTests {
 		SampleEntity entity = SampleEntity.builder().name("테스트").build();
 		
 		repository.save(entity);
+		assertEquals(repository.findById(entity.getId()).orElse(null).getName(), "테스트");
+		
 		repository.deleteById(entity.getId());
-
 		assertNull(repository.findById(entity.getId()).orElse(null));
+	}
+	
+	@DisplayName("수정 테스트")
+	@Test
+	public void update() {
+		SampleEntity entity = SampleEntity.builder().name("테스트").build();
+		
+		repository.save(entity);
+		assertEquals(repository.findById(entity.getId()).orElse(null).getName(), "테스트");
+		
+		entity.updateEntity("테스트1111");
+		assertEquals(repository.findById(entity.getId()).orElse(null).getName(), "테스트1111");
 	}
 }
