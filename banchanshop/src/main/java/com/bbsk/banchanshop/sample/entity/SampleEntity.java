@@ -1,4 +1,4 @@
-package com.bbsk.banchanshop.entity;
+package com.bbsk.banchanshop.sample.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "Test")
+@Table(name = "TEST")
 @Getter
 @ToString
 @Builder
@@ -25,6 +25,8 @@ public class SampleEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String name;
+	private int age;
+	private String email;
 	
 	public void updateEntity(String name) {
 		this.name = name;
