@@ -11,10 +11,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.bbsk.banchanshop.sample.entity.SampleEntity;
-import com.bbsk.banchanshop.sample.repository.SampleRepository;
+
+import lombok.extern.slf4j.Slf4j;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // 해당 설정을 사용하지 않으면 EmbededDatabase를 사용한다
+@Slf4j
 public class SampleRespositoryTests {
 
 	@Autowired
@@ -23,17 +25,21 @@ public class SampleRespositoryTests {
 	@DisplayName("삽입 및 조회 테스트")
 	@Test
 	public void get() {
+		log.info("===============================");
 		SampleEntity entity = SampleEntity.builder().name("백승권").age(29).email("bbsk3939@gmail.com").build();
 		
+		log.info("=== insert start");
 		repository.save(entity);
-		
+		log.info("=== entity.id : {}", entity.getId());
+		log.info("=== insert end");
+		log.info("===============================");
 		assertThat(repository.findById(entity.getId()).orElse(null).getName()).isEqualTo("백승권");
 	}
 	
 	@DisplayName("삭제 테스트")
 	@Test
 	public void delete() {
-		SampleEntity entity = SampleEntity.builder().name("테스트").build();
+		SampleEntity entity = SampleEntity.builder().name("테스트").age(29).email("bbsk3939@gmail.com").build();
 		
 		repository.save(entity);
 		assertEquals(repository.findById(entity.getId()).orElse(null).getName(), "테스트");
@@ -45,7 +51,7 @@ public class SampleRespositoryTests {
 	@DisplayName("수정 테스트")
 	@Test
 	public void update() {
-		SampleEntity entity = SampleEntity.builder().name("테스트").build();
+		SampleEntity entity = SampleEntity.builder().name("테스트").age(29).email("bbsk3939@gmail.com").build();
 		
 		repository.save(entity);
 		assertEquals(repository.findById(entity.getId()).orElse(null).getName(), "테스트");
