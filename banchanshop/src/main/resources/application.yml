@@ -1,3 +1,4 @@
+# Server 설정
 server: 
   port: 8080
   servlet:
@@ -5,8 +6,8 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-      
-#MySQL 및 JPA 설정
+
+# MySQL 및 JPA 설정
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,7 +16,7 @@ spring:
     password: bbsk3939
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
