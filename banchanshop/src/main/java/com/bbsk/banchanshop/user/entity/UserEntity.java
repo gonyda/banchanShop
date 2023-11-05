@@ -4,9 +4,13 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.bbsk.banchanshop.cart.entity.CartEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,6 +28,10 @@ public class UserEntity {
 	
 	@Id
 	private String userId;
+	
+	@OneToOne
+	@JoinColumn(name = "cart_id")
+	private CartEntity cart;
 	
 	@Column(nullable = false)
 	private String userPw;
@@ -46,4 +54,8 @@ public class UserEntity {
 	
 	@Column(nullable = false)
 	private boolean adminYn;
+	
+	public void changePw(String pw) {
+		this.userPw = pw;
+	}
 }
