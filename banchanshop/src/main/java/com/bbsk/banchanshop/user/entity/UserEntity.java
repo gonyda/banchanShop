@@ -62,6 +62,7 @@ public class UserEntity {
 	@Column(nullable = false)
 	private LocalDateTime registDate;
 	
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private UserType adminYn;
 	
