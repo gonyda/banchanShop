@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.bbsk.banchanshop.cart.entity.CartEntity;
 import com.bbsk.banchanshop.cart.repository.CartRepository;
+import com.bbsk.banchanshop.contant.UserType;
 import com.bbsk.banchanshop.user.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,18 +29,22 @@ public class UserEntityTests {
 	
 	@BeforeEach
 	public void createEntity() {
+		CartEntity cart = cartRepo.save(CartEntity.builder()
+				.cartId("bbsk3939")
+				.build());
+		
 		userRepo.save(UserEntity.builder()
 				.userId("bbsk3939")
 				.userPw("zxc156156")
 				.userEmail("test@test.com")
 				.userName("백승권")
 				.address("서울특별시")
-				.adminYn(false)
 				.phoneNumber("01011112222")
+				.adminYn(UserType.N)
+				.cart(cart)
 				.build());
 		
 		userRepo.flush();
-		
 	}
 	
 	@DisplayName("유저 엔티티 조회 테스트")
@@ -48,7 +53,9 @@ public class UserEntityTests {
 		log.info("====================유저 엔티티 조회 테스트");
 		UserEntity user = userRepo.findById("bbsk3939").orElse(null);
 		
+		log.info("user.registDate(): {}", user.getRegistDate());
 		assertEquals("백승권", user.getUserName());
+		assertEquals(UserType.N, user.getAdminYn());
 		
 	}
 	
@@ -70,8 +77,6 @@ public class UserEntityTests {
 		log.info("====================유저 및 카트 insert 테스트");
 		CartEntity cart = cartRepo.save(CartEntity.builder()
 												.cartId("ventosan")
-												.totalQuantity(0)
-												.totalSum(0)
 												.build());
 		
 		UserEntity user = userRepo.save(UserEntity.builder()
@@ -80,8 +85,8 @@ public class UserEntityTests {
 												.userEmail("test111@test.com")
 												.userName("백승권")
 												.address("서울특별시")
-												.adminYn(false)
-												.phoneNumber("01011112222")
+												.phoneNumber("01012345678")
+												.adminYn(UserType.N)
 												.cart(cart)
 												.build());
 		cartRepo.flush();
@@ -89,5 +94,31 @@ public class UserEntityTests {
 		
 		assertEquals(user.getCart().getCartId(), cart.getCartId());
 		assertEquals("ventosan", cart.getCartId());
+		assertEquals(0, user.getCart().getTotalSum());
 	}
+	
+	@DisplayName("카트 삭제 테스트")
+	@Test
+	public void deleteCart() {
+		log.info("====================유저 및 카트 delete 테스트");
+		CartEntity cart = cartRepo.save(CartEntity.builder()
+												.cartId("ventosan1")
+												.build());
+		
+		userRepo.save(UserEntity.builder()
+								.userId("ventosan1")
+								.userPw("zxc156156")
+								.userEmail("test12211@test.com")
+								.userName("백승권")
+								.address("서울특별시")
+								.phoneNumber("01011113333")
+								.adminYn(UserType.N)
+								.cart(cart)
+								.build());
+		cartRepo.flush();
+		userRepo.flush();
+		
+		cartRepo.delete(cart);
+	}
+	
 }
