@@ -1,9 +1,11 @@
 package com.bbsk.banchanshop.banchan.entity;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,7 +17,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @Getter
 @Builder
 @AllArgsConstructor
@@ -28,8 +32,9 @@ public class BanchanIngredientEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long BanchanIngredientId;
 	
-	@ManyToOne
-	@JoinColumn(name = "banchan_id")
+	@ToString.Exclude
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "banchan_id", nullable = true)
 	private BanchanEntity banchan;
 	
 	@Column(nullable = false)
@@ -44,4 +49,11 @@ public class BanchanIngredientEntity {
 	@Column(nullable = false)
 	private LocalDateTime expirationDate;
 
+	public void plusExpirationDate(Long plusDay) {
+		this.expirationDate = LocalDateTime.now().plusDays(Duration.ofDays(plusDay).toDays());
+	}
+	
+	public void setBanchan(BanchanEntity banchan) {
+		this.banchan = banchan;
+	}
 }
