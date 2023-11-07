@@ -20,6 +20,11 @@ public class UserService {
 		this.cartRepo = cartRepo;
 	}
 
+	/**
+	 * 회원가입
+	 * @param user
+	 * @return
+	 */
 	@Transactional
 	public UserEntity registUser(UserEntity user) {
 		return userRepo.save(UserEntity.builder()
