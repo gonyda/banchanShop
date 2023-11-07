@@ -11,8 +11,11 @@ import com.bbsk.banchanshop.cart.repository.CartRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class CartService {
 
 	private final CartRepository cartRepository;
@@ -25,6 +28,12 @@ public class CartService {
 		this.userRepository = userRepository;
 	}
 
+	/**
+	 * 장바구니에 반찬 넣기
+	 * @param user 장바구니 주인
+	 * @param banchan 담을 반찬
+	 * @param itemQuantity 담을 반찬 갯수
+	 */
 	@Transactional
 	public void addBanchanInCart(UserEntity user, BanchanEntity banchan, int itemQuantity) {
 		UserEntity findUser = userRepository.findById(user.getUserId()).orElse(null);
@@ -32,10 +41,7 @@ public class CartService {
 		
 		// 장바구니 아이템 저장
 		// 장바구니 아이템에 중복 반찬이 있는지 체크
-		CartItemEntity findCartItem = findUser.getCart().getCartItem().stream()
-																		.filter(item -> item.getBanchan().getBanchanId().equals(banchan.getBanchanId()))
-																	    .findFirst()
-																	    .orElse(null);
+		CartItemEntity findCartItem = cartItemRepository.findByCartCartIdAndBanchanBanchanId(findUser.getCart().getCartId(), banchan.getBanchanId());
 		
 		if (findCartItem == null) {
 			// 중복 반찬 없으면

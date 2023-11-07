@@ -1,6 +1,7 @@
 package com.bbsk.banchanshop.cart.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.after;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -191,6 +192,10 @@ public class CartServiceTests {
 		assertEquals(5, afterUserEntity.getCart().getCartItem().get(1).getBanchanQuantity()); // 5개를 담았고
 		assertEquals(12+5, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 12 + 5
 		assertEquals(120000+25000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 120000 + 25000원
+		log.info("=============");
+		log.info(afterUserEntity.getCart().toString());
+		log.info(afterUserEntity.getCart().getCartItem().toString());
+		log.info("=============");
 	}
 	
 }
