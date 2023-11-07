@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
@@ -28,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
 @Slf4j
+@Transactional
+@Rollback(false)
 public class CartServiceTests {
 
 	@Autowired
@@ -146,7 +150,6 @@ public class CartServiceTests {
 		
 	}
 	
-	@Transactional
 	@Order(3)
 	@DisplayName("장바구니 상품 넣기 테스트")
 	@Test
@@ -197,6 +200,16 @@ public class CartServiceTests {
 		log.info(afterUserEntity.getCart().toString());
 		log.info(afterUserEntity.getCart().getCartItem().toString());
 		log.info("=============");
+	}
+	
+	@Order(4)
+	@DisplayName("test")
+	@Test
+	public void test() {
+		UserEntity userEntity = userService.findUserById("test");
+		BanchanEntity banchanEntity = banchanService.findBybanchanName("김치찌게");
+		log.info(userEntity.getCart().getCartItem().toString());
+		log.info(userEntity.getCart().toString());
 	}
 	
 }
