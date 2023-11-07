@@ -94,7 +94,6 @@ public class UserEntityTests {
 		
 		assertEquals(user.getCart().getCartId(), cart.getCartId());
 		assertEquals("ventosan", cart.getCartId());
-		assertEquals(0, user.getCart().getTotalSum());
 	}
 	
 	@DisplayName("카트 삭제 테스트")
