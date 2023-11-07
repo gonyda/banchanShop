@@ -4,18 +4,22 @@ import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @Getter
 @Builder
 @AllArgsConstructor
@@ -28,18 +32,29 @@ public class CartItemEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cartItemId;
 	
-	@ManyToOne
-	@JoinColumn(name = "banchan_id")
-	private BanchanEntity banchan;
-	
-	@ManyToOne
+	@ToString.Exclude
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cart_id")
 	private CartEntity cart;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "banchan_id")
+	private BanchanEntity banchan;
 	
 	@Column(nullable = false)
 	private int banchanQuantity;
 	
 	@Column(nullable = false)
-	private int totalSum;
+	private int banchanTotalPrice;
+
+	public void updateQuantity(int quantity) {
+		this.banchanQuantity = quantity;
+	}
+
+	public void updateTotalPrice(int totalPrice) {
+		this.banchanTotalPrice = totalPrice;
+	}
 	
+	
+
 }
