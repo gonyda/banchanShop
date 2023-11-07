@@ -19,15 +19,31 @@ public class BanchanIngredientService {
 		this.banchanIngredientRepository = banchanIngredientRepository;
 	}
 
+	/**
+	 * 반찬재료 조회
+	 * @param name 반찬이름
+	 * @return
+	 */
 	public List<BanchanIngredientEntity> findByIngredientName(String name) {
 
 		return banchanIngredientRepository.findByIngredientName(name);
 	}
 
+	/**
+	 * 반찬재료 조회
+	 * @param id 반찬아이디
+	 * @return
+	 */
 	public BanchanIngredientEntity findByIngredientId(long id) {
 		return banchanIngredientRepository.findById(id).orElse(null);
 	}
 
+	/**
+	 * 반찬재고 수량 업데이트
+	 * @param banchanIngredientId 반찬재료 아이디
+	 * @param newQuantity 반찬재고 수량
+	 * @return
+	 */
 	@Transactional
 	public BanchanIngredientEntity updateQuantity(Long banchanIngredientId, int newQuantity) {
 		return banchanIngredientRepository.findById(banchanIngredientId).orElse(null).updateIngredientQuantity(newQuantity);
