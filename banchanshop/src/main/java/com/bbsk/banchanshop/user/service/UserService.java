@@ -5,11 +5,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bbsk.banchanshop.cart.entity.CartEntity;
 import com.bbsk.banchanshop.cart.repository.CartRepository;
-import com.bbsk.banchanshop.user.dto.RegistUserDto;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.repository.UserRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class UserService {
 	
 	private final UserRepository userRepo;
@@ -21,16 +21,25 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserEntity registUser(RegistUserDto dto) {
+	public UserEntity registUser(UserEntity user) {
 		return userRepo.save(UserEntity.builder()
-										.userId(dto.getUserId())
-										.userPw(dto.getUserPw())
-										.userEmail(dto.getUserEmail())
-										.userName(dto.getUserName())
-										.address(dto.getAddress())
-										.adminYn(dto.getAdminYn())
-										.cart(cartRepo.save(CartEntity.builder().cartId(dto.getUserId()).build()))
-										.phoneNumber(dto.getPhoneNumber())
+										.userId(user.getUserId())
+										.userPw(user.getUserPw())
+										.userEmail(user.getUserEmail())
+										.userName(user.getUserName())
+										.address(user.getAddress())
+										.adminYn(user.getAdminYn())
+										.cart(cartRepo.save(CartEntity.builder().cartId(user.getUserId()).build()))
+										.phoneNumber(user.getPhoneNumber())
 										.build());
+	}
+
+	/**
+	 * 유저 조회
+	 * @param userId
+	 * @return
+	 */
+	public UserEntity findUserById(String userId) {
+		return userRepo.findById(userId).orElse(null);
 	}
 }

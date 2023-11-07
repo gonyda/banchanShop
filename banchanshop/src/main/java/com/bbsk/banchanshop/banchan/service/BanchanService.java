@@ -11,6 +11,7 @@ import com.bbsk.banchanshop.banchan.repository.BanchanIngredientRepository;
 import com.bbsk.banchanshop.banchan.repository.BanchanRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class BanchanService {
 	
 	private final BanchanRepository banchanRepository;
@@ -47,7 +48,6 @@ public class BanchanService {
 	 * @param banchanName
 	 * @return 
 	 */
-	@Transactional(readOnly = true)
 	public BanchanEntity findBybanchanName(String banchanName) {
 		return banchanRepository.findBybanchanName(banchanName);
 		
@@ -58,7 +58,6 @@ public class BanchanService {
 	 * @param banchanId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public BanchanEntity findBanchanById(long banchanId) {
 		return banchanRepository.findById(banchanId).orElse(null);
 	}
