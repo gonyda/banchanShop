@@ -37,7 +37,7 @@ public class BanchanIngredientServiceTests {
 		
 		log.info("=================== 반찬등록 테스트 =================");
 		BanchanEntity entity = BanchanEntity.builder()
-							 .banchanQuantity(1)
+							 .banchanStockQuantity(1)
 							 .banchanName("김치찌게")
 							 .banchanPrice(13500)
 							 .createDate(LocalDateTime.now())

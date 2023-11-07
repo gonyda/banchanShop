@@ -52,7 +52,7 @@ public class BanchanEntityTests {
 		List<BanchanIngredientEntity> list = new ArrayList<>();
 		
 		BanchanEntity 김치찌게 = BanchanEntity.builder()
-											 .banchanQuantity(1)
+											 .banchanStockQuantity(1)
 											 .banchanName("김치찌게")
 											 .banchanPrice(13500)
 											 .createDate(LocalDateTime.now())

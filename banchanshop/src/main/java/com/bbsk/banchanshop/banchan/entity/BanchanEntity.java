@@ -6,7 +6,6 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,7 +37,7 @@ public class BanchanEntity {
 	private List<BanchanIngredientEntity> banchanIngredient;
 	
 	@Column(nullable = false)
-	private int banchanQuantity;
+	private int banchanStockQuantity;
 	
 	@Column(nullable = false, unique = true)
 	private String banchanName;
@@ -74,7 +73,7 @@ public class BanchanEntity {
 	 * @return 
 	 */
 	public BanchanEntity updateBanchanQuantity(int newQuantity) {
-		this.banchanQuantity = newQuantity;
+		this.banchanStockQuantity = newQuantity;
 		return this;
 	}
 }

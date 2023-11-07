@@ -28,7 +28,7 @@ public class BachanServiceTests {
 	public void insertBanchan() {
 		log.info("=================== 반찬등록 테스트 =================");
 		BanchanEntity entity = BanchanEntity.builder()
-							 .banchanQuantity(1)
+							 .banchanStockQuantity(1)
 							 .banchanName("김치찌게")
 							 .banchanPrice(13500)
 							 .createDate(LocalDateTime.now())
@@ -103,6 +103,6 @@ public class BachanServiceTests {
 		BanchanEntity updateEntity = banchanService.updateQuantity(banchanEntity.getBanchanId(), 5);
 
 		assertEquals("김치찌게", updateEntity.getBanchanName());
-		assertEquals(5, updateEntity.getBanchanQuantity());
+		assertEquals(5, updateEntity.getBanchanStockQuantity());
 	}
 }
