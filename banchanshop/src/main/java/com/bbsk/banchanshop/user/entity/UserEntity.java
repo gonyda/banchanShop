@@ -38,7 +38,8 @@ public class UserEntity {
 	
 	@Id
 	private String userId;
-	
+
+	@ToString.Exclude
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cart_id", nullable = false)
 	private CartEntity cart;
@@ -68,5 +69,9 @@ public class UserEntity {
 	
 	public void changePw(String pw) {
 		this.userPw = pw;
+	}
+
+	public void setCart(CartEntity findCart) {
+		this.cart = findCart;
 	}
 }
