@@ -26,16 +26,17 @@ public class CartService {
 	}
 
 	@Transactional
-	public void putCart(UserEntity user, BanchanEntity banchan, int itemQuantity) {
+	public void addBanchanInCart(UserEntity user, BanchanEntity banchan, int itemQuantity) {
 		UserEntity findUser = userRepository.findById(user.getUserId()).orElse(null);
 		CartEntity findCart = cartRepository.findById(findUser.getCart().getCartId()).orElse(null);
 		
 		// 장바구니 아이템 저장
 		// 장바구니 아이템에 중복 반찬이 있는지 체크
 		CartItemEntity findCartItem = findUser.getCart().getCartItem().stream()
-									.filter(item -> item.getBanchan().getBanchanId().equals(banchan.getBanchanId()))
-								    .findFirst()
-								    .orElse(null);
+																		.filter(item -> item.getBanchan().getBanchanId().equals(banchan.getBanchanId()))
+																	    .findFirst()
+																	    .orElse(null);
+		
 		if (findCartItem == null) {
 			// 중복 반찬 없으면
 			// cartItem 저장
@@ -47,6 +48,8 @@ public class CartService {
 												.build());
 			// cart 저장
 			findCart.setCartItem(saveCartItem);
+			findCart.updateTotalPice(saveCartItem.getBanchanTotalPrice() + findCart.getCartTotalPrice());
+			findCart.updateTotalQuantity(saveCartItem.getBanchanQuantity() + findCart.getCartTotalQuantity());
 			
 			// user 저장
 			findUser.setCart(findCart);
@@ -58,7 +61,8 @@ public class CartService {
 			
 			// cart 저장
 			findCart.setCartItem(findCartItem);
-			
+			findCart.updateTotalPice(findCartItem.getBanchanTotalPrice());
+			findCart.updateTotalQuantity(findCartItem.getBanchanQuantity());
 			// user 저장
 			findUser.setCart(findCart);
 		}

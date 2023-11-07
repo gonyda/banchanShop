@@ -103,10 +103,45 @@ public class CartServiceTests {
 		list.add(소금);
 		
 		
-		BanchanEntity registBanchan = banchanService.registBanchan(entity, list);
+		BanchanEntity firstBanchan = banchanService.registBanchan(entity, list);
+		
+		// ====================================================================
+		// ====================================================================
+		// 된장찌게 반찬 추가
+		
+		BanchanEntity entity1 = BanchanEntity.builder()
+				 .banchanStockQuantity(1)
+				 .banchanName("된장찌게")
+				 .banchanPrice(5000)
+				 .createDate(LocalDateTime.now())
+				 .build();
+		entity1.plusExpirationDate(3L);
+		
+		// ====================================================================
+		List<BanchanIngredientEntity> list1 = new ArrayList<>();
+		BanchanIngredientEntity 된장 = BanchanIngredientEntity.builder()
+			   .ingredientName("된장")
+			   .quantity(5)
+			   .inputDate(LocalDateTime.now())
+			   .build();
+		된장.plusExpirationDate(10L);
+		
+		BanchanIngredientEntity 양파 = BanchanIngredientEntity.builder()
+				   .ingredientName("양파")
+				   .quantity(5)
+				   .inputDate(LocalDateTime.now())
+				   .build();
+		양파.plusExpirationDate(20L);
+		
+		list1.add(된장);
+		list1.add(양파);
+		
+		
+		BanchanEntity secondBanchan = banchanService.registBanchan(entity1, list1);
 		// ====================================================================
 		
-		assertEquals("김치찌게", registBanchan.getBanchanName());
+		assertEquals("김치찌게", firstBanchan.getBanchanName());
+		assertEquals("된장찌게", secondBanchan.getBanchanName());
 		
 	}
 	
@@ -119,23 +154,43 @@ public class CartServiceTests {
 		UserEntity userEntity = userService.findUserById("test");
 		BanchanEntity banchanEntity = banchanService.findBybanchanName("김치찌게");
 		
-		cartService.putCart(userEntity, banchanEntity, 2);
+		cartService.addBanchanInCart(userEntity, banchanEntity, 2);
 		
 		UserEntity afterUserEntity = userService.findUserById("test");
-		log.info("카트 :: {}", afterUserEntity.getCart().toString());
-		log.info("카트 아이템 :: {}", afterUserEntity.getCart().getCartItem().toString());
+		assertEquals("test", afterUserEntity.getUserId()); // test 라는 유저가
+		assertEquals("김치찌게", afterUserEntity.getCart().getCartItem().get(0).getBanchan().getBanchanName()); // 김치찌게를 장바구니에 담았다
+		assertEquals(2, afterUserEntity.getCart().getCartItem().get(0).getBanchanQuantity()); // 2개를 담았고
+		assertEquals(2, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 2
+		assertEquals(2*10000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 27000원이다
 		
-		cartService.putCart(userEntity, banchanEntity, 10);
+		// ======================================================================
+		// ======================================================================
+		// 같은 종류 반찬 장바구니에 담기
+		
+		cartService.addBanchanInCart(userEntity, banchanEntity, 10);
 		
 		afterUserEntity = userService.findUserById("test");
-		log.info("카트 :: {}", afterUserEntity.getCart().toString());
-		log.info("카트 아이템 :: {}", afterUserEntity.getCart().getCartItem().toString());
 		
-		//assertEquals("test", afterUserEntity.getUserId()); // test 라는 유저가
-		//assertEquals("김치찌게", afterUserEntity.getCart().getCartItem().get(0).getBanchan().getBanchanName()); // 김치찌게를 장바구니에 담았다
-		//assertEquals(2, afterUserEntity.getCart().getCartItem().get(0).getBanchanQuantity()); // 2개를 담았고
-		//assertEquals(2, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 2
-		//assertEquals(27000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 27000원이다
+		assertEquals("test", afterUserEntity.getUserId()); // test 라는 유저가
+		assertEquals("김치찌게", afterUserEntity.getCart().getCartItem().get(0).getBanchan().getBanchanName()); // 김치찌게를 장바구니에 담았다
+		assertEquals(12, afterUserEntity.getCart().getCartItem().get(0).getBanchanQuantity()); // 10 + 2개를 담았고
+		assertEquals(12, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 10 + 2
+		assertEquals(12*10000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 120000원
+		
+		
+		// ======================================================================
+		// ======================================================================
+		// 다른 종류 반찬 장바구니에 담기
+		BanchanEntity 된장찌게 = banchanService.findBybanchanName("된장찌게");
+		
+		cartService.addBanchanInCart(userEntity, 된장찌게, 5);
+		afterUserEntity = userService.findUserById("test");
+
+		assertEquals("test", afterUserEntity.getUserId()); // test 라는 유저가
+		assertEquals("된장찌게", afterUserEntity.getCart().getCartItem().get(1).getBanchan().getBanchanName()); // 된장찌게를 장바구니에 담았다
+		assertEquals(5, afterUserEntity.getCart().getCartItem().get(1).getBanchanQuantity()); // 5개를 담았고
+		assertEquals(12+5, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 12 + 5
+		assertEquals(120000+25000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 120000 + 25000원
 	}
 	
 }

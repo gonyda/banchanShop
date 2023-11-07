@@ -35,14 +35,21 @@ public class CartEntity {
 	@ToString.Exclude
 	@OneToMany(mappedBy = "cart")
 	private List<CartItemEntity> cartItem;
+	
+	@ColumnDefault("0")
+	@Column(nullable = false)
+	private int cartTotalPrice;
+	
+	@Column(nullable = false)
+	@ColumnDefault("0")
+	private int cartTotalQuantity;
 
 	public void setCartItem(CartItemEntity findCartItem) {
 		int isExistIndex = -1;
 		for (int i = 0; i < cartItem.size(); i++) {
 			if(cartItem.get(i).getBanchan().getBanchanId() == findCartItem.getCartItemId()) {
-				//cartItem.remove(i);
-				//cartItem.add(findCartItem);
 				isExistIndex = i;
+				break;
 			}
 		}
 		
@@ -51,5 +58,13 @@ public class CartEntity {
 		} else {
 			cartItem.add(findCartItem);
 		}
+	}
+	
+	public void updateTotalPice(int price) {
+		this.cartTotalPrice = price;
+	}
+	
+	public void updateTotalQuantity(int quantity) {
+		this.cartTotalQuantity = quantity;
 	}
 }
