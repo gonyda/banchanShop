@@ -34,7 +34,7 @@ public class BanchanIngredientEntity {
 	
 	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "banchan_id", nullable = true)
+	@JoinColumn(name = "banchan_id", nullable = false)
 	private BanchanEntity banchan;
 	
 	@Column(nullable = false)
@@ -55,5 +55,10 @@ public class BanchanIngredientEntity {
 	
 	public void setBanchan(BanchanEntity banchan) {
 		this.banchan = banchan;
+	}
+
+	public BanchanIngredientEntity updateIngredientQuantity(int newQuantity) {
+		this.quantity = newQuantity;
+		return this;
 	}
 }

@@ -33,7 +33,8 @@ public class BanchanEntity {
 	private Long banchanId;
 	
 	@ToString.Exclude
-	@OneToMany(mappedBy = "banchan", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "banchan")
+	@Column(nullable = false)
 	private List<BanchanIngredientEntity> banchanIngredient;
 	
 	@Column(nullable = false)

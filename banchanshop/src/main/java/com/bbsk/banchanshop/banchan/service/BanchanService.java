@@ -24,19 +24,20 @@ public class BanchanService {
 	}
 
 	/**
-	 * 반찬 등록
+	 * 반찬 및 반찬재료 등록
 	 * @param banchan 반찬
 	 * @param ingredientList 반찬에 들어가는 재료들
 	 * @return
 	 */
 	@Transactional
 	public BanchanEntity registBanchan(BanchanEntity banchan, List<BanchanIngredientEntity> ingredientList) {
+		banchan.setIngredientList(ingredientList);
 		BanchanEntity banchanEntity = banchanRepository.save(banchan);
+		
 		ingredientList.forEach(e -> {
 			e.setBanchan(banchanEntity);
 		});
-		List<BanchanIngredientEntity> ingredientListEntity = banchanIngredientRepository.saveAll(ingredientList);
-		banchanEntity.setIngredientList(ingredientListEntity);
+		banchanIngredientRepository.saveAll(ingredientList);
 		
 		return banchanEntity;
 	}
@@ -47,7 +48,7 @@ public class BanchanService {
 	 * @return 
 	 */
 	@Transactional(readOnly = true)
-	public BanchanEntity findBanchanByName(String banchanName) {
+	public BanchanEntity findBybanchanName(String banchanName) {
 		return banchanRepository.findBybanchanName(banchanName);
 		
 	}

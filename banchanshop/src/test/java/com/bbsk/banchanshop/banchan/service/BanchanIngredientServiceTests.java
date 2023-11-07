@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,14 +21,20 @@ import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
 @Slf4j
-public class BachanServiceTests {
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class BanchanIngredientServiceTests {
+	
+	@Autowired
+	private BanchanIngredientService ingredientService;
+	
 	@Autowired
 	private BanchanService banchanService;
 	
-	@DisplayName("반찬등록 테스트")
+	@DisplayName("반찬 및 반찬 재료 등록")
+	@Order(1)
 	@Test
-	public void insertBanchan() {
+	public void registIngredient() {
+		
 		log.info("=================== 반찬등록 테스트 =================");
 		BanchanEntity entity = BanchanEntity.builder()
 							 .banchanQuantity(1)
@@ -72,37 +81,41 @@ public class BachanServiceTests {
 			log.info("해당 반찬재료의 요리: {}", e.getBanchan().toString());
 		});
 		assertEquals("김치찌게", registBanchan.getBanchanName());
-		
 	}
 	
-	@DisplayName("반찬 조회 By 반찬이름")
+	@DisplayName("반찬 재료 조회 By 재료이름")
+	@Order(2)
 	@Test
 	public void findByName() {
-		log.info("=================== 반찬 조회 By 반찬이름 테스트 =================");
-		BanchanEntity findBanchanByName = banchanService.findBybanchanName("김치찌게");
+		log.info("=================== 재료 조회 By 재료 이름 테스트 =================");
 		
-		assertEquals(1, findBanchanByName.getBanchanId());
+		List<BanchanIngredientEntity> list = ingredientService.findByIngredientName("고춧가루");
+
+		assertEquals(1, list.size());
 	}
 	
-	@DisplayName("반찬 조회 By 반찬아이디")
+	@DisplayName("반찬 재료 조회 By 재료아이디")
+	@Order(3)
 	@Test
 	public void findById() {
-		log.info("=================== 반찬 조회 By 반찬아이디 테스트 =================");
-		BanchanEntity findBanchanByName = banchanService.findBanchanById(1L);
+		log.info("=================== 재료 조회 By 재료 아이디 테스트 =================");
+		BanchanIngredientEntity findEntity = ingredientService.findByIngredientId(1L);
 		
-		assertEquals("김치찌게", findBanchanByName.getBanchanName());
+		assertEquals("고춧가루", findEntity.getIngredientName());
 	}
 	
-	@DisplayName("반찬 재고 수량 업데이트")
+	@DisplayName("반찬 재료 재고 수량 업데이트")
+	@Order(4)
 	@Test
 	public void updateQuantity() {
-		log.info("=================== 반찬 재고 수량 업데이트 =================");
-		BanchanEntity banchanEntity = banchanService.findBanchanById(1L);
-		banchanEntity.updateBanchanQuantity(5); // 1 -> 5
+		log.info("=================== 재료 재고 수량 업데이트 =================");
+		BanchanIngredientEntity findEntity = ingredientService.findByIngredientId(1L);
+		findEntity.updateIngredientQuantity(1); // 5 -> 1
 		
-		BanchanEntity updateEntity = banchanService.updateQuantity(banchanEntity.getBanchanId(), 5);
+		BanchanIngredientEntity updateEntity = ingredientService.updateQuantity(findEntity.getBanchanIngredientId(), 1);
 
-		assertEquals("김치찌게", updateEntity.getBanchanName());
-		assertEquals(5, updateEntity.getBanchanQuantity());
+		assertEquals("고춧가루", updateEntity.getIngredientName());
+		assertEquals(1, updateEntity.getQuantity());
 	}
+
 }
