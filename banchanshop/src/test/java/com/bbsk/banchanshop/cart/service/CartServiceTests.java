@@ -1,6 +1,7 @@
 package com.bbsk.banchanshop.cart.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.after;
 
 import java.time.LocalDateTime;
@@ -69,7 +70,7 @@ public class CartServiceTests {
 	public void insertBanchan() {
 		log.info("=================== 반찬등록 테스트 =================");
 		BanchanEntity entity = BanchanEntity.builder()
-							 .banchanStockQuantity(1)
+							 .banchanStockQuantity(100)
 							 .banchanName("김치찌게")
 							 .banchanPrice(10000)
 							 .createDate(LocalDateTime.now())
@@ -111,7 +112,7 @@ public class CartServiceTests {
 		// 된장찌게 반찬 추가
 		
 		BanchanEntity entity1 = BanchanEntity.builder()
-				 .banchanStockQuantity(1)
+				 .banchanStockQuantity(100)
 				 .banchanName("된장찌게")
 				 .banchanPrice(5000)
 				 .createDate(LocalDateTime.now())
@@ -224,5 +225,52 @@ public class CartServiceTests {
 		assertEquals(1, userEntity.getCart().getCartTotalQuantity());
 		assertEquals(10000, userEntity.getCart().getCartTotalPrice());
 		assertEquals("김치찌게", userEntity.getCart().getCartItem().get(0).getBanchan().getBanchanName());
+	}
+
+	@Order(6)
+	@DisplayName("반찬 재고 수량 체크 테스트")
+	@Test
+	public void checkStockQuantity() {
+		// ====================================================================
+		// ====================================================================
+		// 콩나물무침 추가
+		BanchanEntity entity1 = BanchanEntity.builder()
+				.banchanStockQuantity(1)
+				.banchanName("콩나물무침")
+				.banchanPrice(1000)
+				.createDate(LocalDateTime.now())
+				.build();
+		entity1.plusExpirationDate(3L);
+
+		// ====================================================================
+		List<BanchanIngredientEntity> list1 = new ArrayList<>();
+		BanchanIngredientEntity 콩나물 = BanchanIngredientEntity.builder()
+				.ingredientName("콩나물")
+				.quantity(5)
+				.inputDate(LocalDateTime.now())
+				.build();
+		콩나물.plusExpirationDate(10L);
+
+		BanchanIngredientEntity 참기름 = BanchanIngredientEntity.builder()
+				.ingredientName("참기름")
+				.quantity(5)
+				.inputDate(LocalDateTime.now())
+				.build();
+		참기름.plusExpirationDate(20L);
+
+		list1.add(콩나물);
+		list1.add(참기름);
+
+		banchanService.registBanchan(entity1, list1);
+
+		// =====================================
+		UserEntity user = userService.findUserById("test");
+		BanchanEntity banchan = banchanService.findBybanchanName("콩나물무침");
+
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+			cartService.addBanchanInCart(user, banchan, 2);
+		});
+		log.info(exception.getMessage());
+
 	}
 }

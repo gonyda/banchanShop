@@ -34,7 +34,11 @@ public class CartService {
 		UserEntity findUser = userRepository.findById(user.getUserId()).orElse(null);
 		CartEntity findCart = cartRepository.findById(findUser.getCart().getCartId()).orElse(null);
 		CartItemEntity findCartItem = cartItemRepository.findByCartCartIdAndBanchanBanchanId(findUser.getCart().getCartId(), banchan.getBanchanId());
-		
+
+		if (checkStockQuantity(banchan, itemQuantity)) {
+			throw new IllegalArgumentException("재고수량보다 더 많은 수량을 선택할 수 없습니다.");
+		}
+
 		// 장바구니 아이템 저장
 		// 장바구니 아이템에 중복 반찬이 있는지 체크
 		CartItemEntity saveCartItem = null;
@@ -71,6 +75,10 @@ public class CartService {
 
 		cartItemRepository.deleteById(cartItemId);
 		findCart.updateTotalPiceAndTotalQuantity(getSubstrctedPirce(findCart, findCartItem), getSubstrctedQuantity(findCart, findCartItem));
+	}
+
+	private boolean checkStockQuantity(BanchanEntity banchan, int itemQuantity) {
+		return banchan.getBanchanStockQuantity() < itemQuantity;
 	}
 
 	private static int getSumQuantity(CartEntity findCart) {
