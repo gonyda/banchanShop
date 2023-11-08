@@ -57,6 +57,12 @@ public class CartService {
 		findUser.setCart(findCart);
 	}
 
+	/**
+	 * 장바구니 반찬 삭제
+	 * cartItem - delete, cart - 총액,총갯수 update
+	 * @param userEntity
+	 * @param cartItemId
+	 */
 	@Transactional
 	public void deleteCartItem(UserEntity userEntity, Long cartItemId) {
 		UserEntity findUser = userRepository.findById(userEntity.getUserId()).orElse(null);
