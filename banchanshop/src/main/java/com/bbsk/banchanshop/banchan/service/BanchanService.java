@@ -72,4 +72,14 @@ public class BanchanService {
 	public BanchanEntity updateQuantity(Long banchanId, int newQuantity) {
 		return banchanRepository.findById(banchanId).orElse(null).updateBanchanQuantity(newQuantity);
 	}
+
+	/**
+	 * 반찬 삭제 및 반찬 재료 삭제
+	 * @param banchanId
+	 */
+	@Transactional
+    public void deleteBanchan(Long banchanId) {
+		banchanIngredientRepository.deleteByBanchanBanchanId(banchanId);
+		banchanRepository.deleteById(banchanId);
+    }
 }

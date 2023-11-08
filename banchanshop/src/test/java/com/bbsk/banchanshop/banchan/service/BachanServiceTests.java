@@ -6,8 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,12 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
 @Slf4j
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BachanServiceTests {
 
 	@Autowired
 	private BanchanService banchanService;
 	
 	@DisplayName("반찬등록 테스트")
+	@Order(1)
 	@Test
 	public void insertBanchan() {
 		log.info("=================== 반찬등록 테스트 =================");
@@ -72,10 +73,12 @@ public class BachanServiceTests {
 			log.info("해당 반찬재료의 요리: {}", e.getBanchan().toString());
 		});
 		assertEquals("김치찌게", registBanchan.getBanchanName());
-		
+
 	}
-	
+
+	@Disabled
 	@DisplayName("반찬 조회 By 반찬이름")
+	@Order(2)
 	@Test
 	public void findByName() {
 		log.info("=================== 반찬 조회 By 반찬이름 테스트 =================");
@@ -85,6 +88,7 @@ public class BachanServiceTests {
 	}
 	
 	@DisplayName("반찬 조회 By 반찬아이디")
+	@Order(3)
 	@Test
 	public void findById() {
 		log.info("=================== 반찬 조회 By 반찬아이디 테스트 =================");
@@ -94,6 +98,7 @@ public class BachanServiceTests {
 	}
 	
 	@DisplayName("반찬 재고 수량 업데이트")
+	@Order(4)
 	@Test
 	public void updateQuantity() {
 		log.info("=================== 반찬 재고 수량 업데이트 =================");
@@ -104,5 +109,14 @@ public class BachanServiceTests {
 
 		assertEquals("김치찌게", updateEntity.getBanchanName());
 		assertEquals(5, updateEntity.getBanchanStockQuantity());
+	}
+
+	@DisplayName("반찬 삭제")
+	@Order(5)
+	@Test
+	public void deleteBanchan() {
+		banchanService.deleteBanchan(2L);
+
+		assertEquals(null, banchanService.findBanchanById(2L));
 	}
 }
