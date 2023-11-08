@@ -210,5 +210,19 @@ public class CartServiceTests {
 		assertEquals(1+5, afterUserEntity.getCart().getCartTotalQuantity());
 		assertEquals(10000+25000, afterUserEntity.getCart().getCartTotalPrice());
 	}
-	
+
+	@Order(5)
+	@DisplayName("장바구니 삭제 테스트")
+	@Test
+	public void delete() {
+		UserEntity userEntity = userService.findUserById("test");
+
+		cartService.deleteCartItem(userEntity, 2L);
+
+		UserEntity afterUserEntity = userService.findUserById("test");
+
+		assertEquals(1, userEntity.getCart().getCartTotalQuantity());
+		assertEquals(10000, userEntity.getCart().getCartTotalPrice());
+		assertEquals("김치찌게", userEntity.getCart().getCartItem().get(0).getBanchan().getBanchanName());
+	}
 }
