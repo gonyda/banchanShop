@@ -1,13 +1,7 @@
 package com.bbsk.banchanshop.order.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,11 +19,18 @@ public class OrderItemEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderItemId;
-	
-	@ManyToOne
-	@JoinColumn(name = "order_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "order_id", nullable = false)
 	private OrdersEntity order;
-	
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "banchan_id", nullable = false)
+	private BanchanEntity banchan;
+
 	@Column(nullable = false)
 	private int quantity;
+
+	@Column(nullable = false)
+	private int totalPrice;
 }

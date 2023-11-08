@@ -1,19 +1,16 @@
 package com.bbsk.banchanshop.order.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.bbsk.banchanshop.contant.OrderType;
+import com.bbsk.banchanshop.contant.PaymentType;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.bbsk.banchanshop.user.entity.UserEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,15 +29,23 @@ public class OrdersEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderId;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
-	
+
+	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+	private List<OrderItemEntity> orderItems = null;
+
+	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false)
-	private String orderType;
-	
+	private OrderType orderType;
+
+	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false)
-	private String paymentType;
+	private PaymentType paymentType;
+
+	@Column(nullable = false)
+	private String address;
 	
 	@Column(nullable = false)
 	private int totalPrice;
@@ -48,4 +53,8 @@ public class OrdersEntity {
 	@CreationTimestamp
 	@Column(nullable = false)
 	private LocalDateTime orderDate;
+
+	public void setOrderItems(List<OrderItemEntity> orderItems) {
+		this.orderItems = orderItems;
+	}
 }
