@@ -49,18 +49,15 @@ public class OrdersService {
         /*
         * Order_Item 테이블 저장
         * */
-        List<OrderItemEntity> orderItems = new ArrayList<>();
         user.getCart().getCartItem().stream().forEach(e -> {
-                orderItems.add(
-                        orderItemRepository.save(
-                                OrderItemEntity.builder()
-                                        .order(saveOrder)
-                                        .banchan(e.getBanchan())
-                                        .quantity(e.getBanchanQuantity())
-                                        .totalPrice(e.getBanchanTotalPrice())
-                                        .build()
-                )
-            );
+                orderItemRepository.save(
+                        OrderItemEntity.builder()
+                                .order(saveOrder)
+                                .banchan(e.getBanchan())
+                                .quantity(e.getBanchanQuantity())
+                                .totalPrice(e.getBanchanTotalPrice())
+                                .build()
+                );
         });
 
         //TODO 주문성공 시 반찬재고 차감
