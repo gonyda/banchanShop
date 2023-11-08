@@ -15,6 +15,12 @@ public class PaymentService {
     private final OrdersService ordersService;
     private final UserService userService;
 
+    /**
+     * 결제 진행, 결제 완료 시 주문생성
+     * @param card
+     * @param userId
+     * @param orderType
+     */
     public void startPayToOrder(CardStrategy card, String userId, OrderType orderType) {
         if (card.startPayToOrder(card)) {
             /*

@@ -20,6 +20,13 @@ public class OrdersService {
     private final OrdersRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
+    /**
+     * 결제 완료 후 주문 생성
+     * @param user
+     * @param orderType
+     * @param paymentType
+     * @param cardCompany
+     */
     @Transactional
     public void createOrder(UserEntity user, OrderType orderType, PaymentType paymentType, String cardCompany) {
         user.getCart().getCartItem().forEach(e -> {
@@ -61,7 +68,7 @@ public class OrdersService {
     }
 
     /**
-     * 해당 유저의 가장 최근 결제 단건 가져오기
+     * 해당 유저의 가장 최근 주문 단건 가져오기
      * @param userId
      * @return
      */
