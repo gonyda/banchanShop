@@ -1,5 +1,8 @@
 package com.bbsk.banchanshop.order.service;
 
+import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
+import com.bbsk.banchanshop.cart.entity.CartItemEntity;
+import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
@@ -24,6 +27,12 @@ public class OrdersService {
 
     @Transactional
     public void createOrder(UserEntity user, OrderType orderType, PaymentType paymentType) {
+        user.getCart().getCartItem().forEach(e -> {
+            if (checkStockQuantity(e.getBanchan() ,e.getBanchanQuantity())) {
+                throw new IllegalArgumentException(e.getBanchan().getBanchanName() + "의 재고수량이 변경되었습니다. 수량을 다시 선택해주세요.");
+            }
+        });
+
         /*
         * Orders 테이블 저장
         * */
@@ -53,6 +62,18 @@ public class OrdersService {
                 )
             );
         });
-        saveOrder.setOrderItems(orderItems);
+    }
+
+    private boolean checkStockQuantity(BanchanEntity banchan, int itemQuantity) {
+        return banchan.getBanchanStockQuantity() < itemQuantity;
+    }
+
+    /**
+     * 해당 유저의 가장 최근 결제 단건 가져오기
+     * @param userId
+     * @return
+     */
+    public OrdersEntity findRecentOrderByUserId(String userId) {
+        return orderRepository.findTop1RecentOrderByUserUserIdOrderByOrderDateDesc(userId);
     }
 }

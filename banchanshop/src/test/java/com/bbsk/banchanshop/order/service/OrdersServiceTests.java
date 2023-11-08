@@ -9,6 +9,7 @@ import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.contant.UserType;
+import com.bbsk.banchanshop.order.repository.OrdersRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +74,7 @@ public class OrdersServiceTests {
     public void insertBanchan() {
         log.info("=================== 반찬등록 테스트 =================");
         BanchanEntity entity = BanchanEntity.builder()
-                .banchanStockQuantity(1)
+                .banchanStockQuantity(100)
                 .banchanName("김치찌게")
                 .banchanPrice(10000)
                 .createDate(LocalDateTime.now())
@@ -115,7 +116,7 @@ public class OrdersServiceTests {
         // 된장찌게 반찬 추가
 
         BanchanEntity entity1 = BanchanEntity.builder()
-                .banchanStockQuantity(1)
+                .banchanStockQuantity(5)
                 .banchanName("된장찌게")
                 .banchanPrice(5000)
                 .createDate(LocalDateTime.now())
@@ -198,12 +199,26 @@ public class OrdersServiceTests {
         assertEquals(120000+25000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 120000 + 25000원
     }
 
+    @Disabled
     @Order(4)
+    @DisplayName("주문 생성시 반찬 재고 테스트")
+    @Test
+    public void checkStockQuantity() {
+        UserEntity user = userService.findUserById("test");
+
+        user.getCart().getCartItem().get(1).getBanchan().updateBanchanQuantity(2);
+        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD);
+    }
+
+    @Order(5)
     @DisplayName("주문 생성 테스트")
     @Test
-    public void order() {
+    public void careteOrder() {
         UserEntity user = userService.findUserById("test");
 
         orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD);
+        user = userService.findUserById("test");
+
+        assertEquals(user.getCart().getCartTotalPrice(), orderService.findRecentOrderByUserId(user.getUserId()).getTotalPrice());
     }
 }

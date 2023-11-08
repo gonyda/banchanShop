@@ -4,4 +4,6 @@ import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrdersRepository extends JpaRepository<OrdersEntity, Long> {
+
+    OrdersEntity findTop1RecentOrderByUserUserIdOrderByOrderDateDesc(String userId);
 }
