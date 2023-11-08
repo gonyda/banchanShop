@@ -1,8 +1,6 @@
 package com.bbsk.banchanshop.order.service;
 
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
-import com.bbsk.banchanshop.cart.entity.CartItemEntity;
-import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
@@ -14,9 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -26,7 +21,7 @@ public class OrdersService {
     private final OrderItemRepository orderItemRepository;
 
     @Transactional
-    public void createOrder(UserEntity user, OrderType orderType, PaymentType paymentType) {
+    public void createOrder(UserEntity user, OrderType orderType, PaymentType paymentType, String cardCompany) {
         user.getCart().getCartItem().forEach(e -> {
             if (checkStockQuantity(e.getBanchan() ,e.getBanchanQuantity())) {
                 throw new IllegalArgumentException(e.getBanchan().getBanchanName() + "의 재고수량이 변경되었습니다. 수량을 다시 선택해주세요.");
@@ -43,6 +38,7 @@ public class OrdersService {
                         .paymentType(paymentType)
                         .address(user.getAddress())
                         .totalPrice(user.getCart().getCartTotalPrice())
+                        .cardCompany(cardCompany)
                         .build()
         );
 

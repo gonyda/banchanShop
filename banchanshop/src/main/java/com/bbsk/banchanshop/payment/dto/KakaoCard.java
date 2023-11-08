@@ -17,6 +17,7 @@ public class KakaoCard extends CardProcess implements CardStrategy {
 
     private Long cardNumber;
     private int cardCvc;
+    private final String cardCompany = "카카오페이";
 
     private String userName;
     private String userPhoneNumber;
@@ -58,17 +59,16 @@ public class KakaoCard extends CardProcess implements CardStrategy {
 
     /**
      * 결제 프로세스 진행 후 결제가 완료되면 주문테이블 INSERT(주문완료)
+     *
      * @param card
+     * @return
      */
     @Override
-    public void startPayToOrder(CardStrategy card) {
-
+    public boolean startPayToOrder(CardStrategy card) {
         if(this.processPay(card)) {
             System.out.println("카카오페이 - 결제가 완료되었습니다.");
-
-            /*
-            * 주문 생성, 주문테이블 INSERT
-            * */
+            return true;
         }
+        return false;
     }
 }

@@ -45,6 +45,9 @@ public class OrdersEntity {
 	private PaymentType paymentType;
 
 	@Column(nullable = false)
+	private String cardCompany;
+
+	@Column(nullable = false)
 	private String address;
 	
 	@Column(nullable = false)

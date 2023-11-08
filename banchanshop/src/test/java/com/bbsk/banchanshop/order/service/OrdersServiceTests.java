@@ -3,13 +3,10 @@ package com.bbsk.banchanshop.order.service;
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.banchan.entity.BanchanIngredientEntity;
 import com.bbsk.banchanshop.banchan.service.BanchanService;
-import com.bbsk.banchanshop.cart.entity.CartEntity;
-import com.bbsk.banchanshop.cart.entity.CartItemEntity;
 import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.contant.UserType;
-import com.bbsk.banchanshop.order.repository.OrdersRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -207,7 +204,7 @@ public class OrdersServiceTests {
         UserEntity user = userService.findUserById("test");
 
         user.getCart().getCartItem().get(1).getBanchan().updateBanchanQuantity(2);
-        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD);
+        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, "신한은행");
     }
 
     @Order(5)
@@ -216,7 +213,7 @@ public class OrdersServiceTests {
     public void careteOrder() {
         UserEntity user = userService.findUserById("test");
 
-        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD);
+        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, "신한은행");
         user = userService.findUserById("test");
 
         assertEquals(user.getCart().getCartTotalPrice(), orderService.findRecentOrderByUserId(user.getUserId()).getTotalPrice());
