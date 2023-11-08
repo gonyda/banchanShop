@@ -60,11 +60,8 @@ public class CartEntity {
 		}
 	}
 	
-	public void updateTotalPice(int price) {
+	public void updateTotalPiceAndTotalQuantity(int price, int quantity) {
 		this.cartTotalPrice = price;
-	}
-	
-	public void updateTotalQuantity(int quantity) {
 		this.cartTotalQuantity = quantity;
 	}
 }

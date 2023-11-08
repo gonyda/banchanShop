@@ -47,14 +47,14 @@ public class CartItemEntity {
 	@Column(nullable = false)
 	private int banchanTotalPrice;
 
-	public void updateQuantity(int quantity) {
-		this.banchanQuantity = quantity;
+	public CartItemEntity updateCartItem(CartEntity cart, BanchanEntity banchan, int itemQuantity) {
+		this.cart = cart;
+		this.banchan = banchan;
+		this.banchanQuantity = itemQuantity;
+		this.banchanTotalPrice = itemQuantity * banchan.getBanchanPrice();
+
+		return this;
 	}
 
-	public void updateTotalPrice(int totalPrice) {
-		this.banchanTotalPrice = totalPrice;
-	}
-	
-	
 
 }

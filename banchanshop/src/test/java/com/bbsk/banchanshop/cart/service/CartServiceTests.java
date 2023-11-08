@@ -7,11 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
@@ -165,20 +161,20 @@ public class CartServiceTests {
 		assertEquals("김치찌게", afterUserEntity.getCart().getCartItem().get(0).getBanchan().getBanchanName()); // 김치찌게를 장바구니에 담았다
 		assertEquals(2, afterUserEntity.getCart().getCartItem().get(0).getBanchanQuantity()); // 2개를 담았고
 		assertEquals(2, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 2
-		assertEquals(2*10000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 27000원이다
+		assertEquals(2*10000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 20000원이다
 		
 		// ======================================================================
 		// ======================================================================
 		log.info(" =================== 장바구니 같은 상품 넣기 테스트 ================== ");
 		
-		cartService.addBanchanInCart(userEntity, banchanEntity, 10);
+		cartService.addBanchanInCart(userEntity, banchanEntity, 12);
 		
 		afterUserEntity = userService.findUserById("test");
 		
 		assertEquals("test", afterUserEntity.getUserId()); // test 라는 유저가
 		assertEquals("김치찌게", afterUserEntity.getCart().getCartItem().get(0).getBanchan().getBanchanName()); // 김치찌게를 장바구니에 담았다
-		assertEquals(12, afterUserEntity.getCart().getCartItem().get(0).getBanchanQuantity()); // 10 + 2개를 담았고
-		assertEquals(12, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 10 + 2
+		assertEquals(12, afterUserEntity.getCart().getCartItem().get(0).getBanchanQuantity()); // 12개를 담았고
+		assertEquals(12, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 12
 		assertEquals(12*10000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 120000원
 		
 		
@@ -196,20 +192,20 @@ public class CartServiceTests {
 		assertEquals(5, afterUserEntity.getCart().getCartItem().get(1).getBanchanQuantity()); // 5개를 담았고
 		assertEquals(12+5, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 12 + 5
 		assertEquals(120000+25000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 120000 + 25000원
-		log.info("=============");
-		log.info(afterUserEntity.getCart().toString());
-		log.info(afterUserEntity.getCart().getCartItem().toString());
-		log.info("=============");
 	}
-	
+
+	@Disabled
 	@Order(4)
-	@DisplayName("test")
+	@DisplayName("장바구니에 담겨있는 반찬 수량 변경")
 	@Test
-	public void test() {
+	public void updateQuantity() {
 		UserEntity userEntity = userService.findUserById("test");
 		BanchanEntity banchanEntity = banchanService.findBybanchanName("김치찌게");
-		log.info(userEntity.getCart().getCartItem().toString());
-		log.info(userEntity.getCart().toString());
+
+		//cartService.updateQuantity(userEntity, banchanEntity, 1);
+
+		assertEquals(1, userEntity.getCart().getCartItem().get(0).getBanchanQuantity());
+		assertEquals(1*10000, userEntity.getCart().getCartItem().get(0).getBanchanTotalPrice());
 	}
 	
 }
