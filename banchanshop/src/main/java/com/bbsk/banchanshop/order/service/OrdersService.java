@@ -62,10 +62,9 @@ public class OrdersService {
                 )
             );
         });
-    }
 
-    private boolean checkStockQuantity(BanchanEntity banchan, int itemQuantity) {
-        return banchan.getBanchanStockQuantity() < itemQuantity;
+        //TODO 주문성공 시 반찬재고 차감
+
     }
 
     /**
@@ -75,5 +74,17 @@ public class OrdersService {
      */
     public OrdersEntity findRecentOrderByUserId(String userId) {
         return orderRepository.findTop1RecentOrderByUserUserIdOrderByOrderDateDesc(userId);
+    }
+
+    //TODO 해당 유저의 모든 주문내역 조회
+
+    /**
+     * 주문 시 반찬재고, 주문수량 체크
+     * @param banchan
+     * @param itemQuantity
+     * @return
+     */
+    private boolean checkStockQuantity(BanchanEntity banchan, int itemQuantity) {
+        return banchan.getBanchanStockQuantity() < itemQuantity;
     }
 }

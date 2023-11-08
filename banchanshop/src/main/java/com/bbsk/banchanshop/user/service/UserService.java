@@ -1,5 +1,6 @@
 package com.bbsk.banchanshop.user.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,15 +11,11 @@ import com.bbsk.banchanshop.user.repository.UserRepository;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class UserService {
 	
 	private final UserRepository userRepo;
 	private final CartRepository cartRepo;
-
-	public UserService(final UserRepository userRepo, final CartRepository cartRepo) {
-		this.userRepo = userRepo;
-		this.cartRepo = cartRepo;
-	}
 
 	/**
 	 * 회원가입

@@ -2,6 +2,7 @@ package com.bbsk.banchanshop.banchan.service;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,17 +13,11 @@ import com.bbsk.banchanshop.banchan.repository.BanchanRepository;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class BanchanService {
 	
 	private final BanchanRepository banchanRepository;
 	private final BanchanIngredientRepository banchanIngredientRepository;
-	
-	public BanchanService(final BanchanRepository banchanRepository,
-			final BanchanIngredientRepository banchanIngredientRepository) {
-		super();
-		this.banchanRepository = banchanRepository;
-		this.banchanIngredientRepository = banchanIngredientRepository;
-	}
 
 	/**
 	 * 반찬 및 반찬재료 등록

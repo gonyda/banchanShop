@@ -77,22 +77,50 @@ public class CartService {
 		findCart.updateTotalPiceAndTotalQuantity(getSubstrctedPirce(findCart, findCartItem), getSubstrctedQuantity(findCart, findCartItem));
 	}
 
+	/**
+	 * 장바구니에 삼풍 담을 시 반찬재고 수량 체크
+	 * @param banchan
+	 * @param itemQuantity
+	 * @return
+	 */
 	private boolean checkStockQuantity(BanchanEntity banchan, int itemQuantity) {
 		return banchan.getBanchanStockQuantity() < itemQuantity;
 	}
 
+	/**
+	 * 카트에 담긴 모든 반찬 총 갯수
+	 * @param findCart
+	 * @return
+	 */
 	private static int getSumQuantity(CartEntity findCart) {
 		return findCart.getCartItem().stream().mapToInt(e -> e.getBanchanQuantity()).sum();
 	}
 
+	/**
+	 * 카트에 담긴 모든 반찬 총합
+	 * @param findCart
+	 * @return
+	 */
 	private static int getSumPrice(CartEntity findCart) {
 		return findCart.getCartItem().stream().mapToInt(e -> e.getBanchanTotalPrice()).sum();
 	}
 
+	/**
+	 * 장바구니에 반찬 삭제 시, 삭제한 반찬 갯수 만큼 장바구니에 담긴 총 갯수 업데이트
+	 * @param findCart
+	 * @param findCartItem
+	 * @return
+	 */
 	private int getSubstrctedQuantity(CartEntity findCart, CartItemEntity findCartItem) {
 		return findCart.getCartTotalQuantity() - findCartItem.getBanchanQuantity();
 	}
 
+	/**
+	 * 장바구니에 반찬 삭제 시, 삭제한 반찬 총합 만큼 장바구니에 담긴 총합 업데이트
+	 * @param findCart
+	 * @param findCartItem
+	 * @return
+	 */
 	private int getSubstrctedPirce(CartEntity findCart, CartItemEntity findCartItem) {
 		return findCart.getCartTotalPrice() - findCartItem.getBanchanTotalPrice();
 	}
