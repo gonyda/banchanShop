@@ -194,7 +194,6 @@ public class CartServiceTests {
 		assertEquals(120000+25000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 120000 + 25000원
 	}
 
-	@Disabled
 	@Order(4)
 	@DisplayName("장바구니에 담겨있는 반찬 수량 변경")
 	@Test
@@ -202,10 +201,14 @@ public class CartServiceTests {
 		UserEntity userEntity = userService.findUserById("test");
 		BanchanEntity banchanEntity = banchanService.findBybanchanName("김치찌게");
 
-		//cartService.updateQuantity(userEntity, banchanEntity, 1);
+		cartService.addBanchanInCart(userEntity, banchanEntity, 1);
+
+		UserEntity afterUserEntity = userService.findUserById("test");
 
 		assertEquals(1, userEntity.getCart().getCartItem().get(0).getBanchanQuantity());
 		assertEquals(1*10000, userEntity.getCart().getCartItem().get(0).getBanchanTotalPrice());
+		assertEquals(1+5, afterUserEntity.getCart().getCartTotalQuantity());
+		assertEquals(10000+25000, afterUserEntity.getCart().getCartTotalPrice());
 	}
 	
 }
