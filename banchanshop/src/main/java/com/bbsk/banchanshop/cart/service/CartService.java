@@ -1,5 +1,6 @@
 package com.bbsk.banchanshop.cart.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,18 +14,13 @@ import com.bbsk.banchanshop.user.repository.UserRepository;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class CartService {
 
 	private final CartRepository cartRepository;
 	private final CartItemRepository cartItemRepository;
 	private final UserRepository userRepository;
 	
-	public CartService(final CartRepository cartRepository, final CartItemRepository cartItemRepository, final UserRepository userRepository) {
-		this.cartRepository = cartRepository;
-		this.cartItemRepository = cartItemRepository;
-		this.userRepository = userRepository;
-	}
-
 	/**
 	 * 장바구니에 반찬 넣기
 	 * @param user 장바구니 주인
@@ -42,31 +38,45 @@ public class CartService {
 		if (findCartItem == null) {
 			// 중복 반찬 없으면
 			// cartItem 저장
-			CartItemEntity saveCartItem = cartItemRepository.save(CartItemEntity.builder()
-												.cart(findCart)
-												.banchan(banchan)
-												.banchanQuantity(itemQuantity)
-												.banchanTotalPrice(itemQuantity * banchan.getBanchanPrice())
-												.build());
+			CartItemEntity saveCartItem = getSaveCartItem(banchan, itemQuantity, findCart);
 			// cart 저장
-			findCart.setCartItem(saveCartItem);
-			findCart.updateTotalPice(saveCartItem.getBanchanTotalPrice() + findCart.getCartTotalPrice());
-			findCart.updateTotalQuantity(saveCartItem.getBanchanQuantity() + findCart.getCartTotalQuantity());
-			
-			// user 저장
-			findUser.setCart(findCart);
+			saveCart(findCart, saveCartItem, true);
 		} else {
 			// 중복 반찬 있으면
 			// cartItem update
-			findCartItem.updateQuantity(itemQuantity + findCartItem.getBanchanQuantity());
-			findCartItem.updateTotalPrice((itemQuantity * banchan.getBanchanPrice()) + findCartItem.getBanchanTotalPrice());
-			
+			updateCartItem(banchan, itemQuantity, findCartItem);
+
 			// cart 저장
-			findCart.setCartItem(findCartItem);
-			findCart.updateTotalPice(findCartItem.getBanchanTotalPrice());
-			findCart.updateTotalQuantity(findCartItem.getBanchanQuantity());
-			// user 저장
-			findUser.setCart(findCart);
+			saveCart(findCart, findCartItem, false);
+		}
+
+		// user 저장
+		findUser.setCart(findCart);
+	}
+
+	private void updateCartItem(BanchanEntity banchan, int itemQuantity, CartItemEntity findCartItem) {
+		findCartItem.updateQuantity(itemQuantity + findCartItem.getBanchanQuantity());
+		findCartItem.updateTotalPrice((itemQuantity * banchan.getBanchanPrice()) + findCartItem.getBanchanTotalPrice());
+	}
+
+	private CartItemEntity getSaveCartItem(BanchanEntity banchan, int itemQuantity, CartEntity findCart) {
+		return cartItemRepository.save(CartItemEntity.builder()
+				.cart(findCart)
+				.banchan(banchan)
+				.banchanQuantity(itemQuantity)
+				.banchanTotalPrice(itemQuantity * banchan.getBanchanPrice())
+				.build());
+	}
+
+	private void saveCart(CartEntity cart, CartItemEntity cartItem, boolean isExist) {
+		if (isExist) {
+			cart.setCartItem(cartItem);
+			cart.updateTotalPice(cartItem.getBanchanTotalPrice() + cart.getCartTotalPrice());
+			cart.updateTotalQuantity(cartItem.getBanchanQuantity() + cart.getCartTotalQuantity());
+		} else {
+			cart.setCartItem(cartItem);
+			cart.updateTotalPice(cartItem.getBanchanTotalPrice());
+			cart.updateTotalQuantity(cartItem.getBanchanQuantity());
 		}
 	}
 }
