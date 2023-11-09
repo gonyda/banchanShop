@@ -9,8 +9,10 @@ import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.contant.UserType;
 import com.bbsk.banchanshop.order.dto.OrderOptionDto;
-import com.bbsk.banchanshop.order.entity.OrderOptionEntity;
+import com.bbsk.banchanshop.order.repository.OrderOptionRepository;
 import com.bbsk.banchanshop.order.service.OrderItemService;
+import com.bbsk.banchanshop.order.service.OrderOptionService;
+import com.bbsk.banchanshop.order.service.OrdersService;
 import com.bbsk.banchanshop.payment.dto.KakaoCard;
 import com.bbsk.banchanshop.payment.dto.RequestCardDto;
 import com.bbsk.banchanshop.payment.dto.ShinhanCard;
@@ -48,7 +50,14 @@ class PaymentServiceTests {
     @Autowired
     private BanchanService banchanService;
 
+    @Autowired
+    private OrdersService ordersService;
+
+    @Autowired
     private OrderItemService orderItemService;
+
+    @Autowired
+    private OrderOptionRepository orderOptionRepository;
 
     @DisplayName("회원가입 테스트")
     @Order(1)
@@ -264,5 +273,9 @@ class PaymentServiceTests {
         // 주문 옵션
         // 주문옵션은 없다. 주문종류가 일반주문이기 때문
         paymentService.startPayToOrder(userId, paymentType, shinhanCard, orderType1, null);
+
+        assertEquals(2, ordersService.findAllByUserId("test").size()); // startPayToOrder() - 결제 2번 실행
+        assertEquals(2, orderItemService.findAllOrderItemsByOrderId(1L).size()); // 주문 시 장바구니에는 2개 상품이 담겨있다
+        assertEquals(2, orderOptionRepository.findAll().size()); // 예약주문은 첫번째 주문에서만 진행, 2개 상품에 대해서 예약주문 진행
     }
 }
