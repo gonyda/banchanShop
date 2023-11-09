@@ -43,7 +43,7 @@ public class CartService {
 		// 1. cart_item 저장 / 수정
 		findCart.setCartItem((findCartItem == null) ?
 							newCartItem(banchan, itemQuantity, findCart) :
-							updateCartItem(banchan, itemQuantity, findCartItem, findCart));
+							findCartItem.updateCartItem(findCart, banchan, itemQuantity));
 		// 2. cart 총합 및 총갯수 수정
 		findCart.updateTotalPiceAndTotalQuantity(getSumPrice(findCart),
 												getSumQuantity(findCart));
@@ -73,18 +73,6 @@ public class CartService {
 	 */
 	public List<CartItemEntity> findAllByCartId(String cartId) {
 		return cartItemRepository.findAllByCartCartId(cartId);
-	}
-
-	/**
-	 * 기존 장바구니 아이템 update, 수량 및 총합 변경
-	 * @param banchan
-	 * @param itemQuantity
-	 * @param findCartItem
-	 * @param findCart
-	 * @return
-	 */
-	private static CartItemEntity updateCartItem(BanchanEntity banchan, int itemQuantity, CartItemEntity findCartItem, CartEntity findCart) {
-		return findCartItem.updateCartItem(findCart, banchan, itemQuantity);
 	}
 
 	/**
@@ -118,7 +106,7 @@ public class CartService {
 	 * @param findCart
 	 * @return
 	 */
-	private static int getSumQuantity(CartEntity findCart) {
+	private int getSumQuantity(CartEntity findCart) {
 		return findCart.getCartItem().stream().mapToInt(CartItemEntity::getBanchanQuantity).sum();
 	}
 
@@ -127,7 +115,7 @@ public class CartService {
 	 * @param findCart
 	 * @return
 	 */
-	private static int getSumPrice(CartEntity findCart) {
+	private int getSumPrice(CartEntity findCart) {
 		return findCart.getCartItem().stream().mapToInt(CartItemEntity::getBanchanTotalPrice).sum();
 	}
 
