@@ -1,5 +1,7 @@
 package com.bbsk.banchanshop.payment.dto;
 
+import com.bbsk.banchanshop.contant.CardCompany;
+
 public interface CardStrategy {
 
     /**
@@ -14,5 +16,5 @@ public interface CardStrategy {
 
     int getCardCvc();
 
-    String getCardCompany();
+    CardCompany getCardCompany();
 }

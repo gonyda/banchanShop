@@ -1,6 +1,7 @@
 package com.bbsk.banchanshop.order.service;
 
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
+import com.bbsk.banchanshop.contant.CardCompany;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
@@ -30,7 +31,7 @@ public class OrdersService {
      * @param cardCompany
      */
     @Transactional
-    public void createOrder(UserEntity user, OrderType orderType, PaymentType paymentType, String cardCompany) {
+    public void createOrder(UserEntity user, OrderType orderType, PaymentType paymentType, CardCompany cardCompany) {
         user.getCart().getCartItem().forEach(e -> {
             if (checkStockQuantity(e.getBanchan() ,e.getBanchanQuantity())) {
                 throw new IllegalArgumentException(e.getBanchan().getBanchanName() + "의 재고수량이 변경되었습니다. 수량을 다시 선택해주세요.");

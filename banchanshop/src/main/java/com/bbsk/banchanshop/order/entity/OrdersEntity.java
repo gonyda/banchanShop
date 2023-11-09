@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bbsk.banchanshop.contant.CardCompany;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import jakarta.persistence.*;
@@ -41,8 +42,9 @@ public class OrdersEntity {
 	@Column(nullable = false)
 	private PaymentType paymentType;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private String cardCompany;
+	private CardCompany cardCompany;
 
 	@Column(nullable = false)
 	private String address;

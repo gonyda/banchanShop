@@ -1,5 +1,6 @@
 package com.bbsk.banchanshop.payment.dto;
 
+import com.bbsk.banchanshop.contant.CardCompany;
 import lombok.*;
 
 @Getter
@@ -10,7 +11,7 @@ public class ShinhanCard extends CardProcess implements CardStrategy {
 
     private Long cardNumber;
     private int cardCvc;
-    private final String cardCompany = "신한은행";
+    private final CardCompany cardCompany = CardCompany.SHINHAN;
 
     private String userName;
 

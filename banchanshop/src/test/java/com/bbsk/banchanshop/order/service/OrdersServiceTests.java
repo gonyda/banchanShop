@@ -4,6 +4,7 @@ import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.banchan.entity.BanchanIngredientEntity;
 import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.cart.service.CartService;
+import com.bbsk.banchanshop.contant.CardCompany;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.contant.UserType;
@@ -212,7 +213,7 @@ public class OrdersServiceTests {
         UserEntity user = userService.findUserById("test");
 
         user.getCart().getCartItem().get(1).getBanchan().updateBanchanQuantity(2);
-        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, "신한은행");
+        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, CardCompany.SHINHAN);
     }
 
     @Order(5)
@@ -221,8 +222,8 @@ public class OrdersServiceTests {
     public void careteOrder() {
         UserEntity user = userService.findUserById("test");
 
-        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, "신한은행");
-        orderService.createOrder(user, OrderType.PREORDER, PaymentType.CARD, "카카오페이");
+        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, CardCompany.SHINHAN);
+        orderService.createOrder(user, OrderType.PREORDER, PaymentType.CARD, CardCompany.KAKAO);
 
         user = userService.findUserById("test");
 
