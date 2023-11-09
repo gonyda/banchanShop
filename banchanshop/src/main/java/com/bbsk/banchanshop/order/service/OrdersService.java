@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -76,8 +78,6 @@ public class OrdersService {
         return orderRepository.findTop1RecentOrderByUserUserIdOrderByOrderDateDesc(userId);
     }
 
-    //TODO 해당 유저의 모든 주문내역 조회
-
     /**
      * 주문 시 반찬재고, 주문수량 체크
      * @param banchan
@@ -86,5 +86,14 @@ public class OrdersService {
      */
     private boolean checkStockQuantity(BanchanEntity banchan, int itemQuantity) {
         return banchan.getBanchanStockQuantity() < itemQuantity;
+    }
+
+    /**
+     * 해당 유저의 주문 내역 전체 조회
+     * @param userId
+     * @return
+     */
+    public List<OrdersEntity> findAllByUserId(String userId) {
+        return orderRepository.findAllByUserUserId(userId);
     }
 }

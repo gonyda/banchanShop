@@ -7,6 +7,9 @@ import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.contant.UserType;
+import com.bbsk.banchanshop.order.entity.OrderItemEntity;
+import com.bbsk.banchanshop.order.entity.OrdersEntity;
+import com.bbsk.banchanshop.order.repository.OrdersRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +43,8 @@ public class OrdersServiceTests {
 
     @Autowired
     private BanchanService banchanService;
+    @Autowired
+    private OrderItemService orderItemService;
 
     @DisplayName("회원가입 테스트")
     @Order(1)
@@ -196,6 +201,9 @@ public class OrdersServiceTests {
         assertEquals(120000+25000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 120000 + 25000원
     }
 
+    /*
+    * 테스트 완료
+    * */
     @Disabled
     @Order(4)
     @DisplayName("주문 생성시 반찬 재고 테스트")
@@ -214,8 +222,33 @@ public class OrdersServiceTests {
         UserEntity user = userService.findUserById("test");
 
         orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, "신한은행");
+        orderService.createOrder(user, OrderType.PREORDER, PaymentType.CARD, "카카오페이");
+
         user = userService.findUserById("test");
 
         assertEquals(user.getCart().getCartTotalPrice(), orderService.findRecentOrderByUserId(user.getUserId()).getTotalPrice());
+    }
+
+    @Order(6)
+    @DisplayName("해당 유저의 주문 전체 조회 테스트")
+    @Test
+    public void findAll() {
+        UserEntity user = userService.findUserById("test");
+
+        List<OrdersEntity> orders = orderService.findAllByUserId(user.getUserId());
+
+        assertEquals(2, orders.size());
+    }
+
+    @Order(7)
+    @DisplayName("해당 유저의 주문에 해당하는 주문상세내역 전체 조회 테스트")
+    @Test
+    public void findAllOrderItems() {
+        UserEntity user = userService.findUserById("test");
+        OrdersEntity order = orderService.findRecentOrderByUserId(user.getUserId());
+
+        List<OrderItemEntity> orderItems = orderItemService.findAllOrderItemsByOrderId(order.getOrderId());
+
+        assertEquals(2, orderItems.size());
     }
 }

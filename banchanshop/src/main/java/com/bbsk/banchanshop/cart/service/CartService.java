@@ -13,6 +13,8 @@ import com.bbsk.banchanshop.cart.repository.CartRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.repository.UserRepository;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -123,5 +125,14 @@ public class CartService {
 	 */
 	private int getSubstrctedPirce(CartEntity findCart, CartItemEntity findCartItem) {
 		return findCart.getCartTotalPrice() - findCartItem.getBanchanTotalPrice();
+	}
+
+	/**
+	 * 해당 유저의 장바구니 전체조회
+	 * @param cartId
+	 * @return
+	 */
+	public List<CartItemEntity> findAllByCartId(String cartId) {
+		return cartItemRepository.findAllByCartCartId(cartId);
 	}
 }

@@ -7,16 +7,12 @@ import java.util.List;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.bbsk.banchanshop.user.entity.UserEntity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+@ToString
 @Getter
 @Builder
 @AllArgsConstructor
@@ -33,6 +29,7 @@ public class OrdersEntity {
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
 
+	@ToString.Exclude
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
 	private List<OrderItemEntity> orderItems = null;
 

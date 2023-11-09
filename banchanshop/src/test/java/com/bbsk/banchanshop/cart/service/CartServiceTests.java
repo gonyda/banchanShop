@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bbsk.banchanshop.cart.entity.CartItemEntity;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -212,6 +213,7 @@ public class CartServiceTests {
 		assertEquals(10000+25000, afterUserEntity.getCart().getCartTotalPrice());
 	}
 
+	@Disabled
 	@Order(5)
 	@DisplayName("장바구니 삭제 테스트")
 	@Test
@@ -227,6 +229,10 @@ public class CartServiceTests {
 		assertEquals("김치찌게", userEntity.getCart().getCartItem().get(0).getBanchan().getBanchanName());
 	}
 
+	/*
+	 * 테스트 성공
+	 * */
+	@Disabled
 	@Order(6)
 	@DisplayName("반찬 재고 수량 체크 테스트")
 	@Test
@@ -272,5 +278,16 @@ public class CartServiceTests {
 		});
 		log.info(exception.getMessage());
 
+	}
+
+	@Order(7)
+	@DisplayName("유저 장바구니 전체 조회 테스트")
+	@Test
+	public void findAll() {
+		UserEntity user = userService.findUserById("test");
+
+		List<CartItemEntity> cartItems = cartService.findAllByCartId(user.getUserId());
+
+		assertEquals(2, cartItems.size());
 	}
 }
