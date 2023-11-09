@@ -52,7 +52,7 @@ public class PaymentService {
      * @param orderOption
      */
     private void payToCard(String userId, PaymentType paymentType, CardStrategy payCard, OrderType orderType, List<OrderOptionDto> orderOption) {
-        if (payCard.startPayToOrder(payCard)) {
+        if (payCard.startPayProcess(payCard)) {
             /*
              * 결제 성공 후 주문생성
              * */

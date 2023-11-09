@@ -67,7 +67,7 @@ public class KakaoCard extends CardProcess implements CardStrategy {
      * @return
      */
     @Override
-    public boolean startPayToOrder(CardStrategy card) {
+    public boolean startPayProcess(CardStrategy card) {
         if(this.processPay(card)) {
             System.out.println("카카오페이 - 결제가 완료되었습니다.");
             return true;

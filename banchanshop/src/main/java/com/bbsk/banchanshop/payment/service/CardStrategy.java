@@ -13,7 +13,7 @@ public interface CardStrategy {
      * @param card
      * @return
      */
-    boolean startPayToOrder(CardStrategy card);
+    boolean startPayProcess(CardStrategy card);
 
     Long getCardNumber();
 

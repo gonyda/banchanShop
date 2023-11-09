@@ -59,7 +59,7 @@ public class OrdersService {
         /*
         * Order_Item 테이블 저장
         * */
-        user.getCart().getCartItem().stream().forEach(e -> {
+        user.getCart().getCartItem().forEach(e -> {
             orderItemRepository.save(
                     OrderItemEntity.builder()
                             .order(saveOrder)
@@ -75,7 +75,7 @@ public class OrdersService {
         * */
         if (orderType == OrderType.PREORDER) {
             // 예약주문
-            orderOption.stream().forEach(e -> {
+            orderOption.forEach(e -> {
                 orderOptionRepository.save(
                         OrderOptionEntity.builder()
                                 .orderItem(orderItemRepository.findById(e.getOrderItemId()).orElse(null))

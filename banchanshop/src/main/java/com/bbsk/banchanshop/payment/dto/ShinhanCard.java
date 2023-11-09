@@ -57,7 +57,7 @@ public class ShinhanCard extends CardProcess implements CardStrategy {
      * @return
      */
     @Override
-    public boolean startPayToOrder(CardStrategy card) {
+    public boolean startPayProcess(CardStrategy card) {
 
         if(this.processPay(card)) {
             System.out.println("신한카드 - 결제가 완료되었습니다.");
