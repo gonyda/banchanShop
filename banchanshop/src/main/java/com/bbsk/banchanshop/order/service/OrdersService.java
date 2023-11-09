@@ -75,7 +75,6 @@ public class OrdersService {
         * */
         if (orderType == OrderType.PREORDER) {
             // 예약주문
-            // TODO 예약주문시 order_option 테이블 저장
             orderOption.stream().forEach(e -> {
                 orderOptionRepository.save(
                         OrderOptionEntity.builder()

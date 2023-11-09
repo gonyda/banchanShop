@@ -4,9 +4,13 @@ import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.banchan.entity.BanchanIngredientEntity;
 import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.cart.service.CartService;
+import com.bbsk.banchanshop.contant.OrderOption;
 import com.bbsk.banchanshop.contant.OrderType;
+import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.contant.UserType;
-import com.bbsk.banchanshop.order.service.OrdersService;
+import com.bbsk.banchanshop.order.dto.OrderOptionDto;
+import com.bbsk.banchanshop.order.entity.OrderOptionEntity;
+import com.bbsk.banchanshop.order.service.OrderItemService;
 import com.bbsk.banchanshop.payment.dto.KakaoCard;
 import com.bbsk.banchanshop.payment.dto.RequestCardDto;
 import com.bbsk.banchanshop.payment.dto.ShinhanCard;
@@ -43,6 +47,8 @@ class PaymentServiceTests {
 
     @Autowired
     private BanchanService banchanService;
+
+    private OrderItemService orderItemService;
 
     @DisplayName("회원가입 테스트")
     @Order(1)
@@ -203,30 +209,60 @@ class PaymentServiceTests {
     @DisplayName("결제-주문 테스트")
     @Test
     public void payment() {
-      log.info(" ==== 결제 테스트 ==== ");
+        log.info(" ==== 결제 테스트 ==== ");
         // ================== 컨트롤러에서 받은 Dto
         RequestCardDto dto = new RequestCardDto();
         dto.setCardNumber(11111L);
         dto.setCardCvc(111);
         // ==================
+        // 결제 진행하는 유저
+        String userId = "test";
+        // 결제 종류
+        PaymentType paymentType = PaymentType.CARD;
+        // 카드 정보
+        KakaoCard kakaoCard = KakaoCard.builder()
+                .cardNumber(dto.getCardNumber())
+                .cardCvc(dto.getCardCvc())
+                .build();
+        // 주문 종류
+        OrderType orderType = OrderType.PREORDER;
+        // 주문 옵션
+        List<OrderOptionDto> orderOptions = new ArrayList<>();
+        OrderOptionDto first = OrderOptionDto.builder()
+                .orderItemId(1L)
+                .optionAmount(OrderOption.SMALL)
+                .optionSpicy(OrderOption.SPICY)
+                .optionPickUp(LocalDateTime.now())
+                .build();
+        OrderOptionDto second = OrderOptionDto.builder()
+                .orderItemId(2L)
+                .optionAmount(OrderOption.LAGE)
+                .optionSpicy(OrderOption.MILD)
+                .optionPickUp(LocalDateTime.now())
+                .build();
+        orderOptions.add(first);
+        orderOptions.add(second);
+        paymentService.startPayToOrder(userId, paymentType, kakaoCard, orderType, orderOptions);
 
         // ================== 컨트롤러에서 받은 Dto
         RequestCardDto dto1 = new RequestCardDto();
-        dto1.setCardNumber(123456789011L);
-        dto1.setCardCvc(123);
-        dto1.setUserName("백승권");
+        dto1.setCardNumber(11111L);
+        dto1.setCardCvc(111);
         // ==================
-
-        // 카카오페이
-        paymentService.startPayToOrder(KakaoCard.builder()
-                                            .cardNumber(dto.getCardNumber())
-                                            .cardCvc(dto.getCardCvc())
-                                            .build(), "test", OrderType.ORDER);
-        // 신한카드
-        paymentService.startPayToOrder(ShinhanCard.builder()
-                                              .cardNumber(dto1.getCardNumber())
-                                              .cardCvc(dto1.getCardCvc())
-                                              .userName(dto1.getUserName())
-                                              .build(), "test", OrderType.PREORDER);
+        // 결제 진행하는 유저
+        userId = "test";
+        // 결제 종류
+        PaymentType paymentType1 = PaymentType.CARD;
+        // 카드 정보
+        ShinhanCard shinhanCard = ShinhanCard.builder()
+                .cardNumber(dto1.getCardNumber())
+                .cardCvc(dto1.getCardCvc())
+                .userName("백승권")
+                .build();
+        // 주문 종류
+        OrderType orderType1 = OrderType.ORDER;
+        // 주문 옵션
+        // 주문옵션은 없다. 주문종류가 일반주문이기 때문
+        paymentService.startPayToOrder(userId, paymentType, shinhanCard, orderType1, null);
     }
 }
