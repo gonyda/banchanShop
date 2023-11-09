@@ -40,14 +40,13 @@ public class CartService {
 			throw new IllegalArgumentException("재고수량보다 더 많은 수량을 선택할 수 없습니다.");
 		}
 
-		// 장바구니 아이템 저장
-		// 장바구니 아이템에 중복 반찬이 있는지 체크
-		findCartItem = findCartItem == null ? newCartItem(banchan, itemQuantity, findCart) :
-											updateCartItem(banchan, itemQuantity, findCartItem, findCart);
-
-		// cart 저장
-		findCart.setCartItem(findCartItem);
-		findCart.updateTotalPiceAndTotalQuantity(getSumPrice(findCart), getSumQuantity(findCart));
+		// 1. cart_item 저장 / 수정
+		findCart.setCartItem((findCartItem == null) ?
+							newCartItem(banchan, itemQuantity, findCart) :
+							updateCartItem(banchan, itemQuantity, findCartItem, findCart));
+		// 2. cart 총합 및 총갯수 수정
+		findCart.updateTotalPiceAndTotalQuantity(getSumPrice(findCart),
+												getSumQuantity(findCart));
 	}
 
 	/**
@@ -62,7 +61,9 @@ public class CartService {
 		CartItemEntity findCartItem = cartItemRepository.findById(cartItemId).orElse(null);
 
 		cartItemRepository.deleteById(cartItemId);
-		findCart.updateTotalPiceAndTotalQuantity(getSubstrctedPirce(findCart, findCartItem), getSubstrctedQuantity(findCart, findCartItem));
+		// cart 총합 및 총갯수 수정
+		findCart.updateTotalPiceAndTotalQuantity(getSubstrctedPirce(findCart, findCartItem),
+												getSubstrctedQuantity(findCart, findCartItem));
 	}
 
 	/**
@@ -118,7 +119,7 @@ public class CartService {
 	 * @return
 	 */
 	private static int getSumQuantity(CartEntity findCart) {
-		return findCart.getCartItem().stream().mapToInt(e -> e.getBanchanQuantity()).sum();
+		return findCart.getCartItem().stream().mapToInt(CartItemEntity::getBanchanQuantity).sum();
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class CartService {
 	 * @return
 	 */
 	private static int getSumPrice(CartEntity findCart) {
-		return findCart.getCartItem().stream().mapToInt(e -> e.getBanchanTotalPrice()).sum();
+		return findCart.getCartItem().stream().mapToInt(CartItemEntity::getBanchanTotalPrice).sum();
 	}
 
 	/**
