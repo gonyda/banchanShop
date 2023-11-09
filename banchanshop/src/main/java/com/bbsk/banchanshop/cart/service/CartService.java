@@ -42,17 +42,8 @@ public class CartService {
 
 		// 장바구니 아이템 저장
 		// 장바구니 아이템에 중복 반찬이 있는지 체크
-		CartItemEntity saveCartItem = null;
-		if (findCartItem == null) {
-			findCartItem = cartItemRepository.save(CartItemEntity.builder()
-					.banchan(banchan)
-					.cart(findCart)
-					.banchanQuantity(itemQuantity)
-					.banchanTotalPrice(itemQuantity * banchan.getBanchanPrice())
-					.build());
-		} else {
-			findCartItem = findCartItem.updateCartItem(findCart, banchan, itemQuantity);
-		}
+		findCartItem = findCartItem == null ? newCartItem(banchan, itemQuantity, findCart) :
+											updateCartItem(banchan, itemQuantity, findCartItem, findCart);
 
 		// cart 저장
 		findCart.setCartItem(findCartItem);
@@ -72,6 +63,43 @@ public class CartService {
 
 		cartItemRepository.deleteById(cartItemId);
 		findCart.updateTotalPiceAndTotalQuantity(getSubstrctedPirce(findCart, findCartItem), getSubstrctedQuantity(findCart, findCartItem));
+	}
+
+	/**
+	 * 해당 유저의 장바구니 전체조회
+	 * @param cartId
+	 * @return
+	 */
+	public List<CartItemEntity> findAllByCartId(String cartId) {
+		return cartItemRepository.findAllByCartCartId(cartId);
+	}
+
+	/**
+	 * 기존 장바구니 아이템 update, 수량 및 총합 변경
+	 * @param banchan
+	 * @param itemQuantity
+	 * @param findCartItem
+	 * @param findCart
+	 * @return
+	 */
+	private static CartItemEntity updateCartItem(BanchanEntity banchan, int itemQuantity, CartItemEntity findCartItem, CartEntity findCart) {
+		return findCartItem.updateCartItem(findCart, banchan, itemQuantity);
+	}
+
+	/**
+	 * 장바구니 아이템 신규 저장
+	 * @param banchan
+	 * @param itemQuantity
+	 * @param findCart
+	 * @return
+	 */
+	private CartItemEntity newCartItem(BanchanEntity banchan, int itemQuantity, CartEntity findCart) {
+		return cartItemRepository.save(CartItemEntity.builder()
+				.banchan(banchan)
+				.cart(findCart)
+				.banchanQuantity(itemQuantity)
+				.banchanTotalPrice(itemQuantity * banchan.getBanchanPrice())
+				.build());
 	}
 
 	/**
@@ -120,14 +148,5 @@ public class CartService {
 	 */
 	private int getSubstrctedPirce(CartEntity findCart, CartItemEntity findCartItem) {
 		return findCart.getCartTotalPrice() - findCartItem.getBanchanTotalPrice();
-	}
-
-	/**
-	 * 해당 유저의 장바구니 전체조회
-	 * @param cartId
-	 * @return
-	 */
-	public List<CartItemEntity> findAllByCartId(String cartId) {
-		return cartItemRepository.findAllByCartCartId(cartId);
 	}
 }

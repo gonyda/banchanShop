@@ -7,11 +7,13 @@ import com.bbsk.banchanshop.order.service.OrdersService;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class PaymentService {
 
     private final OrdersService ordersService;
@@ -23,6 +25,7 @@ public class PaymentService {
      * @param userId
      * @param orderType
      */
+    @Transactional
     public void startPayToOrder(String userId, PaymentType paymentType, CardStrategy payCard, OrderType orderType, List<OrderOptionDto> orderOption) {
 
         switch (paymentType) {
