@@ -33,9 +33,8 @@ public class CartService {
 	 */
 	@Transactional
 	public void addBanchanInCart(UserEntity user, BanchanEntity banchan, int itemQuantity) {
-		UserEntity findUser = userRepository.findById(user.getUserId()).orElse(null);
-		CartEntity findCart = cartRepository.findById(findUser.getCart().getCartId()).orElse(null);
-		CartItemEntity findCartItem = cartItemRepository.findByCartCartIdAndBanchanBanchanId(findUser.getCart().getCartId(), banchan.getBanchanId());
+		CartEntity findCart = cartRepository.findById(user.getCart().getCartId()).orElse(null);
+		CartItemEntity findCartItem = cartItemRepository.findByCartCartIdAndBanchanBanchanId(user.getCart().getCartId(), banchan.getBanchanId());
 
 		if (checkStockQuantity(banchan, itemQuantity)) {
 			throw new IllegalArgumentException("재고수량보다 더 많은 수량을 선택할 수 없습니다.");
@@ -58,9 +57,6 @@ public class CartService {
 		// cart 저장
 		findCart.setCartItem(findCartItem);
 		findCart.updateTotalPiceAndTotalQuantity(getSumPrice(findCart), getSumQuantity(findCart));
-
-		// user 저장
-		findUser.setCart(findCart);
 	}
 
 	/**
@@ -71,7 +67,6 @@ public class CartService {
 	 */
 	@Transactional
 	public void deleteCartItem(UserEntity userEntity, Long cartItemId) {
-		UserEntity findUser = userRepository.findById(userEntity.getUserId()).orElse(null);
 		CartEntity findCart = cartRepository.findById(userEntity.getCart().getCartId()).orElse(null);
 		CartItemEntity findCartItem = cartItemRepository.findById(cartItemId).orElse(null);
 
