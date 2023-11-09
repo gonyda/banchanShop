@@ -111,15 +111,12 @@ public class OrdersService {
     }
 
     /**
-     * 주문 시 반찬재고, 주문수량 체크
+     * 주문 시 반찬재고 체크
      * @param banchan
      * @param itemQuantity
      * @return
      */
     private boolean checkStockQuantity(BanchanEntity banchan, int itemQuantity) {
-        if (banchan == null) {
-            return false;
-        }
         return banchan.getBanchanStockQuantity() < itemQuantity;
     }
 }

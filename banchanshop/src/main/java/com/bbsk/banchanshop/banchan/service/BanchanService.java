@@ -2,6 +2,7 @@ package com.bbsk.banchanshop.banchan.service;
 
 import java.util.List;
 
+import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ public class BanchanService {
 	
 	private final BanchanRepository banchanRepository;
 	private final BanchanIngredientRepository banchanIngredientRepository;
+	private final CartItemRepository cartItemRepository;
 
 	/**
 	 * 반찬 및 반찬재료 등록
@@ -67,14 +69,4 @@ public class BanchanService {
 	public BanchanEntity updateQuantity(Long banchanId, int newQuantity) {
 		return banchanRepository.findById(banchanId).orElse(null).updateBanchanQuantity(newQuantity);
 	}
-
-	/**
-	 * 반찬 삭제 및 반찬 재료 삭제
-	 * @param banchanId
-	 */
-	@Transactional
-    public void deleteBanchan(Long banchanId) {
-		banchanIngredientRepository.deleteByBanchanBanchanId(banchanId);
-		banchanRepository.deleteById(banchanId);
-    }
 }

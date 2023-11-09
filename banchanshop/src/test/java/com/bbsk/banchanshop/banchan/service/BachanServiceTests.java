@@ -110,13 +110,4 @@ public class BachanServiceTests {
 		assertEquals("김치찌게", updateEntity.getBanchanName());
 		assertEquals(5, updateEntity.getBanchanStockQuantity());
 	}
-
-	@DisplayName("반찬 삭제")
-	@Order(5)
-	@Test
-	public void deleteBanchan() {
-		banchanService.deleteBanchan(2L);
-
-		assertEquals(null, banchanService.findBanchanById(2L));
-	}
 }

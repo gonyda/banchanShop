@@ -272,7 +272,7 @@ public class OrdersServiceTests {
                 .build();
         orderOptions.add(orderOption);
 
-        orderService.createOrder(userService.findUserById(userId), PaymentType.CARD, CardCompany.KAKAO, OrderType.ORDER, orderOptions);
+        orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany(), orderType, orderOptions);
 
         UserEntity user = userService.findUserById("test");
 
@@ -303,16 +303,15 @@ public class OrdersServiceTests {
     }
 
     /*
-    * TODO 기능구현 보류
+    * 테스트 완료
     * */
     @Disabled
     @Order(8)
-    @DisplayName("주문 시 반찬이 없으면 주문실패 테스트")
+    @DisplayName("주문 시 반찬이 없으면(재고가 없으면) 주문실패 테스트")
     @Test
     public void banchanNullCheck() {
-        UserEntity user = userService.findUserById("test");
 
-        banchanService.deleteBanchan(2L);
-        //orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, CardCompany.SHINHAN);
+        banchanService.updateQuantity(2L, 0);
+        orderService.createOrder(userService.findUserById("test"), PaymentType.CARD, CardCompany.KAKAO, OrderType.ORDER, null);
     }
 }

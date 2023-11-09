@@ -1,5 +1,6 @@
 package com.bbsk.banchanshop.cart.service;
 
+import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.cart.entity.CartEntity;
 import com.bbsk.banchanshop.cart.entity.CartItemEntity;
-import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import com.bbsk.banchanshop.cart.repository.CartRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.repository.UserRepository;
@@ -23,8 +23,7 @@ public class CartService {
 
 	private final CartRepository cartRepository;
 	private final CartItemRepository cartItemRepository;
-	private final UserRepository userRepository;
-	
+
 	/**
 	 * 장바구니에 반찬 담기 및 수량 수정
 	 * @param user 장바구니 주인
