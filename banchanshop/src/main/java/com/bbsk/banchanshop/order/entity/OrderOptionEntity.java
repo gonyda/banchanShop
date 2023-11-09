@@ -2,16 +2,10 @@ package com.bbsk.banchanshop.order.entity;
 
 import java.time.LocalDateTime;
 
+import com.bbsk.banchanshop.contant.OrderOption;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,17 +24,18 @@ public class OrderOptionEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderOptionId;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "order_item_id")
 	private OrderItemEntity orderItem;
+
+	@Enumerated(EnumType.STRING)
+	@Column
+	private OrderOption optionAmount;
+
+	@Enumerated(EnumType.STRING)
+	@Column
+	private OrderOption optionSpicy;
 	
-	@Column(nullable = false)
-	private String optionAmount;
-	
-	@Column(nullable = false)
-	private String aoptionSpicy;
-	
-	@CreatedDate
 	@Column(nullable = false)
 	private LocalDateTime optionPickUp;
 

@@ -4,13 +4,13 @@ import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.banchan.entity.BanchanIngredientEntity;
 import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.cart.service.CartService;
-import com.bbsk.banchanshop.contant.CardCompany;
-import com.bbsk.banchanshop.contant.OrderType;
-import com.bbsk.banchanshop.contant.PaymentType;
-import com.bbsk.banchanshop.contant.UserType;
+import com.bbsk.banchanshop.contant.*;
+import com.bbsk.banchanshop.order.dto.OrderOptionDto;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.repository.OrdersRepository;
+import com.bbsk.banchanshop.payment.dto.KakaoCard;
+import com.bbsk.banchanshop.payment.dto.RequestCardDto;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -211,21 +211,70 @@ public class OrdersServiceTests {
     @Test
     public void checkStockQuantity() {
         UserEntity user = userService.findUserById("test");
-
+        // 재고 변경
         user.getCart().getCartItem().get(1).getBanchan().updateBanchanQuantity(2);
-        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, CardCompany.SHINHAN);
+
+        // ================== 컨트롤러에서 받은 Dto
+        RequestCardDto dto = new RequestCardDto();
+        dto.setCardNumber(11111L);
+        dto.setCardCvc(111);
+        // ==================
+        // 결제 진행하는 유저
+        String userId = "test";
+        // 결제 종류
+        PaymentType paymentType = PaymentType.CARD;
+        // 카드 정보
+        KakaoCard kakaoCard = KakaoCard.builder()
+                .cardNumber(dto.getCardNumber())
+                .cardCvc(dto.getCardCvc())
+                .build();
+        // 주문 종류
+        OrderType orderType = OrderType.PREORDER;
+        // 주문 옵션
+        List<OrderOptionDto> orderOptions = new ArrayList<>();
+        OrderOptionDto orderOption = OrderOptionDto.builder()
+                .orderItemId(2L)
+                .optionAmount(OrderOption.SMALL)
+                .optionSpicy(OrderOption.SPICY)
+                .optionPickUp(LocalDateTime.now())
+                .build();
+        orderOptions.add(orderOption);
+        orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany(), orderType, orderOptions);
     }
 
     @Order(5)
     @DisplayName("주문 생성 테스트")
     @Test
     public void careteOrder() {
+        // ================== 컨트롤러에서 받은 Dto
+        RequestCardDto dto = new RequestCardDto();
+        dto.setCardNumber(11111L);
+        dto.setCardCvc(111);
+        // ==================
+        // 결제 진행하는 유저
+        String userId = "test";
+        // 결제 종류
+        PaymentType paymentType = PaymentType.CARD;
+        // 카드 정보
+        KakaoCard kakaoCard = KakaoCard.builder()
+                .cardNumber(dto.getCardNumber())
+                .cardCvc(dto.getCardCvc())
+                .build();
+        // 주문 종류
+        OrderType orderType = OrderType.PREORDER;
+        // 주문 옵션
+        List<OrderOptionDto> orderOptions = new ArrayList<>();
+        OrderOptionDto orderOption = OrderOptionDto.builder()
+                .orderItemId(2L)
+                .optionAmount(OrderOption.SMALL)
+                .optionSpicy(OrderOption.SPICY)
+                .optionPickUp(LocalDateTime.now())
+                .build();
+        orderOptions.add(orderOption);
+
+        orderService.createOrder(userService.findUserById(userId), PaymentType.CARD, CardCompany.KAKAO, OrderType.ORDER, orderOptions);
+
         UserEntity user = userService.findUserById("test");
-
-        orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, CardCompany.SHINHAN);
-        orderService.createOrder(user, OrderType.PREORDER, PaymentType.CARD, CardCompany.KAKAO);
-
-        user = userService.findUserById("test");
 
         assertEquals(user.getCart().getCartTotalPrice(), orderService.findRecentOrderByUserId(user.getUserId()).getTotalPrice());
     }
@@ -238,7 +287,7 @@ public class OrdersServiceTests {
 
         List<OrdersEntity> orders = orderService.findAllByUserId(user.getUserId());
 
-        assertEquals(2, orders.size());
+        assertEquals(1, orders.size());
     }
 
     @Order(7)
@@ -251,5 +300,19 @@ public class OrdersServiceTests {
         List<OrderItemEntity> orderItems = orderItemService.findAllOrderItemsByOrderId(order.getOrderId());
 
         assertEquals(2, orderItems.size());
+    }
+
+    /*
+    * TODO 기능구현 보류
+    * */
+    @Disabled
+    @Order(8)
+    @DisplayName("주문 시 반찬이 없으면 주문실패 테스트")
+    @Test
+    public void banchanNullCheck() {
+        UserEntity user = userService.findUserById("test");
+
+        banchanService.deleteBanchan(2L);
+        //orderService.createOrder(user, OrderType.ORDER, PaymentType.CARD, CardCompany.SHINHAN);
     }
 }

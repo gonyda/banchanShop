@@ -43,7 +43,7 @@ public class OrdersEntity {
 	private PaymentType paymentType;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
+	@Column
 	private CardCompany cardCompany;
 
 	@Column(nullable = false)
