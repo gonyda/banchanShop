@@ -1,6 +1,8 @@
 package com.bbsk.banchanshop.payment.dto;
 
 import com.bbsk.banchanshop.contant.CardCompany;
+import com.bbsk.banchanshop.payment.service.CardProcess;
+import com.bbsk.banchanshop.payment.service.CardStrategy;
 import lombok.*;
 
 @Getter

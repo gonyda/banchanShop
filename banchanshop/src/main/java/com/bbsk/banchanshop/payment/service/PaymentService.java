@@ -4,7 +4,6 @@ import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.order.dto.OrderOptionDto;
 import com.bbsk.banchanshop.order.service.OrdersService;
-import com.bbsk.banchanshop.payment.dto.CardStrategy;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,6 +40,14 @@ public class PaymentService {
         }
     }
 
+    /**
+     * 결제 - 카드
+     * @param userId
+     * @param paymentType
+     * @param payCard
+     * @param orderType
+     * @param orderOption
+     */
     private void payToCard(String userId, PaymentType paymentType, CardStrategy payCard, OrderType orderType, List<OrderOptionDto> orderOption) {
         if (payCard.startPayToOrder(payCard)) {
             /*
@@ -53,8 +60,10 @@ public class PaymentService {
     }
 
     private void payToAccountTransfer() {
+        //TODO 무통장입금 결제방법 추가
     }
 
     private void payToBankTransfer() {
+        //TODO 계좌이체 결제방법 추가
     }
 }

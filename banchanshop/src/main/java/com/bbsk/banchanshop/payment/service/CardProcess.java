@@ -1,5 +1,8 @@
-package com.bbsk.banchanshop.payment.dto;
+package com.bbsk.banchanshop.payment.service;
 
+/**
+ * 카드결제 알고리즘 구조
+ */
 public abstract class CardProcess {
 
     /**
