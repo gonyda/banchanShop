@@ -213,10 +213,6 @@ public class CartServiceTests {
 		assertEquals(10000+25000, afterUserEntity.getCart().getCartTotalPrice());
 	}
 
-	/**
-	 * 테스트 완료
-	 */
-	@Disabled
 	@Order(5)
 	@DisplayName("장바구니 삭제 테스트")
 	@Test
@@ -291,6 +287,6 @@ public class CartServiceTests {
 
 		List<CartItemEntity> cartItems = cartService.findAllByCartId(user.getUserId());
 
-		assertEquals(2, cartItems.size());
+		assertEquals(1, cartItems.size());
 	}
 }

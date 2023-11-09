@@ -76,7 +76,6 @@ public class BachanServiceTests {
 
 	}
 
-	@Disabled
 	@DisplayName("반찬 조회 By 반찬이름")
 	@Order(2)
 	@Test
