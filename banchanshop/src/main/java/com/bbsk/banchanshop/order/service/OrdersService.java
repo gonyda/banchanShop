@@ -36,57 +36,24 @@ public class OrdersService {
      */
     @Transactional
     public void createOrder(UserEntity user, PaymentType paymentType, CardCompany cardCompany, OrderType orderType, List<OrderOptionDto> orderOption) {
-        user.getCart().getCartItem().forEach(e -> {
-            if (checkStockQuantity(e.getBanchan() ,e.getBanchanQuantity())) {
-                throw new IllegalArgumentException(e.getBanchan().getBanchanName() + "의 재고수량이 변경되었습니다. 수량을 다시 선택해주세요.");
-            }
-        });
-
         /*
-        * Orders 테이블 저장
+        * 주문 시 반찬재고 체크
         * */
-        OrdersEntity saveOrder = orderRepository.save(
-                OrdersEntity.builder()
-                        .user(user)
-                        .orderType(orderType)
-                        .paymentType(paymentType)
-                        .address(user.getAddress())
-                        .totalPrice(user.getCart().getCartTotalPrice())
-                        .cardCompany(cardCompany)
-                        .build()
-        );
+        checkStockQuantity(user);
 
         /*
-        * Order_Item 테이블 저장
+        * 1. Orders 테이블 저장
+        * 2. Order_Item 테이블 저장
         * */
-        user.getCart().getCartItem().forEach(e -> {
-            orderItemRepository.save(
-                    OrderItemEntity.builder()
-                            .order(saveOrder)
-                            .banchan(e.getBanchan())
-                            .quantity(e.getBanchanQuantity())
-                            .totalPrice(e.getBanchanTotalPrice())
-                            .build()
-            );
-        });
+        saveOrderItem(user, saveOrder(user, paymentType, cardCompany, orderType));
 
         /*
+        * 예약주문
         * order_option 테이블 저장
         * */
-        if (orderType == OrderType.PREORDER) {
-            // 예약주문
-            orderOption.forEach(e -> {
-                orderOptionRepository.save(
-                        OrderOptionEntity.builder()
-                                .orderItem(orderItemRepository.findById(e.getOrderItemId()).orElse(null))
-                                .optionAmount(e.getOptionAmount())
-                                .optionSpicy(e.getOptionSpicy())
-                                .optionPickUp(e.getOptionPickUp())
-                                .build()
-                );
-            });
+        if (OrderType.PREORDER == orderType) {
+            saveOrderOption(orderOption);
         }
-
 
         //TODO 주문성공 시 반찬재고 차감
 
@@ -111,12 +78,70 @@ public class OrdersService {
     }
 
     /**
-     * 주문 시 반찬재고 체크
-     * @param banchan
-     * @param itemQuantity
+     * orders 테이블 INSERT
+     * @param user
+     * @param paymentType
+     * @param cardCompany
+     * @param orderType
      * @return
      */
-    private boolean checkStockQuantity(BanchanEntity banchan, int itemQuantity) {
-        return banchan.getBanchanStockQuantity() < itemQuantity;
+    private OrdersEntity saveOrder(UserEntity user, PaymentType paymentType, CardCompany cardCompany, OrderType orderType) {
+        return orderRepository.save(
+                OrdersEntity.builder()
+                        .user(user)
+                        .orderType(orderType)
+                        .paymentType(paymentType)
+                        .address(user.getAddress())
+                        .totalPrice(user.getCart().getCartTotalPrice())
+                        .cardCompany(cardCompany)
+                        .build()
+        );
+    }
+
+    /**
+     * order_item 테이블 INSERT
+     * @param user
+     * @param saveOrder
+     */
+    private void saveOrderItem(UserEntity user, OrdersEntity saveOrder) {
+        user.getCart().getCartItem().forEach(e -> {
+            orderItemRepository.save(
+                    OrderItemEntity.builder()
+                            .order(saveOrder)
+                            .banchan(e.getBanchan())
+                            .quantity(e.getBanchanQuantity())
+                            .totalPrice(e.getBanchanTotalPrice())
+                            .build()
+            );
+        });
+    }
+
+    /**
+     * order_option 테이블 INSERT
+     * @param orderOption
+     */
+    private void saveOrderOption(List<OrderOptionDto> orderOption) {
+        orderOption.forEach(e -> {
+            orderOptionRepository.save(
+                    OrderOptionEntity.builder()
+                            .orderItem(orderItemRepository.findById(e.getOrderItemId()).orElse(null))
+                            .optionAmount(e.getOptionAmount())
+                            .optionSpicy(e.getOptionSpicy())
+                            .optionPickUp(e.getOptionPickUp())
+                            .build()
+            );
+        });
+    }
+
+    /**
+     * 주문시점에서 반찬재고 체크
+     * @param user
+     */
+    private void checkStockQuantity(UserEntity user) {
+        user.getCart().getCartItem().forEach(e -> {
+            if (e.getBanchan().getBanchanStockQuantity() < e.getBanchanQuantity()) {
+                throw new IllegalArgumentException(e.getBanchan().getBanchanName() + "의 재고수량이 변경되었습니다. 수량을 다시 선택해주세요.");
+            }
+        });
     }
 }
