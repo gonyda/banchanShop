@@ -11,7 +11,6 @@ import com.bbsk.banchanshop.cart.entity.CartEntity;
 import com.bbsk.banchanshop.cart.entity.CartItemEntity;
 import com.bbsk.banchanshop.cart.repository.CartRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
-import com.bbsk.banchanshop.user.repository.UserRepository;
 
 import java.util.List;
 
@@ -32,20 +31,21 @@ public class CartService {
 	 */
 	@Transactional
 	public void addBanchanInCart(UserEntity user, BanchanEntity banchan, int itemQuantity) {
-		CartEntity findCart = cartRepository.findById(user.getCart().getCartId()).orElse(null);
-		CartItemEntity findCartItem = cartItemRepository.findByCartCartIdAndBanchanBanchanId(user.getCart().getCartId(), banchan.getBanchanId());
+		CartEntity cart = user.getCart();
+		cart.updateCartItem(cartItemRepository.findAllByCartCartId(cart.getCartId()));
+		CartItemEntity existingCartItem = existingCartItem(user, banchan); // 장바구니에 존재하는 반찬인지
 
 		if (checkStockQuantity(banchan, itemQuantity)) {
 			throw new IllegalArgumentException("재고수량보다 더 많은 수량을 선택할 수 없습니다.");
 		}
 
 		// 1. cart_item 저장 / 수정
-		findCart.setCartItem((findCartItem == null) ?
-							newCartItem(banchan, itemQuantity, findCart) :
-							findCartItem.updateCartItem(findCart, banchan, itemQuantity));
+		cart.newCartOrUpdateCart((existingCartItem == null) ? newCartItem(banchan, itemQuantity, cart) :
+				 											  existingCartItem.updateCartItem(cart, banchan, itemQuantity));
+
 		// 2. cart 총합 및 총갯수 수정
-		findCart.updateTotalPiceAndTotalQuantity(getSumPrice(findCart),
-												getSumQuantity(findCart));
+		cart.updateTotalPiceAndTotalQuantity(getSumPrice(cart),
+												getSumQuantity(cart));
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class CartService {
 	 */
 	@Transactional
 	public void deleteCartItem(UserEntity userEntity, Long cartItemId) {
-		CartEntity findCart = cartRepository.findById(userEntity.getCart().getCartId()).orElse(null);
+		CartEntity findCart = userEntity.getCart();
 		CartItemEntity findCartItem = cartItemRepository.findById(cartItemId).orElse(null);
 
 		cartItemRepository.deleteById(cartItemId);
@@ -74,17 +74,21 @@ public class CartService {
 		return cartItemRepository.findAllByCartCartId(cartId);
 	}
 
+	private CartItemEntity existingCartItem(UserEntity user, BanchanEntity banchan) {
+		return cartItemRepository.findByCartCartIdAndBanchanBanchanId(user.getCart().getCartId(), banchan.getBanchanId());
+	}
+
 	/**
 	 * 장바구니 아이템 신규 저장
 	 * @param banchan
 	 * @param itemQuantity
-	 * @param findCart
+	 * @param cart
 	 * @return
 	 */
-	private CartItemEntity newCartItem(BanchanEntity banchan, int itemQuantity, CartEntity findCart) {
+	private CartItemEntity newCartItem(BanchanEntity banchan, int itemQuantity, CartEntity cart) {
 		return cartItemRepository.save(CartItemEntity.builder()
 				.banchan(banchan)
-				.cart(findCart)
+				.cart(cart)
 				.banchanQuantity(itemQuantity)
 				.banchanTotalPrice(itemQuantity * banchan.getBanchanPrice())
 				.build());

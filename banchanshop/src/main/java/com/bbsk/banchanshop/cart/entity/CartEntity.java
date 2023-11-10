@@ -1,5 +1,6 @@
 package com.bbsk.banchanshop.cart.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -34,7 +35,7 @@ public class CartEntity {
 	
 	@ToString.Exclude
 	@OneToMany(mappedBy = "cart")
-	private List<CartItemEntity> cartItem;
+	private List<CartItemEntity> cartItem = new ArrayList<>();
 	
 	@ColumnDefault("0")
 	@Column(nullable = false)
@@ -44,22 +45,26 @@ public class CartEntity {
 	@ColumnDefault("0")
 	private int cartTotalQuantity;
 
-	public void setCartItem(CartItemEntity findCartItem) {
+	public void updateCartItem(List<CartItemEntity> cartItem) {
+		this.cartItem = cartItem;
+	}
+
+	public void newCartOrUpdateCart(CartItemEntity newCartItem) {
 		int isExistIndex = -1;
-		for (int i = 0; i < cartItem.size(); i++) {
-			if(cartItem.get(i).getBanchan().getBanchanId() == findCartItem.getCartItemId()) {
+		for (int i = 0; i < this.cartItem.size(); i++) {
+			if(this.cartItem.get(i).getBanchan().getBanchanId() == newCartItem.getCartItemId()) {
 				isExistIndex = i;
 				break;
 			}
 		}
-		
+
 		if(isExistIndex != -1) {
-			cartItem.set(isExistIndex, findCartItem);
+			this.cartItem.set(isExistIndex, newCartItem);
 		} else {
-			cartItem.add(findCartItem);
+			this.cartItem.add(newCartItem);
 		}
 	}
-	
+
 	public void updateTotalPiceAndTotalQuantity(int price, int quantity) {
 		this.cartTotalPrice = price;
 		this.cartTotalQuantity = quantity;
