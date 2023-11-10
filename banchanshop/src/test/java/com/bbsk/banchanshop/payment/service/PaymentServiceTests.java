@@ -6,21 +6,16 @@ import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.contant.*;
 import com.bbsk.banchanshop.order.dto.OrderOptionDto;
-import com.bbsk.banchanshop.order.repository.OrderOptionRepository;
-import com.bbsk.banchanshop.order.service.OrderItemService;
+import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.service.OrdersService;
-import com.bbsk.banchanshop.payment.dto.card.RequestBankDto;
 import com.bbsk.banchanshop.payment.service.account.ShinhanBank;
 import com.bbsk.banchanshop.payment.service.card.KakaoCard;
-import com.bbsk.banchanshop.payment.dto.card.RequestCardDto;
-import com.bbsk.banchanshop.payment.service.card.ShinhanCard;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -29,11 +24,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
 @Slf4j
-@Transactional
-@Rollback(false)
 class PaymentServiceTests {
 
     @Autowired
@@ -51,43 +43,45 @@ class PaymentServiceTests {
     @Autowired
     private OrdersService ordersService;
 
-    @Autowired
-    private OrderItemService orderItemService;
-
-    @Autowired
-    private OrderOptionRepository orderOptionRepository;
-
-    @DisplayName("회원가입 테스트")
-    @Order(1)
+    @Transactional
+    @DisplayName("결제-주문 테스트")
     @Test
-    public void registUser() {
-        log.info("==================== 회원가입 테스트");
+    public void payment() {
+        log.info(" ==== 결제 테스트 ==== ");
+        UserEntity user = saveUser();
+        BanchanEntity banchan = saveFirstBanchan();
 
-        UserEntity user = UserEntity.builder()
+        saveCart(user, banchan, 5);
+
+        saveOrderByPreOrder();
+
+        OrdersEntity order = ordersService.findRecentOrderByUserId("test");
+        assertEquals(CardCompany.KAKAOPAY.name(), order.getPaymentCompany());
+        assertEquals(OrderType.PREORDER, order.getOrderType());
+        assertEquals(10000*5, order.getTotalPrice());
+
+        saveOrderByOrder();
+        order = ordersService.findRecentOrderByUserId("test");
+        assertEquals(BankCompany.SHINHANBANK.name(), order.getPaymentCompany());
+        assertEquals(OrderType.ORDER, order.getOrderType());
+        assertEquals(10000*5, order.getTotalPrice());
+    }
+
+    private UserEntity saveUser(){
+        return userService.registUser(UserEntity.builder()
                 .userId("test")
                 .userPw("test")
-                .userEmail("bbsk3939@gmail.com")
+                .userEmail("bbsk3939@gmil.com")
                 .userName("백승권")
                 .address("서울특별실 양천구")
                 .adminYn(UserType.N)
-                .phoneNumber("01064629667")
-                .build();
-
-        UserEntity registEntity = userService.registUser(user);
-
-        assertEquals("test", registEntity.getUserId());
-        assertEquals("백승권", registEntity.getUserName());
-        assertEquals(UserType.N, registEntity.getAdminYn());
-        assertEquals("test", registEntity.getCart().getCartId());
+                .phoneNumber("01064629657")
+                .build());
     }
 
-    @Order(2)
-    @DisplayName("반찬등록 테스트")
-    @Test
-    public void insertBanchan() {
-        log.info("=================== 반찬등록 테스트 =================");
+    private BanchanEntity saveFirstBanchan() {
         BanchanEntity entity = BanchanEntity.builder()
-                .banchanStockQuantity(100)
+                .banchanStockQuantity(15)
                 .banchanName("김치찌게")
                 .banchanPrice(10000)
                 .createDate(LocalDateTime.now())
@@ -121,23 +115,20 @@ class PaymentServiceTests {
         list.add(간장);
         list.add(소금);
 
+        return banchanService.registBanchan(entity, list);
+    }
 
-        BanchanEntity firstBanchan = banchanService.registBanchan(entity, list);
-
-        // ====================================================================
-        // ====================================================================
-        // 된장찌게 반찬 추가
-
-        BanchanEntity entity1 = BanchanEntity.builder()
+    private BanchanEntity saveSecondBanchan() {
+        BanchanEntity entity = BanchanEntity.builder()
                 .banchanStockQuantity(15)
                 .banchanName("된장찌게")
                 .banchanPrice(5000)
                 .createDate(LocalDateTime.now())
                 .build();
-        entity1.plusExpirationDate(3L);
+        entity.plusExpirationDate(3L);
 
         // ====================================================================
-        List<BanchanIngredientEntity> list1 = new ArrayList<>();
+        List<BanchanIngredientEntity> list = new ArrayList<>();
         BanchanIngredientEntity 된장 = BanchanIngredientEntity.builder()
                 .ingredientName("된장")
                 .quantity(5)
@@ -152,153 +143,55 @@ class PaymentServiceTests {
                 .build();
         양파.plusExpirationDate(20L);
 
-        list1.add(된장);
-        list1.add(양파);
+        list.add(된장);
+        list.add(양파);
 
-
-        BanchanEntity secondBanchan = banchanService.registBanchan(entity1, list1);
-        // ====================================================================
-
-        assertEquals("김치찌게", firstBanchan.getBanchanName());
-        assertEquals("된장찌게", secondBanchan.getBanchanName());
-
+        return banchanService.registBanchan(entity, list);
     }
 
-    @Order(3)
-    @DisplayName("장바구니 상품 넣기 테스트")
-    @Test
-    public void putCart() {
-        log.info(" =================== 장바구니 상품 넣기 테스트 ================== ");
-        UserEntity userEntity = userService.findUserById("test");
-        BanchanEntity banchanEntity = banchanService.findBybanchanName("김치찌게");
-
-        cartService.addBanchanInCart(userEntity, banchanEntity, 2);
-
-        UserEntity afterUserEntity = userService.findUserById("test");
-        assertEquals("test", afterUserEntity.getUserId()); // test 라는 유저가
-        assertEquals("김치찌게", afterUserEntity.getCart().getCartItem().get(0).getBanchan().getBanchanName()); // 김치찌게를 장바구니에 담았다
-        assertEquals(2, afterUserEntity.getCart().getCartItem().get(0).getBanchanQuantity()); // 2개를 담았고
-        assertEquals(2, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 2
-        assertEquals(2*10000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 20000원이다
-
-        // ======================================================================
-        // ======================================================================
-        log.info(" =================== 장바구니 같은 상품 넣기 테스트 ================== ");
-
-        cartService.addBanchanInCart(userEntity, banchanEntity, 12);
-
-        afterUserEntity = userService.findUserById("test");
-
-        assertEquals("test", afterUserEntity.getUserId()); // test 라는 유저가
-        assertEquals("김치찌게", afterUserEntity.getCart().getCartItem().get(0).getBanchan().getBanchanName()); // 김치찌게를 장바구니에 담았다
-        assertEquals(12, afterUserEntity.getCart().getCartItem().get(0).getBanchanQuantity()); // 12개를 담았고
-        assertEquals(12, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 12
-        assertEquals(12*10000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 120000원
-
-
-        // ======================================================================
-        // ======================================================================
-        log.info(" =================== 장바구니 다른 상품 넣기 테스트 ================== ");
-
-        BanchanEntity 된장찌게 = banchanService.findBybanchanName("된장찌게");
-
-        cartService.addBanchanInCart(userEntity, 된장찌게, 5);
-        afterUserEntity = userService.findUserById("test");
-
-        assertEquals("test", afterUserEntity.getUserId()); // test 라는 유저가
-        assertEquals("된장찌게", afterUserEntity.getCart().getCartItem().get(1).getBanchan().getBanchanName()); // 된장찌게를 장바구니에 담았다
-        assertEquals(5, afterUserEntity.getCart().getCartItem().get(1).getBanchanQuantity()); // 5개를 담았고
-        assertEquals(12+5, afterUserEntity.getCart().getCartTotalQuantity());// 장바구니 총 갯수는 12 + 5
-        assertEquals(120000+25000, afterUserEntity.getCart().getCartTotalPrice());// 장바구니 총 가격은 120000 + 25000원
+    private void saveCart(UserEntity user, BanchanEntity banchan, int quantity) {
+        cartService.addBanchanInCart(user, banchan, quantity);
     }
 
-    @Order(4)
-    @DisplayName("결제-주문 테스트")
-    @Test
-    public void payment() {
-        log.info(" ==== 결제 테스트 ==== ");
-        // ================== 컨트롤러에서 받은 Dto
-        RequestCardDto dto = new RequestCardDto();
-        dto.setCardNumber(11111L);
-        dto.setCardCvc(111);
-        // ==================
+    private void saveOrderByPreOrder() {
         // 결제 진행하는 유저
         String userId = "test";
         // 결제 종류
         PaymentType paymentType = PaymentType.CARD;
         // 카드 정보
         KakaoCard kakaoCard = KakaoCard.builder()
-                .cardNumber(dto.getCardNumber())
-                .cardCvc(dto.getCardCvc())
+                .cardNumber(1111L)
+                .cardCvc(444)
                 .build();
         // 주문 종류
         OrderType orderType = OrderType.PREORDER;
         // 주문 옵션
         List<OrderOptionDto> orderOptions = new ArrayList<>();
-        OrderOptionDto first = OrderOptionDto.builder()
-                .orderItemId(1L)
+        OrderOptionDto orderOption = OrderOptionDto.builder()
+                .orderItemId(2L)
                 .optionAmount(OrderOption.SMALL)
                 .optionSpicy(OrderOption.SPICY)
                 .optionPickUp(LocalDateTime.now())
                 .build();
-        OrderOptionDto second = OrderOptionDto.builder()
-                .orderItemId(2L)
-                .optionAmount(OrderOption.LAGE)
-                .optionSpicy(OrderOption.MILD)
-                .optionPickUp(LocalDateTime.now())
-                .build();
-        orderOptions.add(first);
-        orderOptions.add(second);
+        orderOptions.add(orderOption);
+
         paymentService.startPayToOrderByCard(userId, paymentType, kakaoCard, orderType, orderOptions);
+    }
 
-        // ================== 컨트롤러에서 받은 Dto
-        RequestCardDto dto1 = new RequestCardDto();
-        dto1.setCardNumber(11111L);
-        dto1.setCardCvc(111);
-        // ==================
+    private void saveOrderByOrder() {
         // 결제 진행하는 유저
-        userId = "test";
+        String userId = "test";
         // 결제 종류
-        PaymentType paymentType1 = PaymentType.CARD;
+        PaymentType paymentType = PaymentType.ACCOUNTTRANSFER;
         // 카드 정보
-        ShinhanCard shinhanCard = ShinhanCard.builder()
-                .cardNumber(dto1.getCardNumber())
-                .cardCvc(dto1.getCardCvc())
+        ShinhanBank bank = ShinhanBank.builder()
                 .userName("백승권")
-                .build();
-        // 주문 종류
-        OrderType orderType1 = OrderType.ORDER;
-        // 주문 옵션
-        // 주문옵션은 없다. 주문종류가 일반주문이기 때문
-        paymentService.startPayToOrderByCard(userId, paymentType, shinhanCard, orderType1, null);
-
-        assertEquals(2, ordersService.findAllByUserId("test").size()); // startPayToOrder() - 결제 2번 실행
-        assertEquals(2, orderItemService.findAllOrderItemsByOrderId(1L).size()); // 주문 시 장바구니에는 2개 상품이 담겨있다
-        assertEquals(2, orderOptionRepository.findAll().size()); // 예약주문은 첫번째 주문에서만 진행, 2개 상품에 대해서 예약주문 진행
-
-        // ===========================================================================================================================
-        // ===========================================================================================================================
-
-        // ================== 컨트롤러에서 받은 Dto
-        RequestBankDto bankDto = RequestBankDto.builder()
-                .bankCompany(BankCompany.SHINHANBANK)
                 .accountNumber("110337163077")
-                .userName(userService.findUserById("test").getUserName()).build();
-        // ==================
-        // 결제 진행하는 유저
-        String userIdForAccount = "test";
-        // 결제 종류
-        PaymentType paymentTypeForAccount = PaymentType.ACCOUNTTRANSFER;
-        // 은행 정보
-        ShinhanBank shinhanBank = ShinhanBank.builder()
-                .accountNumber(bankDto.getAccountNumber())
-                .userName(bankDto.getUserName())
                 .build();
         // 주문 종류
-        OrderType orderTypeForAccount = OrderType.ORDER;
-        // 주문 옵션
-        // XX
+        OrderType orderType = OrderType.ORDER;
+        // 주문 옵션 X
 
-        paymentService.startPayToOrderByAccount(userIdForAccount, paymentTypeForAccount, shinhanBank, orderTypeForAccount, null);
+        paymentService.startPayToOrderByAccount(userId, paymentType, bank, orderType, null);
     }
 }
