@@ -1,8 +1,8 @@
-package com.bbsk.banchanshop.payment.dto;
+package com.bbsk.banchanshop.payment.service.card;
 
 import com.bbsk.banchanshop.contant.CardCompany;
-import com.bbsk.banchanshop.payment.service.CardProcess;
-import com.bbsk.banchanshop.payment.service.CardStrategy;
+import com.bbsk.banchanshop.payment.service.card.CardProcess;
+import com.bbsk.banchanshop.payment.service.card.CardStrategy;
 import lombok.*;
 
 @Getter
@@ -20,7 +20,7 @@ public class KakaoCard extends CardProcess implements CardStrategy {
 
     private Long cardNumber;
     private int cardCvc;
-    private final CardCompany cardCompany = CardCompany.KAKAO;
+    private final CardCompany cardCompany = CardCompany.KAKAOPAY;
 
     private String userName;
     private String userPhoneNumber;

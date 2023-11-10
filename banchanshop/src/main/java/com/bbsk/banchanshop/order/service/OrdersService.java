@@ -1,8 +1,5 @@
 package com.bbsk.banchanshop.order.service;
 
-import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
-import com.bbsk.banchanshop.cart.entity.CartItemEntity;
-import com.bbsk.banchanshop.contant.CardCompany;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.order.dto.OrderOptionDto;
@@ -33,10 +30,10 @@ public class OrdersService {
      * @param user
      * @param orderType
      * @param paymentType
-     * @param cardCompany
+     * @param paymentCompany
      */
     @Transactional
-    public void createOrder(UserEntity user, PaymentType paymentType, CardCompany cardCompany, OrderType orderType, List<OrderOptionDto> orderOption) {
+    public void createOrder(UserEntity user, PaymentType paymentType, String paymentCompany, OrderType orderType, List<OrderOptionDto> orderOption) {
         /*
         * 주문 시 반찬재고 체크
         * */
@@ -46,7 +43,7 @@ public class OrdersService {
         * 1. Orders 테이블 저장
         * 2. Order_Item 테이블 저장
         * */
-        saveOrderItem(user, saveOrder(user, paymentType, cardCompany, orderType));
+        saveOrderItem(user, saveOrder(user, paymentType, paymentCompany, orderType));
 
         /*
         * 예약주문
@@ -89,7 +86,7 @@ public class OrdersService {
      * @param orderType
      * @return
      */
-    private OrdersEntity saveOrder(UserEntity user, PaymentType paymentType, CardCompany cardCompany, OrderType orderType) {
+    private OrdersEntity saveOrder(UserEntity user, PaymentType paymentType, String cardCompany, OrderType orderType) {
         return orderRepository.save(
                 OrdersEntity.builder()
                         .user(user)
@@ -97,7 +94,7 @@ public class OrdersService {
                         .paymentType(paymentType)
                         .address(user.getAddress())
                         .totalPrice(user.getCart().getCartTotalPrice())
-                        .cardCompany(cardCompany)
+                        .paymentCompany(cardCompany)
                         .build()
         );
     }

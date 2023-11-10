@@ -1,4 +1,4 @@
-package com.bbsk.banchanshop.payment.service;
+package com.bbsk.banchanshop.payment.service.card;
 
 import com.bbsk.banchanshop.contant.CardCompany;
 

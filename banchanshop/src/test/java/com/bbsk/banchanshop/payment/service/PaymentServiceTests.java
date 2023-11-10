@@ -4,17 +4,16 @@ import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.banchan.entity.BanchanIngredientEntity;
 import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.cart.service.CartService;
-import com.bbsk.banchanshop.contant.OrderOption;
-import com.bbsk.banchanshop.contant.OrderType;
-import com.bbsk.banchanshop.contant.PaymentType;
-import com.bbsk.banchanshop.contant.UserType;
+import com.bbsk.banchanshop.contant.*;
 import com.bbsk.banchanshop.order.dto.OrderOptionDto;
 import com.bbsk.banchanshop.order.repository.OrderOptionRepository;
 import com.bbsk.banchanshop.order.service.OrderItemService;
 import com.bbsk.banchanshop.order.service.OrdersService;
-import com.bbsk.banchanshop.payment.dto.KakaoCard;
-import com.bbsk.banchanshop.payment.dto.RequestCardDto;
-import com.bbsk.banchanshop.payment.dto.ShinhanCard;
+import com.bbsk.banchanshop.payment.dto.card.RequestBankDto;
+import com.bbsk.banchanshop.payment.service.account.ShinhanBank;
+import com.bbsk.banchanshop.payment.service.card.KakaoCard;
+import com.bbsk.banchanshop.payment.dto.card.RequestCardDto;
+import com.bbsk.banchanshop.payment.service.card.ShinhanCard;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -250,7 +249,7 @@ class PaymentServiceTests {
                 .build();
         orderOptions.add(first);
         orderOptions.add(second);
-        paymentService.startPayToOrder(userId, paymentType, kakaoCard, orderType, orderOptions);
+        paymentService.startPayToOrderByCard(userId, paymentType, kakaoCard, orderType, orderOptions);
 
         // ================== 컨트롤러에서 받은 Dto
         RequestCardDto dto1 = new RequestCardDto();
@@ -271,10 +270,35 @@ class PaymentServiceTests {
         OrderType orderType1 = OrderType.ORDER;
         // 주문 옵션
         // 주문옵션은 없다. 주문종류가 일반주문이기 때문
-        paymentService.startPayToOrder(userId, paymentType, shinhanCard, orderType1, null);
+        paymentService.startPayToOrderByCard(userId, paymentType, shinhanCard, orderType1, null);
 
         assertEquals(2, ordersService.findAllByUserId("test").size()); // startPayToOrder() - 결제 2번 실행
         assertEquals(2, orderItemService.findAllOrderItemsByOrderId(1L).size()); // 주문 시 장바구니에는 2개 상품이 담겨있다
         assertEquals(2, orderOptionRepository.findAll().size()); // 예약주문은 첫번째 주문에서만 진행, 2개 상품에 대해서 예약주문 진행
+
+        // ===========================================================================================================================
+        // ===========================================================================================================================
+
+        // ================== 컨트롤러에서 받은 Dto
+        RequestBankDto bankDto = RequestBankDto.builder()
+                .bankCompany(BankCompany.SHINHANBANK)
+                .accountNumber("110337163077")
+                .userName(userService.findUserById("test").getUserName()).build();
+        // ==================
+        // 결제 진행하는 유저
+        String userIdForAccount = "test";
+        // 결제 종류
+        PaymentType paymentTypeForAccount = PaymentType.ACCOUNTTRANSFER;
+        // 은행 정보
+        ShinhanBank shinhanBank = ShinhanBank.builder()
+                .accountNumber(bankDto.getAccountNumber())
+                .userName(bankDto.getUserName())
+                .build();
+        // 주문 종류
+        OrderType orderTypeForAccount = OrderType.ORDER;
+        // 주문 옵션
+        // XX
+
+        paymentService.startPayToOrderByAccount(userIdForAccount, paymentTypeForAccount, shinhanBank, orderTypeForAccount, null);
     }
 }

@@ -1,4 +1,4 @@
-package com.bbsk.banchanshop.payment.service;
+package com.bbsk.banchanshop.payment.service.card;
 
 /**
  * 카드결제 알고리즘 구조

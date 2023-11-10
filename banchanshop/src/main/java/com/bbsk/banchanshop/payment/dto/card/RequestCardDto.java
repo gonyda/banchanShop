@@ -1,4 +1,4 @@
-package com.bbsk.banchanshop.payment.dto;
+package com.bbsk.banchanshop.payment.dto.card;
 
 import lombok.Getter;
 import lombok.Setter;

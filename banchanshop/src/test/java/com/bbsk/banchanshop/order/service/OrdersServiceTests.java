@@ -8,9 +8,8 @@ import com.bbsk.banchanshop.contant.*;
 import com.bbsk.banchanshop.order.dto.OrderOptionDto;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
-import com.bbsk.banchanshop.order.repository.OrdersRepository;
-import com.bbsk.banchanshop.payment.dto.KakaoCard;
-import com.bbsk.banchanshop.payment.dto.RequestCardDto;
+import com.bbsk.banchanshop.payment.service.card.KakaoCard;
+import com.bbsk.banchanshop.payment.dto.card.RequestCardDto;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -239,7 +238,7 @@ public class OrdersServiceTests {
                 .optionPickUp(LocalDateTime.now())
                 .build();
         orderOptions.add(orderOption);
-        orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany(), orderType, orderOptions);
+        orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany().name(), orderType, orderOptions);
     }
 
     @Order(5)
@@ -272,7 +271,7 @@ public class OrdersServiceTests {
                 .build();
         orderOptions.add(orderOption);
 
-        orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany(), orderType, orderOptions);
+        orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany().name(), orderType, orderOptions);
 
         UserEntity user = userService.findUserById("test");
 
@@ -314,6 +313,6 @@ public class OrdersServiceTests {
     public void banchanNullCheck() {
 
         banchanService.updateQuantity(2L, 0);
-        orderService.createOrder(userService.findUserById("test"), PaymentType.CARD, CardCompany.KAKAO, OrderType.ORDER, null);
+        orderService.createOrder(userService.findUserById("test"), PaymentType.CARD, CardCompany.KAKAOPAY.name(), OrderType.ORDER, null);
     }
 }
