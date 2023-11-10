@@ -130,7 +130,7 @@ class PaymentServiceTests {
         // 된장찌게 반찬 추가
 
         BanchanEntity entity1 = BanchanEntity.builder()
-                .banchanStockQuantity(5)
+                .banchanStockQuantity(15)
                 .banchanName("된장찌게")
                 .banchanPrice(5000)
                 .createDate(LocalDateTime.now())
