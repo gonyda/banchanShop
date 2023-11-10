@@ -11,7 +11,6 @@ import com.bbsk.banchanshop.contant.UserType;
 import com.bbsk.banchanshop.order.dto.OrderOptionDto;
 import com.bbsk.banchanshop.order.repository.OrderOptionRepository;
 import com.bbsk.banchanshop.order.service.OrderItemService;
-import com.bbsk.banchanshop.order.service.OrderOptionService;
 import com.bbsk.banchanshop.order.service.OrdersService;
 import com.bbsk.banchanshop.payment.dto.KakaoCard;
 import com.bbsk.banchanshop.payment.dto.RequestCardDto;
