@@ -1,6 +1,7 @@
 package com.bbsk.banchanshop.order.service;
 
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
+import com.bbsk.banchanshop.cart.entity.CartItemEntity;
 import com.bbsk.banchanshop.contant.CardCompany;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
@@ -55,7 +56,10 @@ public class OrdersService {
             saveOrderOption(orderOption);
         }
 
-        //TODO 주문성공 시 반찬재고 차감
+        /*
+        * 반찬 재고 차감
+        * */
+        subtractBanchanQuantity(user);
 
     }
 
@@ -142,6 +146,16 @@ public class OrdersService {
             if (e.getBanchan().getBanchanStockQuantity() < e.getBanchanQuantity()) {
                 throw new IllegalArgumentException(e.getBanchan().getBanchanName() + "의 재고수량이 변경되었습니다. 수량을 다시 선택해주세요.");
             }
+        });
+    }
+
+    /**
+     * 주문 성공시 반찬 재고 차감
+     * @param user
+     */
+    private void subtractBanchanQuantity(UserEntity user) {
+        user.getCart().getCartItem().forEach(e -> {
+            e.getBanchan().updateBanchanQuantity(e.getBanchan().getBanchanStockQuantity() - e.getBanchanQuantity());
         });
     }
 }

@@ -243,7 +243,7 @@ public class OrdersServiceTests {
     }
 
     @Order(5)
-    @DisplayName("주문 생성 테스트")
+    @DisplayName("주문 생성 및 재고차감 테스트")
     @Test
     public void careteOrder() {
         // ================== 컨트롤러에서 받은 Dto
@@ -277,6 +277,8 @@ public class OrdersServiceTests {
         UserEntity user = userService.findUserById("test");
 
         assertEquals(user.getCart().getCartTotalPrice(), orderService.findRecentOrderByUserId(user.getUserId()).getTotalPrice());
+        assertEquals(100-12, banchanService.findBanchanById(1L).getBanchanStockQuantity());
+        assertEquals(5-5, banchanService.findBanchanById(2L).getBanchanStockQuantity());
     }
 
     @Order(6)
