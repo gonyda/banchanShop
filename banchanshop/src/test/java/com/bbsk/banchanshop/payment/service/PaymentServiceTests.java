@@ -175,7 +175,7 @@ class PaymentServiceTests {
                 .build();
         orderOptions.add(orderOption);
 
-        paymentService.startPayToOrderByCard(userId, paymentType, kakaoCard, orderType, orderOptions);
+        paymentService.startPayToOrder(userId, paymentType, kakaoCard, orderType, orderOptions);
     }
 
     private void saveOrderByOrder() {
@@ -192,6 +192,6 @@ class PaymentServiceTests {
         OrderType orderType = OrderType.ORDER;
         // 주문 옵션 X
 
-        paymentService.startPayToOrderByAccount(userId, paymentType, bank, orderType, null);
+        paymentService.startPayToOrder(userId, paymentType, bank, orderType, null);
     }
 }

@@ -22,6 +22,18 @@ public class PaymentService {
     private final OrdersService ordersService;
     private final UserService userService;
 
+    public void startPayToOrder(String userId, PaymentType paymentType, PaymentStrategy payment, OrderType orderType, List<OrderOptionDto> orderOption) {
+        switch (paymentType) {
+            case CARD -> {
+                startPayToOrderByCard(userId, paymentType, (CardStrategy) payment, orderType, orderOption);
+            }
+            case ACCOUNTTRANSFER -> {
+                startPayToOrderByAccount(userId, paymentType, (AccountStrategy) payment, orderType, orderOption);
+            }
+        }
+    }
+
+    //TODO 중복메서드 리팩토링
     /**
      * 카드 결제 진행, 결제 완료 시 주문생성
      * @param userId 결제 유저
@@ -32,7 +44,7 @@ public class PaymentService {
      */
     @Transactional
     public void startPayToOrderByCard(String userId, PaymentType paymentType, CardStrategy card, OrderType orderType, List<OrderOptionDto> orderOption) {
-        if (card.startPayProcess(card)) {
+        if (card.startPayProcess()) {
             /*
              * 결제 성공 후 주문생성
              * */
@@ -52,8 +64,9 @@ public class PaymentService {
      * @param orderType 주문 방식
      * @param orderOption 주문 옵션
      */
+    @Transactional
     public void startPayToOrderByAccount(String userId, PaymentType paymentType, AccountStrategy bank, OrderType orderType, List<OrderOptionDto> orderOption) {
-        if (bank.startPayProcess(bank)) {
+        if (bank.startPayProcess()) {
             /*
             * 결제승인 요청 후 주문생성
             * */

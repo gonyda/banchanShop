@@ -1,5 +1,6 @@
 package com.bbsk.banchanshop.payment.service.account;
 
+import com.bbsk.banchanshop.payment.service.PaymentStrategy;
 import com.bbsk.banchanshop.payment.service.card.CardStrategy;
 
 public abstract class AccountProcess {
@@ -9,8 +10,8 @@ public abstract class AccountProcess {
      * @param bank
      * @return
      */
-    public boolean processPay(AccountStrategy bank) {
-        if (checkBankAndAccountNumber(bank.getAccountNumber(), bank.getUserName())) {
+    public boolean processPay(String userName, String accountNumber) {
+        if (checkBankAndAccountNumber(accountNumber, userName)) {
             return requestPay();
         } else {
             return false;

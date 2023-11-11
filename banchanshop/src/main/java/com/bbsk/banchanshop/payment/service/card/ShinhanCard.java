@@ -53,13 +53,11 @@ public class ShinhanCard extends CardProcess implements CardStrategy {
     /**
      * 결제 프로세스 진행 후 결제가 완료되면 주문테이블 INSERT(주문완료)
      *
-     * @param card
      * @return
      */
     @Override
-    public boolean startPayProcess(CardStrategy card) {
-
-        if(this.processPay(card)) {
+    public boolean startPayProcess() {
+        if(this.processPay(cardNumber, cardCvc)) {
             System.out.println("신한카드 - 결제가 완료되었습니다.");
             return true;
         }

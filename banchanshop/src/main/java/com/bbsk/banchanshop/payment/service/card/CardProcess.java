@@ -10,8 +10,8 @@ public abstract class CardProcess {
      * @param card
      * @return
      */
-    public boolean processPay(CardStrategy card) {
-        if (cardNumberAndCardCvcCheck(card.getCardNumber(), card.getCardCvc())) {
+    public boolean processPay(Long cardNumber, int cardCVC) {
+        if (cardNumberAndCardCvcCheck(cardNumber, cardCVC)) {
             if (balanceCheck()) {
                 return requestPay();
             } else {

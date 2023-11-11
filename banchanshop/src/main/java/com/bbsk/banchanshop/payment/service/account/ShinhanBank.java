@@ -1,7 +1,7 @@
 package com.bbsk.banchanshop.payment.service.account;
 
 import com.bbsk.banchanshop.contant.BankCompany;
-import com.bbsk.banchanshop.order.service.OrdersService;
+import com.bbsk.banchanshop.payment.service.PaymentStrategy;
 import lombok.*;
 
 @Getter
@@ -45,13 +45,8 @@ public class ShinhanBank extends AccountProcess implements AccountStrategy{
         System.out.println("주문완료 후 " + bankCompany + " 은행사에게 출금요청");
     }
 
-    /**
-     * 계좌정보 유효성 체크 및 결제 승인 요청
-     * @param bank
-     * @return
-     */
     @Override
-    public boolean startPayProcess(AccountStrategy bank) {
-        return this.processPay(bank);
+    public boolean startPayProcess() {
+        return this.processPay(userName, accountNumber);
     }
 }

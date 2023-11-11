@@ -1,6 +1,7 @@
 package com.bbsk.banchanshop.payment.service.card;
 
 import com.bbsk.banchanshop.contant.CardCompany;
+import com.bbsk.banchanshop.payment.service.PaymentStrategy;
 import com.bbsk.banchanshop.payment.service.card.CardProcess;
 import com.bbsk.banchanshop.payment.service.card.CardStrategy;
 import lombok.*;
@@ -60,15 +61,9 @@ public class KakaoCard extends CardProcess implements CardStrategy {
         return true;
     }
 
-    /**
-     * 결제 프로세스 진행 후 결제가 완료되면 주문테이블 INSERT(주문완료)
-     *
-     * @param card
-     * @return
-     */
     @Override
-    public boolean startPayProcess(CardStrategy card) {
-        if(this.processPay(card)) {
+    public boolean startPayProcess() {
+        if(this.processPay(cardNumber, cardCvc)) {
             System.out.println("카카오페이 - 결제가 완료되었습니다.");
             return true;
         }
