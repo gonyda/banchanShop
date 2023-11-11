@@ -33,7 +33,6 @@ public class PaymentService {
         }
     }
 
-    //TODO 중복메서드 리팩토링
     /**
      * 카드 결제 진행, 결제 완료 시 주문생성
      * @param userId 결제 유저
