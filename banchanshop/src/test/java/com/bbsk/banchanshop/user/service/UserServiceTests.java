@@ -37,7 +37,7 @@ public class UserServiceTests {
 				.build());
 
 		assertEquals("test", registEntity.getUserId());
-		assertEquals("백승권", registEntity.getUserName());
+		assertEquals("백승권", registEntity.getUsername());
 		assertEquals(UserType.N, registEntity.getAdminYn());
 		assertEquals("test", registEntity.getCart().getCartId());
 	}

@@ -68,4 +68,8 @@ public class BanchanService {
 	public BanchanEntity updateQuantity(Long banchanId, int newQuantity) {
 		return banchanRepository.findById(banchanId).orElse(null).updateBanchanQuantity(newQuantity);
 	}
+
+	public List<BanchanEntity> findAll() {
+		return banchanRepository.findAll();
+	}
 }

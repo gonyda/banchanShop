@@ -5,17 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>사이트</title>
     <link rel="stylesheet" th:href="@{/layout/sidebar.css}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .grid-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: flex-start;
+        }
+
+        .product {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product h2 {
+            margin-bottom: 10px;
+        }
+
+        .product p {
+            margin: 0;
+        }
+    </style>
+
 </head>
 <body>
 
     <!-- 네비게이션 바를 포함합니다. -->
     <div th:insert="layout/sidebar :: sidebar"></div>
 
-    <div class="content">
-        <!-- 여기에 사이트의 본문 내용이 들어갑니다. -->
-        <h1>메인 컨텐츠 영역</h1>
-        <p>여기에 웹 페이지의 주요 내용이 들어갑니다.</p>
-    </div>
+    <div class="content grid-container">
+        <div class="product" th:each="banchan: ${banchanList}">
+            <span style="display: none" th:text="${banchan.banchanId}"></span>
+            <h2 th:text="|상품명 : ${banchan.banchanName}|">가격: 10,000원</h2>
+            <p th:text="|상품가격 : ${banchan.banchanPrice}|">가격: 10,000원</p>
+            <p th:text="|재고 : ${banchan.banchanStockQuantity}|">재고: 50개</p>
+        </div>
 
+        <div class="product">
+            <h2>상품명 6</h2>
+            <p>가격: 9,000원</p>
+            <p>재고: 18개</p>
+        </div>
+
+        <div class="product">
+            <h2>상품명 6</h2>
+            <p>가격: 9,000원</p>
+            <p>재고: 18개</p>
+        </div>
+
+        <div class="product">
+            <h2>상품명 6</h2>
+            <p>가격: 9,000원</p>
+            <p>재고: 18개</p>
+        </div>
+
+        <div class="product">
+            <h2>상품명 6</h2>
+            <p>가격: 9,000원</p>
+            <p>재고: 18개</p>
+        </div>
+
+        <div class="product">
+            <h2>상품명 6</h2>
+            <p>가격: 9,000원</p>
+            <p>재고: 18개</p>
+        </div>
+
+        <div class="product">
+            <h2>상품명 6</h2>
+            <p>가격: 9,000원</p>
+            <p>재고: 18개</p>
+        </div>
+
+        <div class="product">
+            <h2>상품명 6</h2>
+            <p>가격: 9,000원</p>
+            <p>재고: 18개</p>
+        </div>
+
+        <div class="product">
+            <h2>상품명 6</h2>
+            <p>가격: 9,000원</p>
+            <p>재고: 18개</p>
+        </div>
+
+
+    </div>
 </body>
 </html>
