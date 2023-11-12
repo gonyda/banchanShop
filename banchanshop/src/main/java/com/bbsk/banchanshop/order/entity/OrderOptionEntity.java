@@ -24,7 +24,7 @@ public class OrderOptionEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderOptionId;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "order_item_id")
 	private OrderItemEntity orderItem;
 

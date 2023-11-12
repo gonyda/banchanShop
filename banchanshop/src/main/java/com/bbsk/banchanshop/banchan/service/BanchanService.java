@@ -29,14 +29,13 @@ public class BanchanService {
 	 */
 	@Transactional
 	public BanchanEntity registBanchan(BanchanEntity banchan, List<BanchanIngredientEntity> ingredientList) {
-		banchan.setIngredientList(ingredientList);
-		BanchanEntity banchanEntity = banchanRepository.save(banchan);
-		
 		ingredientList.forEach(e -> {
-			e.setBanchan(banchanEntity);
+			e.setBanchan(banchan);
 		});
+
+		BanchanEntity banchanEntity = banchanRepository.save(banchan);
 		banchanIngredientRepository.saveAll(ingredientList);
-		
+
 		return banchanEntity;
 	}
 

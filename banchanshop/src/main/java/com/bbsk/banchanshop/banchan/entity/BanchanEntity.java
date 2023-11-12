@@ -2,6 +2,7 @@ package com.bbsk.banchanshop.banchan.entity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -34,7 +35,7 @@ public class BanchanEntity {
 	@ToString.Exclude
 	@OneToMany(mappedBy = "banchan")
 	@Column(nullable = false)
-	private List<BanchanIngredientEntity> banchanIngredient;
+	private List<BanchanIngredientEntity> banchanIngredient = new ArrayList<>();
 	
 	@Column(nullable = false)
 	private int banchanStockQuantity;
@@ -57,14 +58,6 @@ public class BanchanEntity {
 	 */
 	public void plusExpirationDate(Long plusDay) {
 		this.expirationDate = LocalDateTime.now().plusDays(Duration.ofDays(plusDay).toDays());
-	}
-	
-	/**
-	 * 반찬 재료 등록
-	 * @param list
-	 */
-	public void setIngredientList(List<BanchanIngredientEntity> list) {
-		this.banchanIngredient = list;
 	}
 	
 	/**
