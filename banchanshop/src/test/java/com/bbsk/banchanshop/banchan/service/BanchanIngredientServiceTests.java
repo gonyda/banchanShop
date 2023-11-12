@@ -15,6 +15,7 @@ import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.banchan.entity.BanchanIngredientEntity;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -30,12 +31,13 @@ public class BanchanIngredientServiceTests {
 	@Transactional
 	@DisplayName("반찬 및 반찬 재료 등록")
 	@Test
+	@Rollback(value = false)
 	public void registIngredient() {
 		log.info("=================== 반찬등록 테스트 =================");
 		BanchanEntity banchan = saveBanchan();
 
 		assertEquals("김치찌게", banchan.getBanchanName());
-		assertEquals("고춧가루", banchan.getBanchanIngredient().get(0).getIngredientName());
+		assertEquals("고춧가루", ingredientService.findByIngredientId(1L).getIngredientName());
 	}
 
 	@Transactional
@@ -45,7 +47,7 @@ public class BanchanIngredientServiceTests {
 		log.info("=================== 재료 조회 By 재료 이름 테스트 =================");
 		BanchanEntity banchan = saveBanchan();
 
-		List<BanchanIngredientEntity> list = ingredientService.findByIngredientName(banchan.getBanchanIngredient().get(0).getIngredientName());
+		List<BanchanIngredientEntity> list = ingredientService.findByIngredientName("고춧가루");
 
 		assertEquals(1, list.size());
 	}
@@ -57,7 +59,7 @@ public class BanchanIngredientServiceTests {
 		log.info("=================== 재료 조회 By 재료 아이디 테스트 =================");
 		BanchanEntity banchan = saveBanchan();
 
-		BanchanIngredientEntity findEntity = ingredientService.findByIngredientId(banchan.getBanchanIngredient().get(0).getBanchanIngredientId());
+		BanchanIngredientEntity findEntity = ingredientService.findByIngredientId(1L);
 		assertEquals("고춧가루", findEntity.getIngredientName());
 	}
 
@@ -68,7 +70,7 @@ public class BanchanIngredientServiceTests {
 		log.info("=================== 재료 재고 수량 업데이트 =================");
 		BanchanEntity banchan = saveBanchan();
 
-		BanchanIngredientEntity updateEntity = ingredientService.updateQuantity(banchan.getBanchanIngredient().get(0).getBanchanIngredientId(), 1);
+		BanchanIngredientEntity updateEntity = ingredientService.updateQuantity(1L, 1);
 
 		assertEquals("고춧가루", updateEntity.getIngredientName());
 		assertEquals(1, updateEntity.getQuantity());
