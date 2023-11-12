@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사이트</title>
+    <link rel="stylesheet" th:href="@{/layout/sidebar.css}">
+</head>
+<body>
+
+    <div th:fragment="sidebar" class="nav-bar">
+        <div class="user-welcome">OOO님 환영합니다.</div>
+        <a class="nav-link" href="#">반찬보기</a>
+        <a class="nav-link" href="#">나의 주문 내역</a>
+        <a class="logout-btn" href="/logout">로그아웃</a>
+    </div>
+
+</body>
+</html>

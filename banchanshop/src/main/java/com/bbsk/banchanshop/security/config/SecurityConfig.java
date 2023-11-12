@@ -37,7 +37,11 @@ class SecurityConfig {
                         .defaultSuccessUrl("/", true) // 로그인 성공 시 리다이렉트
                         .permitAll()
                 )
-                .logout(withDefaults())
+                .logout(logout -> logout
+                        .logoutUrl("/logout").permitAll()   // 로그아웃 처리 URL (= form action url)
+                        .logoutSuccessUrl("/login")
+                        .deleteCookies("JSESSIONID")
+                )
                 .authenticationProvider(authenticationProvider());
 
         return http.build();

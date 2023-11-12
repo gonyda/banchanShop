@@ -1,13 +1,21 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사이트</title>
+    <link rel="stylesheet" th:href="@{/layout/sidebar.css}">
 </head>
 <body>
-    홉 입니다.
+
+    <!-- 네비게이션 바를 포함합니다. -->
+    <div th:insert="layout/sidebar :: sidebar"></div>
+
+    <div class="content">
+        <!-- 여기에 사이트의 본문 내용이 들어갑니다. -->
+        <h1>메인 컨텐츠 영역</h1>
+        <p>여기에 웹 페이지의 주요 내용이 들어갑니다.</p>
+    </div>
+
 </body>
 </html>
