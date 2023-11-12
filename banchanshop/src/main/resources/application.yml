@@ -16,7 +16,7 @@ spring:
     password: bbsk3939
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -26,3 +26,4 @@ spring:
 # Logging 설정
 logging.level:
   org.hibernate.orm.jdbc.bind: trace
+  root: info

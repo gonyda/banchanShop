@@ -1,5 +1,6 @@
 package com.bbsk.banchanshop.user.service;
 
+import com.bbsk.banchanshop.security.serivce.Sha512CustomPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +25,12 @@ public class UserService {
 	 */
 	@Transactional
 	public UserEntity registUser(UserEntity user) {
+
 		return userRepo.save(UserEntity.builder()
 										.userId(user.getUserId())
-										.userPw(user.getUserPw())
+										.userPw(new Sha512CustomPasswordEncoder().encode(user.getUserPw()))
 										.userEmail(user.getUserEmail())
-										.userName(user.getUserName())
+										.userName(user.getUsername())
 										.address(user.getAddress())
 										.adminYn(user.getAdminYn())
 										.cart(cartRepo.save(CartEntity.builder().cartId(user.getUserId()).build()))
@@ -44,4 +46,6 @@ public class UserService {
 	public UserEntity findUserById(String userId) {
 		return userRepo.findById(userId).orElse(null);
 	}
+
+	//TODO 유저 전체조회 (운영자)
 }
