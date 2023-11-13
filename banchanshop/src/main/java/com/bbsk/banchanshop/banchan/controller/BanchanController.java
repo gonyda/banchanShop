@@ -21,7 +21,6 @@ public class BanchanController {
     @GetMapping("/{id}")
     public String getBanchan(@PathVariable("id") Long id, @AuthenticationPrincipal UserEntity user, Model model) {
 
-        model.addAttribute("userName", user.getUsername());
         model.addAttribute("banchan", banchanService.findBanchanById(id));
 
         return "banchan/banchanDetail";

@@ -23,9 +23,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(@AuthenticationPrincipal UserEntity user, Model model) {
 
-        model.addAttribute("userName", user.getUsername());
         model.addAttribute("banchanList", banchanService.findAll());
-        log.info(banchanService.findAll().toString());
 
         return "home";
     }
