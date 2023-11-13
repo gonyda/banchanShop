@@ -52,8 +52,7 @@
 
     <div class="content grid-container">
         <div class="product" th:each="banchan: ${banchanList}">
-            <span style="display: none" th:text="${banchan.banchanId}"></span>
-            <h2 th:text="|상품명 : ${banchan.banchanName}|">가격: 10,000원</h2>
+            <a th:href="|/banchan/${banchan.banchanId}|"><h2 th:text="|상품명 : ${banchan.banchanName}|">가격: 10,000원</h2></a>
             <p th:text="|상품가격 : ${banchan.banchanPrice}|">가격: 10,000원</p>
             <p th:text="|재고 : ${banchan.banchanStockQuantity}|">재고: 50개</p>
         </div>

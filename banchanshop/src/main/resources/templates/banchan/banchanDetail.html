@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반찬 상세 페이지</title>
+    <link rel="stylesheet" th:href="@{/layout/sidebar.css}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .product-details {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+        }
+
+        .product-details img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-right: 20px;
+            flex: 1; /* 사진이 전체 너비를 차지하도록 함 */
+        }
+
+        .product-details-info {
+            flex: 1; /* 상품 정보가 전체 너비를 차지하도록 함 */
+        }
+
+        .product-details h2 {
+            margin-bottom: 10px;
+        }
+
+        .product-details p {
+            margin: 0;
+        }
+
+        .product-details button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .product-details button:hover {
+            background-color: #45a049;
+        }
+
+        .quantity-dropdown {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 네비게이션 바를 포함합니다. -->
+    <div th:insert="layout/sidebar :: sidebar"></div>
+
+    <div class="content">
+        <!-- 반찬 상세 정보 표시 -->
+        <div class="product-details">
+            <img src="/img/noimage.jpg" style="width: 100px" alt="반찬 이미지">
+            <div class="product-details-info">
+                <h2 th:text="${banchan.banchanName}">상품명</h2>
+                <p th:text="|가격 : ${banchan.banchanPrice}원|">가격: 10,000원</p>
+                <p th:text="|재고 : ${banchan.banchanStockQuantity}개|">재고: 3</p>
+                <p th:text="|요리일 : ${banchan.createDate}|">요리일: 2023 / 03 / 09</p>
+
+                <!-- 수량 선택 -->
+                <div class="quantity-dropdown">
+                    <span>수량: <input type="number" name="quantity" min="1" th:max="${banchan.banchanStockQuantity}" value="1" style="width: 10%"></span>
+                </div>
+                <button>장바구니에 담기</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
