@@ -75,18 +75,27 @@
         <div class="product-details">
             <img src="/img/noimage.jpg" style="width: 100px" alt="반찬 이미지">
             <div class="product-details-info">
-                <h2 th:text="${banchan.banchanName}">상품명</h2>
-                <p th:text="|가격 : ${banchan.banchanPrice}원|">가격: 10,000원</p>
-                <p th:text="|재고 : ${banchan.banchanStockQuantity}개|">재고: 3</p>
-                <p th:text="|요리일 : ${banchan.createDate}|">요리일: 2023 / 03 / 09</p>
+                <form action="/cart/insert-cart" method="post">
+                    <h2 th:text="${banchan.banchanName}">상품명</h2>
+                    <p th:text="|가격 : ${banchan.banchanPrice}원|">가격: 10,000원</p>
+                    <p th:text="|재고 : ${banchan.banchanStockQuantity}개|">재고: 3</p>
+                    <p th:text="|요리일 : ${banchan.createDate}|">요리일: 2023 / 03 / 09</p>
+                    <p th:text="|상품번호 : ${banchan.banchanId}|">1</p>
 
-                <!-- 수량 선택 -->
-                <div class="quantity-dropdown">
-                    <span>수량: <input type="number" name="quantity" min="1" th:max="${banchan.banchanStockQuantity}" value="1" style="width: 10%"></span>
-                </div>
-                <button>장바구니에 담기</button>
+                    <!-- 수량 선택 -->
+                    <div class="quantity-dropdown">
+                        <span>수량: <input type="number" min="1" th:max="${banchan.banchanStockQuantity}" value="1" style="width: 10%" name="quantity"/></span>
+                        <script>
+                        </script>
+                    </div>
+
+                    <input type="hidden" th:value="${banchan.banchanId}" name="banchanId"/>
+                    <button type="submit">장바구니에 담기</button>
+                </form>
+                <span th:if="${postcart}">해당 상품을 장바구니에 담았습니다. <a href="/cart/cart-list">장바구니 보러가기</a></span>
             </div>
         </div>
+
     </div>
 
 </body>

@@ -31,7 +31,7 @@ public class CartService {
 	 */
 	@Transactional
 	public void addBanchanInCart(UserEntity user, BanchanEntity banchan, int itemQuantity) {
-		CartEntity cart = user.getCart();
+		CartEntity cart = cartRepository.findById(user.getCart().getCartId()).orElse(null);
 		cart.updateCartItem(cartItemRepository.findAllByCartCartId(cart.getCartId()));
 		CartItemEntity existingCartItem = existingCartItem(user, banchan); // 장바구니에 존재하는 반찬인지
 
@@ -66,7 +66,16 @@ public class CartService {
 	}
 
 	/**
-	 * 해당 유저의 장바구니 전체조회
+	 * 해당 유저의 장바구니 조회
+	 * @param user
+	 * @return
+	 */
+	public CartEntity findByCartId(UserEntity user) {
+		return cartRepository.findById(user.getUserId()).orElse(null);
+	}
+
+	/**
+	 * 해당 유저의 장바구니 아이템 전체조회
 	 * @param cartId
 	 * @return
 	 */
