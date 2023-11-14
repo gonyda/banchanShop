@@ -104,7 +104,6 @@
             background-color: #2980b9;
         }
     </style>
-    </style>
 </head>
 <body>
 
@@ -125,23 +124,26 @@
             </tr>
             </thead>
             <tbody>
-                <tr th:each="e : ${cartItems}">
+                <tr th:each="e : ${cart.cartItems}">
                     <td>
+                        <!-- TODO 장바구니 아이템 삭제 -->
                         <button class="delete-btn">삭제</button>
                     </td>
                     <td>
-                        <a class="product-name" th:text="${e.banchanName}" th:href="|/banchan/${e.banchanId}|">
+                        <a class="product-name" th:text="${e.responseUserCartItemBanchanDto.banchanName}" th:href="|/banchan/${e.responseUserCartItemBanchanDto.banchanId}|">
                             상품 1
                         </a>
                     </td>
-                    <td th:text="${e.banchanPrice}">10,000원</td>
+                    <td th:text="${e.responseUserCartItemBanchanDto.banchanPrice}">10,000원</td>
                     <td>
                         <div class="quantity-buttons">
                             <input type="number" th:value="${e.banchanQuantity}"/>
+                            <!-- TODO 수량변경 -->
                             <button class="change-quantity-btn">수량변경</button>
                         </div>
                     </td>
                     <td th:text="${e.banchanTotalPrice}">20,000원</td>
+
                 </tr>
             </tbody>
         </table>
@@ -149,6 +151,7 @@
         <div class="total">
             <p><strong>총 갯수:</strong> <span th:text="${cart.cartTotalQuantity}">35,000원</span></p>
             <p><strong>총 금액:</strong> <span th:text="${cart.cartTotalPrice}">35,000원</span></p>
+            <!-- TODO 주문하기 -->
             <button>주문하기</button>
         </div>
     </div>

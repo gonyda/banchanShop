@@ -1,5 +1,6 @@
 package com.bbsk.banchanshop.cart.service;
 
+import com.bbsk.banchanshop.cart.dto.ResponseUserCartDto;
 import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,11 +68,11 @@ public class CartService {
 
 	/**
 	 * 해당 유저의 장바구니 조회
-	 * @param user
+	 * @param cartId
 	 * @return
 	 */
-	public CartEntity findByCartId(UserEntity user) {
-		return cartRepository.findById(user.getUserId()).orElse(null);
+	public CartEntity findByCartId(String cartId) {
+		return cartRepository.findById(cartId).orElse(null);
 	}
 
 	/**

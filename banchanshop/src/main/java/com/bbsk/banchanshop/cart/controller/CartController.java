@@ -1,9 +1,9 @@
 package com.bbsk.banchanshop.cart.controller;
 
 import com.bbsk.banchanshop.banchan.service.BanchanService;
-import com.bbsk.banchanshop.cart.dto.InsertCartDto;
-import com.bbsk.banchanshop.cart.dto.UserCartDto;
-import com.bbsk.banchanshop.cart.dto.UserCartItemsDto;
+import com.bbsk.banchanshop.cart.dto.RequestInsertCartDto;
+import com.bbsk.banchanshop.cart.dto.ResponseUserCartDto;
+import com.bbsk.banchanshop.cart.dto.ResponseUserCartItemsDto;
 import com.bbsk.banchanshop.cart.entity.CartEntity;
 import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.user.entity.UserEntity;
@@ -31,33 +31,13 @@ public class CartController {
     
     @GetMapping("/cart-list")
     public String getCart(@AuthenticationPrincipal UserEntity user, Model model) {
+        model.addAttribute("cart", new ResponseUserCartDto().toDto(cartService.findByCartId(user.getUserId())));
 
-        List<UserCartItemsDto> cartItems = new ArrayList<>();
-        cartService.findAllByCartId(user.getUserId()).forEach(e -> {
-            cartItems.add(
-                UserCartItemsDto.builder()
-                        .banchanId(e.getBanchan().getBanchanId())
-                        .banchanName(e.getBanchan().getBanchanName())
-                        .banchanPrice(e.getBanchan().getBanchanPrice())
-                        .banchanTotalPrice(e.getBanchanTotalPrice())
-                        .banchanQuantity(e.getBanchanQuantity())
-                        .build()
-            );
-        });
-
-        CartEntity cart = cartService.findByCartId(user);
-
-        model.addAttribute("cartItems", cartItems);
-        model.addAttribute("cart", UserCartDto.builder()
-                                                            .cartTotalQuantity(cart.getCartTotalQuantity())
-                                                            .cartTotalPrice(cart.getCartTotalPrice())
-                                                            .build()
-                          );
         return "cart/cart";
     }
 
     @PostMapping("/insert-cart")
-    public String postCart(InsertCartDto dto, @AuthenticationPrincipal UserEntity user, RedirectAttributes ra) {
+    public String postCart(RequestInsertCartDto dto, @AuthenticationPrincipal UserEntity user, RedirectAttributes ra) {
 
         cartService.addBanchanInCart(user, banchanService.findBanchanById(dto.getBanchanId()), dto.getQuantity());
 
