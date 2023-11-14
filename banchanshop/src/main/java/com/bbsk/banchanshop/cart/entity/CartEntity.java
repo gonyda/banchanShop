@@ -45,14 +45,10 @@ public class CartEntity {
 	@ColumnDefault("0")
 	private int cartTotalQuantity;
 
-	public void updateCartItem(List<CartItemEntity> cartItem) {
-		this.cartItem = cartItem;
-	}
-
 	public void newCartOrUpdateCart(CartItemEntity newCartItem) {
 		int isExistIndex = -1;
 		for (int i = 0; i < this.cartItem.size(); i++) {
-			if(this.cartItem.get(i).getBanchan().getBanchanId() == newCartItem.getCartItemId()) {
+			if(this.cartItem.get(i).getBanchan().getBanchanId() == newCartItem.getBanchan().getBanchanId()) {
 				isExistIndex = i;
 				break;
 			}

@@ -26,6 +26,7 @@ public class CartService {
 
 	/**
 	 * 장바구니에 반찬 담기 및 수량 수정
+	 * 상품 디테일페이지에서 장바구니 담기 시 기존 장바구니에서 상품 더하기
 	 * @param user 장바구니 주인
 	 * @param banchan 담을 반찬
 	 * @param itemQuantity 담을 반찬 갯수
@@ -33,16 +34,18 @@ public class CartService {
 	@Transactional
 	public void addBanchanInCart(UserEntity user, BanchanEntity banchan, int itemQuantity) {
 		CartEntity cart = cartRepository.findById(user.getCart().getCartId()).orElse(null);
-		cart.updateCartItem(cartItemRepository.findAllByCartCartId(cart.getCartId()));
-		CartItemEntity existingCartItem = existingCartItem(user, banchan); // 장바구니에 존재하는 반찬인지
 
 		if (checkStockQuantity(banchan, itemQuantity)) {
 			throw new IllegalArgumentException("재고수량보다 더 많은 수량을 선택할 수 없습니다.");
 		}
 
+		// TODO 빼기도 가능하게 변경 필요
+
 		// 1. cart_item 저장 / 수정
+		CartItemEntity existingCartItem = existingCartItem(user, banchan); // 장바구니에 존재하는 반찬인지
 		cart.newCartOrUpdateCart((existingCartItem == null) ? newCartItem(banchan, itemQuantity, cart) :
 				 											  existingCartItem.updateCartItem(cart, banchan, itemQuantity));
+		// TODO 총합 문제있음
 
 		// 2. cart 총합 및 총갯수 수정
 		cart.updateTotalPiceAndTotalQuantity(getSumPrice(cart),
