@@ -6,13 +6,13 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class ResponseUserCartItemBanchanDto {
+public class ResponseBanchanDto {
 
     private Long banchanId; // 반찬 아이디
     private String banchanName; // 반찬이름
     private int banchanPrice; // 반찬가격
 
-    public ResponseUserCartItemBanchanDto(BanchanEntity banchan) {
+    public ResponseBanchanDto(BanchanEntity banchan) {
         this.banchanId = banchan.getBanchanId();
         this.banchanName = banchan.getBanchanName();
         this.banchanPrice = banchan.getBanchanPrice();

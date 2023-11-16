@@ -131,7 +131,7 @@ public class OrdersServiceTests {
                 .userId("test")
                 .userPw("test")
                 .userEmail("bbsk3939@gmil.com")
-                .userName("백승권")
+                .name("백승권")
                 .address("서울특별실 양천구")
                 .adminYn(UserType.N)
                 .phoneNumber("01064629657")

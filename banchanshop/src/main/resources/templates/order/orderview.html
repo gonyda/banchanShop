@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 및 결제</title>
+    <link rel="stylesheet" th:href="@{/layout/sidebar.css}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .content {
+            display: block;
+            padding: 0 20%;
+        }
+
+        .order-container,
+        .order-summary {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .order-summary table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .order-summary th,
+        .order-summary td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .order-summary th {
+            background-color: #f2f2f2;
+        }
+
+        .order-summary .total {
+            text-align: right;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 네비게이션 바를 포함합니다. -->
+<div th:insert="layout/sidebar :: sidebar"></div>
+
+<div class="content">
+    <div class="order-summary">
+        <h2>주문 상품 목록</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>상품명</th>
+                    <th>구매수량</th>
+                    <th>가격</th>
+                    <th>총합</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="e : ${cart.cartItems}">
+                    <td th:text="${e.responseBanchanDto.banchanName}">상품 1</td>
+                    <td th:text="${e.banchanQuantity}">2</td>
+                    <td th:text="${e.responseBanchanDto.banchanPrice}">10,000원</td>
+                    <td th:text="${e.banchanTotalPrice}">20,000원</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="total" th:text="|총 결제금액: ${cart.cartTotalPrice}|">총합: 35,000원</div>
+    </div>
+
+    <div class="order-container">
+        <h2>주문 및 결제</h2>
+        <form action="/submit-order" method="post">
+            <label for="name">이름:</label>
+            <input type="text" id="name" name="name" th:value="${user.name}" required>
+
+            <label for="address">주소:</label>
+            <input type="text" id="address" name="address" th:value="${user.address}" required>
+
+            <label for="email">이메일:</label>
+            <input type="email" id="email" name="email" th:value="${user.userEmail}" required>
+
+            <label for="email">전화번호:</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" th:value="${user.phoneNumber}" required>
+
+            <label for="paymentMethod">결제방법:</label>
+            <select id="paymentMethod" name="paymentMethod" required>
+                <option value="creditCard">신용카드</option>
+                <option value="bankTransfer">계좌이체</option>
+            </select>
+
+            <button type="submit">결제</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

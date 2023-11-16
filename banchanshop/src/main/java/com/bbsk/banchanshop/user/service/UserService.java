@@ -30,7 +30,7 @@ public class UserService {
 										.userId(user.getUserId())
 										.userPw(new Sha512CustomPasswordEncoder().encode(user.getUserPw()))
 										.userEmail(user.getUserEmail())
-										.userName(user.getUsername())
+										.name(user.getName())
 										.address(user.getAddress())
 										.adminYn(user.getAdminYn())
 										.cart(cartRepo.save(CartEntity.builder().cartId(user.getUserId()).build()))

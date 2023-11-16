@@ -51,7 +51,7 @@ public class UserEntity implements UserDetails {
 	private String userPw;
 	
 	@Column(nullable = false)
-	private String userName;
+	private String name;
 	
 	@Column(nullable = false, unique = true)
 	private String userEmail;

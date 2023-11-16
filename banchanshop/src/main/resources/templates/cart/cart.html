@@ -176,15 +176,15 @@
                         <button class="delete-btn" th:attr="onclick=|deleteCartItem('${e.cartItemId}')|">삭제</button>
                     </td>
                     <td>
-                        <a class="product-name" th:text="${e.responseUserCartItemBanchanDto.banchanName}" th:href="|/banchan/${e.responseUserCartItemBanchanDto.banchanId}|">
+                        <a class="product-name" th:text="${e.responseBanchanDto.banchanName}" th:href="|/banchan/${e.responseBanchanDto.banchanId}|">
                             상품 1
                         </a>
                     </td>
-                    <td th:text="${e.responseUserCartItemBanchanDto.banchanPrice}">10,000원</td>
+                    <td th:text="${e.responseBanchanDto.banchanPrice}">10,000원</td>
                     <td>
                         <div class="quantity-buttons">
-                            <input type="number" th:value="${e.banchanQuantity}" th:id="|banchan-quantity-${e.responseUserCartItemBanchanDto.banchanId}|"/>
-                            <button class="change-quantity-btn" th:attr="onclick=|updateQuantity('${e.responseUserCartItemBanchanDto.banchanId}')|">수량변경</button>
+                            <input type="number" th:value="${e.banchanQuantity}" th:id="|banchan-quantity-${e.responseBanchanDto.banchanId}|"/>
+                            <button class="change-quantity-btn" th:attr="onclick=|updateQuantity('${e.responseBanchanDto.banchanId}')|">수량변경</button>
                         </div>
                     </td>
                     <td th:text="${e.banchanTotalPrice}">20,000원</td>
@@ -196,8 +196,7 @@
         <div class="total">
             <p><strong>총 갯수:</strong> <span th:text="${cart.cartTotalQuantity}">35,000원</span></p>
             <p><strong>총 금액:</strong> <span th:text="${cart.cartTotalPrice}">35,000원</span></p>
-            <!-- TODO 주문하기 -->
-            <button>주문하기</button>
+            <button onclick="location.href='/order/'">주문하기</button>
         </div>
     </div>
 

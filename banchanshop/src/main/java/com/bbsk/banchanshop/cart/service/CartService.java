@@ -1,6 +1,5 @@
 package com.bbsk.banchanshop.cart.service;
 
-import com.bbsk.banchanshop.cart.dto.ResponseUserCartDto;
 import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,13 +38,10 @@ public class CartService {
 			throw new IllegalArgumentException("재고수량보다 더 많은 수량을 선택할 수 없습니다.");
 		}
 
-		// TODO 빼기도 가능하게 변경 필요
-
 		// 1. cart_item 저장 / 수정
 		CartItemEntity existingCartItem = existingCartItem(user, banchan); // 장바구니에 존재하는 반찬인지
 		cart.newCartOrUpdateCart((existingCartItem == null) ? newCartItem(banchan, itemQuantity, cart) :
 				 											  existingCartItem.updateCartItem(cart, banchan, itemQuantity));
-		// TODO 총합 문제있음
 
 		// 2. cart 총합 및 총갯수 수정
 		cart.updateTotalPiceAndTotalQuantity(getSumPrice(cart),

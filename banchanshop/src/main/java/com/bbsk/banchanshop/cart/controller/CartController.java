@@ -2,7 +2,7 @@ package com.bbsk.banchanshop.cart.controller;
 
 import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.cart.dto.RequestCartItemDto;
-import com.bbsk.banchanshop.cart.dto.ResponseUserCartDto;
+import com.bbsk.banchanshop.cart.dto.ResponseCartDto;
 import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class CartController {
     
     @GetMapping("/cart-list")
     public String getCart(@AuthenticationPrincipal UserEntity user, Model model) {
-        model.addAttribute("cart", new ResponseUserCartDto().toDto(cartService.findByCartId(user.getUserId())));
+        model.addAttribute("cart", new ResponseCartDto().toDto(cartService.findByCartId(user.getUserId())));
 
         return "cart/cart";
     }

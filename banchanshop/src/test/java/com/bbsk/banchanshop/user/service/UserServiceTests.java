@@ -30,14 +30,14 @@ public class UserServiceTests {
 				.userId("test")
 				.userPw("test")
 				.userEmail("bbsk3939@gmil.com")
-				.userName("백승권")
+				.name("백승권")
 				.address("서울특별실 양천구")
 				.adminYn(UserType.N)
 				.phoneNumber("01064629657")
 				.build());
 
 		assertEquals("test", registEntity.getUserId());
-		assertEquals("백승권", registEntity.getUsername());
+		assertEquals("백승권", registEntity.getName());
 		assertEquals(UserType.N, registEntity.getAdminYn());
 		assertEquals("test", registEntity.getCart().getCartId());
 	}
