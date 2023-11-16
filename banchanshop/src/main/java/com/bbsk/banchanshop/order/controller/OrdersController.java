@@ -21,12 +21,12 @@ public class OrdersController {
     private final OrdersService ordersService;
     private final CartService cartService;
 
-    @GetMapping("/")
+    @GetMapping("/form")
     public String viewOrder(Model model, @AuthenticationPrincipal UserEntity user) {
 
         model.addAttribute("cart", new ResponseCartDto().toDto(cartService.findByCartId(user.getUserId())));
         model.addAttribute("user", user);
-        log.info("===== {}", user.toString());
+
         return "order/orderview";
     }
 }

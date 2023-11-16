@@ -15,8 +15,6 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userId){
-        return userRepository.findById(userId).orElseThrow(() -> {
-            throw new UsernameNotFoundException("아이디 또는 비밀번호를 다시 확인해주세요.");
-        });
+        return userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("아이디 또는 비밀번호를 다시 확인해주세요."));
     }
 }
