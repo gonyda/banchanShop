@@ -54,15 +54,11 @@ public class CartController {
     @PutMapping("/cartitem/{id}/{quantity}")
     public ResponseEntity<?> updateQuantity(@PathVariable("id") Long banchanId, @PathVariable("quantity") int quantity
             , @AuthenticationPrincipal UserEntity user) {
-
-        log.info("banchanId: {}", banchanId);
-        log.info("quantity: {}", quantity);
-
         try {
             cartService.addBanchanInCart(user, banchanService.findBanchanById(banchanId), quantity);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 }

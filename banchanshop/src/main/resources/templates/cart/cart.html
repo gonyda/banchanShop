@@ -134,9 +134,11 @@
             })
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error("수량 변경 하는데 실패하였습니다.");
+                    return response.text().then((errorText) => {
+                        throw new Error(errorText);
+                    });
                 }
-                response.text()
+                return response.text();
             })
             .then((data) => {
                 alert("장바구니 수량 변경을 하였습니다");
@@ -144,6 +146,7 @@
             })
             .catch((error) => {
                 alert(error)
+                window.location.reload();
             });
 
         }
