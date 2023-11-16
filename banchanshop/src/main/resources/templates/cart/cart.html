@@ -125,6 +125,28 @@
                 alert(error)
             });
         }
+
+        function updateQuantity(banchanId) {
+            var quantity = document.getElementById("banchan-quantity-" + banchanId).value;
+
+            fetch("/cart/cartitem/" + banchanId + "/" + quantity, {
+              method: "PUT",
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("수량 변경 하는데 실패하였습니다.");
+                }
+                response.text()
+            })
+            .then((data) => {
+                alert("장바구니 수량 변경을 하였습니다");
+                window.location.reload();
+            })
+            .catch((error) => {
+                alert(error)
+            });
+
+        }
     </script>
 </head>
 <body>
@@ -158,9 +180,8 @@
                     <td th:text="${e.responseUserCartItemBanchanDto.banchanPrice}">10,000원</td>
                     <td>
                         <div class="quantity-buttons">
-                            <input type="number" th:value="${e.banchanQuantity}"/>
-                            <!-- TODO 수량변경 -->
-                            <button class="change-quantity-btn">수량변경</button>
+                            <input type="number" th:value="${e.banchanQuantity}" th:id="|banchan-quantity-${e.responseUserCartItemBanchanDto.banchanId}|"/>
+                            <button class="change-quantity-btn" th:attr="onclick=|updateQuantity('${e.responseUserCartItemBanchanDto.banchanId}')|">수량변경</button>
                         </div>
                     </td>
                     <td th:text="${e.banchanTotalPrice}">20,000원</td>
