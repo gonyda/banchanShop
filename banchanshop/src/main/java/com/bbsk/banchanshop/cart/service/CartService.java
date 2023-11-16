@@ -60,7 +60,7 @@ public class CartService {
 	 */
 	@Transactional
 	public void deleteCartItem(UserEntity userEntity, Long cartItemId) {
-		CartEntity findCart = userEntity.getCart();
+		CartEntity findCart = cartRepository.findById(userEntity.getCart().getCartId()).orElse(null);
 		CartItemEntity findCartItem = cartItemRepository.findById(cartItemId).orElse(null);
 
 		cartItemRepository.deleteById(cartItemId);

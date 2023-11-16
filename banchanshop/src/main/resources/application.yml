@@ -23,7 +23,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
         # n + 1 문제 해결, in절로 쿼리 실행
-        # default_batch_fetch_size: 100
+        default_batch_fetch_size: 10
   devtools:
     # Auto Restart
     restart:

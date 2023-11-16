@@ -104,6 +104,28 @@
             background-color: #2980b9;
         }
     </style>
+
+    <script>
+        function deleteCartItem(cartItemId){
+
+            fetch("/cart/cartitem/" + cartItemId, {
+              method: "DELETE",
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("장바구니 목록을 삭제하는데 실패하였습니다.");
+                }
+                response.text()
+            })
+            .then((data) => {
+                alert("장바구니 목록을 삭제하였습니다");
+                window.location.reload();
+            })
+            .catch((error) => {
+                alert(error)
+            });
+        }
+    </script>
 </head>
 <body>
 
@@ -126,8 +148,7 @@
             <tbody>
                 <tr th:each="e : ${cart.cartItems}">
                     <td>
-                        <!-- TODO 장바구니 아이템 삭제 -->
-                        <button class="delete-btn">삭제</button>
+                        <button class="delete-btn" th:attr="onclick=|deleteCartItem('${e.cartItemId}')|">삭제</button>
                     </td>
                     <td>
                         <a class="product-name" th:text="${e.responseUserCartItemBanchanDto.banchanName}" th:href="|/banchan/${e.responseUserCartItemBanchanDto.banchanId}|">
