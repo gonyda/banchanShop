@@ -88,7 +88,7 @@
 <body>
 
 <!-- 네비게이션 바를 포함합니다. -->
-<div th:insert="layout/sidebar :: sidebar"></div>
+<div th:replace="layout/sidebar :: sidebar"></div>
 
 <div class="content">
     <div class="order-summary">
@@ -116,7 +116,7 @@
 
     <div class="order-container">
         <h2>주문 및 결제</h2>
-        <form action="/submit-order" method="post">
+        <form action="/payment/form" method="post">
             <label for="name">이름:</label>
             <input type="text" id="name" name="name" th:value="${user.name}" required>
 
@@ -129,10 +129,10 @@
             <label for="email">전화번호:</label>
             <input type="text" id="phoneNumber" name="phoneNumber" th:value="${user.phoneNumber}" required>
 
-            <label for="paymentMethod">결제방법:</label>
-            <select id="paymentMethod" name="paymentMethod" required>
-                <option value="creditCard">신용카드</option>
-                <option value="bankTransfer">계좌이체</option>
+            <label for="paymentType">결제방법:</label>
+            <select id="paymentType" name="paymentType" required>
+                <option value="CARD">신용카드</option>
+                <option value="ACCOUNTTRANSFER">계좌이체</option>
             </select>
 
             <button type="submit">결제</button>

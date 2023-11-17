@@ -2,18 +2,16 @@ package com.bbsk.banchanshop.order.service;
 
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
-import com.bbsk.banchanshop.order.dto.OrderOptionDto;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
-import com.bbsk.banchanshop.order.entity.OrderOptionEntity;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.repository.OrderItemRepository;
-import com.bbsk.banchanshop.order.repository.OrderOptionRepository;
 import com.bbsk.banchanshop.order.repository.OrdersRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,7 +21,6 @@ public class OrdersService {
 
     private final OrdersRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final OrderOptionRepository orderOptionRepository;
 
     /**
      * 결제 완료 후 주문 생성
@@ -33,7 +30,7 @@ public class OrdersService {
      * @param paymentCompany
      */
     @Transactional
-    public void createOrder(UserEntity user, PaymentType paymentType, String paymentCompany, OrderType orderType, List<OrderOptionDto> orderOption) {
+    public void createOrder(UserEntity user, PaymentType paymentType, String paymentCompany, OrderType orderType) {
         /*
         * 주문 시 반찬재고 체크
         * */
@@ -46,18 +43,12 @@ public class OrdersService {
         saveOrderItem(user, saveOrder(user, paymentType, paymentCompany, orderType));
 
         /*
-        * 예약주문
-        * order_option 테이블 저장
-        * */
-        if (OrderType.PREORDER == orderType) {
-            saveOrderOption(orderOption);
+         * 일반주문 시 재고차감
+         * 예약주문은 주문들어온 뒤에 반찬을 만들기 때문에 재고관리가 필요없음
+         * */
+        if (OrderType.ORDER == orderType) {
+            subtractBanchanQuantity(user);
         }
-
-        /*
-        * 반찬 재고 차감
-        * */
-        subtractBanchanQuantity(user);
-
     }
 
     /**
@@ -112,23 +103,6 @@ public class OrdersService {
                             .banchan(e.getBanchan())
                             .quantity(e.getBanchanQuantity())
                             .totalPrice(e.getBanchanTotalPrice())
-                            .build()
-            );
-        });
-    }
-
-    /**
-     * order_option 테이블 INSERT
-     * @param orderOption
-     */
-    private void saveOrderOption(List<OrderOptionDto> orderOption) {
-        orderOption.forEach(e -> {
-            orderOptionRepository.save(
-                    OrderOptionEntity.builder()
-                            .orderItem(orderItemRepository.findById(e.getOrderItemId()).orElse(null))
-                            .optionAmount(e.getOptionAmount())
-                            .optionSpicy(e.getOptionSpicy())
-                            .optionPickUp(e.getOptionPickUp())
                             .build()
             );
         });

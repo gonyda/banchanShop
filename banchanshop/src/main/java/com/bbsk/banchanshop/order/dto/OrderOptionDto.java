@@ -1,17 +1,21 @@
 package com.bbsk.banchanshop.order.dto;
 
 import com.bbsk.banchanshop.contant.OrderOption;
-import lombok.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
+@Embeddable
 public class OrderOptionDto {
-    private Long orderItemId;
-    private OrderOption optionAmount;
-    private OrderOption optionSpicy;
-    private LocalDateTime optionPickUp;
+
+    private LocalDate pickUp;
+
+    @Enumerated(value = EnumType.STRING)
+    private OrderOption amount;
+
+    @Enumerated(value = EnumType.STRING)
+    private OrderOption spicy;
+
 }

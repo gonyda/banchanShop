@@ -1,6 +1,7 @@
 package com.bbsk.banchanshop.order.entity;
 
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
+import com.bbsk.banchanshop.order.dto.OrderOptionDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,4 +32,7 @@ public class OrderItemEntity {
 
 	@Column(nullable = false)
 	private int totalPrice;
+
+	@Embedded
+	private OrderOptionDto orderOption;
 }

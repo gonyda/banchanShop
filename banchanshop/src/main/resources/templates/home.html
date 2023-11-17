@@ -48,7 +48,7 @@
 <body>
 
     <!-- 네비게이션 바를 포함합니다. -->
-    <div th:insert="layout/sidebar :: sidebar"></div>
+    <div th:replace="layout/sidebar :: sidebar"></div>
 
     <div class="content grid-container">
         <div class="product" th:each="banchan: ${banchanList}">

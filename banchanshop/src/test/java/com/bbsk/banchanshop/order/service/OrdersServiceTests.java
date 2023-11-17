@@ -5,7 +5,6 @@ import com.bbsk.banchanshop.banchan.entity.BanchanIngredientEntity;
 import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.contant.*;
-import com.bbsk.banchanshop.order.dto.OrderOptionDto;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.payment.service.card.KakaoCard;
@@ -15,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -65,19 +63,10 @@ public class OrdersServiceTests {
                 .build();
         // 주문 종류
         OrderType orderType = OrderType.PREORDER;
-        // 주문 옵션
-        List<OrderOptionDto> orderOptions = new ArrayList<>();
-        OrderOptionDto orderOption = OrderOptionDto.builder()
-                .orderItemId(2L)
-                .optionAmount(OrderOption.SMALL)
-                .optionSpicy(OrderOption.SPICY)
-                .optionPickUp(LocalDateTime.now())
-                .build();
-        orderOptions.add(orderOption);
 
         assertThrows(IllegalArgumentException.class, () -> {
             // 주문생성
-            orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany().name(), orderType, orderOptions);
+            orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany().name(), orderType);
         });
     }
 
@@ -224,16 +213,7 @@ public class OrdersServiceTests {
                 .build();
         // 주문 종류
         OrderType orderType = OrderType.PREORDER;
-        // 주문 옵션
-        List<OrderOptionDto> orderOptions = new ArrayList<>();
-        OrderOptionDto orderOption = OrderOptionDto.builder()
-                .orderItemId(2L)
-                .optionAmount(OrderOption.SMALL)
-                .optionSpicy(OrderOption.SPICY)
-                .optionPickUp(LocalDateTime.now())
-                .build();
-        orderOptions.add(orderOption);
 
-        orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany().name(), orderType, orderOptions);
+        orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany().name(), orderType);
     }
 }

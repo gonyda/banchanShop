@@ -5,7 +5,6 @@ import com.bbsk.banchanshop.banchan.entity.BanchanIngredientEntity;
 import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.contant.*;
-import com.bbsk.banchanshop.order.dto.OrderOptionDto;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.service.OrdersService;
 import com.bbsk.banchanshop.payment.service.account.ShinhanBank;
@@ -165,17 +164,8 @@ class PaymentServiceTests {
                 .build();
         // 주문 종류
         OrderType orderType = OrderType.PREORDER;
-        // 주문 옵션
-        List<OrderOptionDto> orderOptions = new ArrayList<>();
-        OrderOptionDto orderOption = OrderOptionDto.builder()
-                .orderItemId(2L)
-                .optionAmount(OrderOption.SMALL)
-                .optionSpicy(OrderOption.SPICY)
-                .optionPickUp(LocalDateTime.now())
-                .build();
-        orderOptions.add(orderOption);
 
-        paymentService.startPayToOrder(userId, paymentType, kakaoCard, orderType, orderOptions);
+        paymentService.startPayToOrder(userId, paymentType, kakaoCard, orderType);
     }
 
     private void saveOrderByOrder() {
@@ -192,6 +182,6 @@ class PaymentServiceTests {
         OrderType orderType = OrderType.ORDER;
         // 주문 옵션 X
 
-        paymentService.startPayToOrder(userId, paymentType, bank, orderType, null);
+        paymentService.startPayToOrder(userId, paymentType, bank, orderType);
     }
 }
