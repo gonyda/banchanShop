@@ -34,7 +34,9 @@ public class OrdersService {
         /*
         * 주문 시 반찬재고 체크
         * */
-        checkStockQuantity(user);
+        if (OrderType.ORDER == orderType) {
+            checkStockQuantity(user);
+        }
 
         /*
         * 1. Orders 테이블 저장

@@ -12,9 +12,6 @@
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
         }
 
@@ -83,7 +80,38 @@
         button:hover {
             background-color: #45a049;
         }
+
+        /* 추가된 CSS 부분 */
+        .item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .option-group {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .option {
+            flex: 1;
+            margin-right: 10px;
+        }
     </style>
+
+    <script>
+        function changeOrderType(selectBox) {
+            var orderOption = document.getElementById("order-option");
+
+            if(selectBox.value == "PREORDER") {
+                orderOption.style.display = "block";
+            } else {
+                orderOption.style.display = "none";
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -91,53 +119,92 @@
 <div th:replace="layout/sidebar :: sidebar"></div>
 
 <div class="content">
-    <div class="order-summary">
-        <h2>주문 상품 목록</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>상품명</th>
-                    <th>구매수량</th>
-                    <th>가격</th>
-                    <th>총합</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="e : ${cart.cartItems}">
-                    <td th:text="${e.responseBanchanDto.banchanName}">상품 1</td>
-                    <td th:text="${e.banchanQuantity}">2</td>
-                    <td th:text="${e.responseBanchanDto.banchanPrice}">10,000원</td>
-                    <td th:text="${e.banchanTotalPrice}">20,000원</td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="total" th:text="|총 결제금액: ${cart.cartTotalPrice}|">총합: 35,000원</div>
-    </div>
+    <form action="/payment/form" method="post" style="padding: 5% 0px;">
+        <div class="order-summary">
 
-    <div class="order-container">
-        <h2>주문 및 결제</h2>
-        <form action="/payment/form" method="post">
-            <label for="name">이름:</label>
-            <input type="text" id="name" name="name" th:value="${user.name}" required>
+            <h2>주문 상품 목록</h2>
 
-            <label for="address">주소:</label>
-            <input type="text" id="address" name="address" th:value="${user.address}" required>
-
-            <label for="email">이메일:</label>
-            <input type="email" id="email" name="email" th:value="${user.userEmail}" required>
-
-            <label for="email">전화번호:</label>
-            <input type="text" id="phoneNumber" name="phoneNumber" th:value="${user.phoneNumber}" required>
-
-            <label for="paymentType">결제방법:</label>
-            <select id="paymentType" name="paymentType" required>
-                <option value="CARD">신용카드</option>
-                <option value="ACCOUNTTRANSFER">계좌이체</option>
+            <select name="orderType" onchange="changeOrderType(this)">
+                <option value="ORDER">일반주문 - 판매자가 정한대로 판매</option>
+                <option value="PREORDER">예약주문 - 구매자가 양, 맛, 포장시간 선택가능</option>
             </select>
+            <table>
+                <thead>
+                    <tr>
+                        <th>상품명</th>
+                        <th>구매수량</th>
+                        <th>가격</th>
+                        <th>총합</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="e : ${cart.cartItems}">
+                        <td th:text="${e.responseBanchanDto.banchanName}">상품 1</td>
+                        <td th:text="${e.banchanQuantity}">2</td>
+                        <td th:text="${e.responseBanchanDto.banchanPrice}">10,000원</td>
+                        <td th:text="${e.banchanTotalPrice}">20,000원</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="total" th:text="|총 결제금액: ${cart.cartTotalPrice}|">총합: 35,000원</div>
+        </div>
 
-            <button type="submit">결제</button>
-        </form>
-    </div>
+        <div class="order-summary" id="order-option" style="display: none">
+            <h2>주문 옵션</h2>
+            <div th:each="e, i: ${cart.cartItems}" class="item">
+                <h3 th:text="${e.responseBanchanDto.banchanName}">상품 1</h3>
+
+                <div class="option-group">
+                    <input type="hidden" th:value="${e.responseBanchanDto.banchanId}" th:name="${'requestOrderOptionDto[' + i.index + '].banchanId'}">
+                    <div class="option">
+                        <label for="amount">양:</label>
+                        <select id="amount" th:name="${'requestOrderOptionDto[' + i.index + '].amount'}">
+                            <option value="SMALL">적게</option>
+                            <option value="REGULAR">보통</option>
+                            <option value="LARGE">많이</option>
+                        </select>
+                    </div>
+                    <div class="option">
+                        <label for="spicy">맵기:</label>
+                        <select id="spicy" th:name="${'requestOrderOptionDto[' + i.index + '].spicy'}">
+                            <option value="MILD">약간</option>
+                            <option value="MEDIUM">보통</option>
+                            <option value="SPICY">매운맛</option>
+                        </select>
+                    </div>
+                    <div class="option">
+                        <label for="pickUp">포장시간:</label>
+                        <input type="datetime-local" id="pickUp" th:name="${'requestOrderOptionDto[' + i.index + '].pickUp'}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-container">
+            <h2>주문 및 결제</h2>
+                <label for="name">이름:</label>
+                <input type="text" id="name" name="name" th:value="${user.name}" required>
+
+                <label for="address">주소:</label>
+                <input type="text" id="address" name="address" th:value="${user.address}" required>
+
+                <label for="email">이메일:</label>
+                <input type="email" id="email" name="email" th:value="${user.userEmail}" required>
+
+                <label for="email">전화번호:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" th:value="${user.phoneNumber}" required>
+
+                <label for="paymentType">결제방법:</label>
+                <select id="paymentType" name="paymentType" required>
+                    <option value="CARD">신용카드</option>
+                    <option value="ACCOUNTTRANSFER">계좌이체</option>
+                </select>
+
+                <button type="submit">결제</button>
+        </div>
+
+
+    </form>
 </div>
 
 </body>

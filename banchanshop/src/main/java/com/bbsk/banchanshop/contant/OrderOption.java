@@ -29,5 +29,5 @@ public enum OrderOption {
     /**
      * 양 많이
      */
-    LAGE
+    LARGE
 }
