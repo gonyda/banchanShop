@@ -12,7 +12,6 @@
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            height: 100vh;
         }
 
         .content {
@@ -196,6 +195,7 @@
 
                 <label for="paymentType">결제방법:</label>
                 <select id="paymentType" name="paymentType" required>
+                    <!--TODO enum 활용-->
                     <option value="CARD">신용카드</option>
                     <option value="ACCOUNTTRANSFER">계좌이체</option>
                 </select>

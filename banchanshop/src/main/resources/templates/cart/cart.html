@@ -15,7 +15,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
 
         /* 나의 장바구니 페이지 스타일 */
@@ -173,7 +172,6 @@
             <tbody>
                 <tr th:each="e : ${cart.cartItems}">
                     <td>
-                        <!-- TODO form방식으로 변경 -->
                         <button class="delete-btn" th:attr="onclick=|deleteCartItem('${e.cartItemId}')|">삭제</button>
                     </td>
                     <td>
@@ -184,7 +182,6 @@
                     <td th:text="${e.responseBanchanDto.banchanPrice}">10,000원</td>
                     <td>
                         <div class="quantity-buttons">
-                            <!-- TODO form방식으로 변경 -->
                             <input type="number" th:value="${e.banchanQuantity}" th:id="|banchan-quantity-${e.responseBanchanDto.banchanId}|"/>
                             <button class="change-quantity-btn" th:attr="onclick=|updateQuantity('${e.responseBanchanDto.banchanId}')|">수량변경</button>
                         </div>

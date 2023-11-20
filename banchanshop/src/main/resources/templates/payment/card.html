@@ -16,7 +16,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
 
         .payment-container {
@@ -83,10 +82,10 @@
     <form action="/process-payment" method="post">
         <label for="cardIssuer">카드사 선택:</label>
         <select id="cardIssuer" name="cardIssuer" required>
+            <!--TODO enum 활용-->
             <option value="visa">Visa</option>
             <option value="mastercard">MasterCard</option>
             <option value="amex">American Express</option>
-            <!-- Add more card issuers as needed -->
         </select>
 
         <label for="cardNumber">카드번호:</label>
@@ -95,7 +94,6 @@
         <label for="cardCVC">CVC:</label>
         <input type="text" id="cardCVC" name="cardCVC" placeholder="CVC" required>
 
-        <!-- Add hidden input for total payment amount -->
         <input type="hidden" id="totalAmount" name="totalAmount" value="35000">
 
         <div class="total-amount">

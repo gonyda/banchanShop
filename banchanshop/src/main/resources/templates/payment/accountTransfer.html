@@ -16,7 +16,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
 
         .payment-container {
@@ -83,9 +82,9 @@
     <form action="/process-payment" method="post">
         <label for="cardIssuer">은행사 선택:</label>
         <select id="cardIssuer" name="cardIssuer" required>
+            <!--TODO enum 활용-->
             <option value="visa">국민은행</option>
             <option value="mastercard">신한은행</option>
-            <!-- Add more card issuers as needed -->
         </select>
 
         <label for="cardNumber">계좌번호:</label>
@@ -94,7 +93,6 @@
         <label for="cardCVC">계좌 비밀번호:</label>
         <input type="password" id="cardCVC" name="cardCVC" placeholder="비밀번호 4자리" required>
 
-        <!-- Add hidden input for total payment amount -->
         <input type="hidden" id="totalAmount" name="totalAmount" value="35000">
 
         <div class="total-amount">
