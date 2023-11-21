@@ -13,11 +13,6 @@ public class ResponseCartItemsDto {
     private int banchanQuantity; // 상품 갯수
     private int banchanTotalPrice; // 상품 가격
 
-    public ResponseCartItemsDto(BanchanEntity banchan, int banchanQuantity, int banchanTotalPrice) {
-        this.banchanTotalPrice = banchanTotalPrice;
-        this.banchanQuantity = banchanQuantity;
-    }
-
     public ResponseCartItemsDto(CartItemEntity cartItem) {
         this.cartItemId = cartItem.getCartItemId();
         this.banchanTotalPrice = cartItem.getBanchanTotalPrice();

@@ -1,5 +1,6 @@
 package com.bbsk.banchanshop.banchan.controller;
 
+import com.bbsk.banchanshop.banchan.dto.ResponseBanchanDto;
 import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class BanchanController {
     @GetMapping("/{id}")
     public String getBanchan(@PathVariable("id") Long id, @AuthenticationPrincipal UserEntity user, Model model) {
 
-        model.addAttribute("banchan", banchanService.findBanchanById(id));
+        model.addAttribute("banchan", new ResponseBanchanDto(banchanService.findBanchanById(id)));
 
         return "banchan/banchanDetail";
     }

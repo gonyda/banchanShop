@@ -1,7 +1,9 @@
 package com.bbsk.banchanshop.banchan.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.bbsk.banchanshop.banchan.dto.ResponseBanchanDto;
 import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -69,7 +71,13 @@ public class BanchanService {
 		return banchanRepository.findById(banchanId).orElse(null).updateBanchanQuantity(newQuantity);
 	}
 
-	public List<BanchanEntity> findAll() {
-		return banchanRepository.findAll();
+	public List<ResponseBanchanDto> findAll() {
+
+		List<ResponseBanchanDto> responseBanchanDtoList = new ArrayList<>();
+		banchanRepository.findAll().stream().forEach(e -> {
+			responseBanchanDtoList.add(new ResponseBanchanDto(e.getBanchanId(), e.getBanchanName(), e.getBanchanPrice(), e.getBanchanStockQuantity()));
+		});
+
+		return responseBanchanDtoList;
 	}
 }
