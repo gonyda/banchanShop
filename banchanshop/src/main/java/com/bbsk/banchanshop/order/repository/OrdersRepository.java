@@ -10,7 +10,7 @@ import java.util.List;
 public interface OrdersRepository extends JpaRepository<OrdersEntity, Long> {
     OrdersEntity findTop1RecentOrderByUserUserIdOrderByOrderDateDesc(String userId);
 
-    List<OrdersEntity> findAllByUserUserId(String userId);
+    List<OrdersEntity> findAllByUserUserIdOrderByOrderIdDesc(String userId);
 
     @Query(value = "select sum(total_price) from orders where user_id = :userId", nativeQuery = true)
     int sumTotalPriceByUserUserId(String userId);

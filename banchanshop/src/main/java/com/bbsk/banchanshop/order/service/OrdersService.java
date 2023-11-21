@@ -78,7 +78,7 @@ public class OrdersService {
      * @return
      */
     public List<ResponseOrderDto> findAllByUserId(String userId) {
-        List<OrdersEntity> ordersEntityList = orderRepository.findAllByUserUserId(userId);
+        List<OrdersEntity> ordersEntityList = orderRepository.findAllByUserUserIdOrderByOrderIdDesc(userId);
 
         List<ResponseOrderDto> responseOrderDto = new ArrayList<>();
         for (OrdersEntity order : ordersEntityList) {

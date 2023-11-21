@@ -41,7 +41,6 @@ public class OrdersController {
     public String myOrder(@AuthenticationPrincipal UserEntity user, Model model) {
         log.info("=== 나의 주문내역 ===");
 
-        log.info(ordersService.findAllByUserId(user.getUserId()).toString());
         model.addAttribute("orderList", ordersService.findAllByUserId(user.getUserId()));
         model.addAttribute("totalPrice", ordersService.getTotalPrice(user.getUserId()));
 
