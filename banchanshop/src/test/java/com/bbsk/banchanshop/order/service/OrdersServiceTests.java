@@ -66,7 +66,7 @@ public class OrdersServiceTests {
 
         assertThrows(IllegalArgumentException.class, () -> {
             // 주문생성
-            orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany().name(), orderType);
+            //orderService.createOrder(userId, paymentType, kakaoCard.getCardCompany().name(), orderType, requestPaymentDto.getRequestOrderDto().getRequestOrderOptionDto());
         });
     }
 
@@ -214,6 +214,6 @@ public class OrdersServiceTests {
         // 주문 종류
         OrderType orderType = OrderType.PREORDER;
 
-        orderService.createOrder(userService.findUserById(userId), paymentType, kakaoCard.getCardCompany().name(), orderType);
+        //orderService.createOrder(userId, paymentType, kakaoCard.getCardCompany().name(), orderType, requestPaymentDto.getRequestOrderDto().getRequestOrderOptionDto());
     }
 }

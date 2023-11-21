@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class ShinhanBank extends AccountProcess implements AccountStrategy{
+public class KookminBank extends AccountProcess implements AccountStrategy{
 
     private BankCompany bank;
     private String accountNumber;

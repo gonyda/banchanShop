@@ -7,7 +7,8 @@ public abstract class CardProcess {
 
     /**
      * 결제 프로세스 순서
-     * @param card
+     * @param cardNumber
+     * @param cardCVC
      * @return
      */
     public boolean processPay(Long cardNumber, int cardCVC) {

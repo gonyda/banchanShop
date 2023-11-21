@@ -8,9 +8,4 @@ import com.bbsk.banchanshop.payment.service.PaymentStrategy;
  */
 public interface CardStrategy extends PaymentStrategy {
 
-    Long getCardNumber();
-
-    int getCardCvc();
-
-    CardCompany getCardCompany();
 }

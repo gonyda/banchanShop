@@ -1,10 +1,16 @@
 package com.bbsk.banchanshop.payment.service;
 
+import com.bbsk.banchanshop.contant.BankCompany;
+import com.bbsk.banchanshop.contant.CardCompany;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.order.service.OrdersService;
+import com.bbsk.banchanshop.payment.dto.RequestPaymentDto;
 import com.bbsk.banchanshop.payment.service.account.AccountStrategy;
+import com.bbsk.banchanshop.payment.service.account.KookminBank;
+import com.bbsk.banchanshop.payment.service.account.ShinhanBank;
 import com.bbsk.banchanshop.payment.service.card.CardStrategy;
+import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,34 +24,16 @@ public class PaymentService {
     private final OrdersService ordersService;
     private final UserService userService;
 
-    public void startPayToOrder(String userId, PaymentType paymentType, PaymentStrategy payment, OrderType orderType) {
-        switch (paymentType) {
+    @Transactional
+    public void startPayToOrder(RequestPaymentDto requestPaymentDto, UserEntity user) {
+
+        switch (requestPaymentDto.getPaymentType()) {
             case CARD -> {
-                startPayToOrderByCard(userId, paymentType, (CardStrategy) payment, orderType);
+                startPayToOrderByCard(requestPaymentDto, user);
             }
             case ACCOUNTTRANSFER -> {
-                startPayToOrderByAccount(userId, paymentType, (AccountStrategy) payment, orderType);
+                startPayToOrderByAccount(requestPaymentDto, user);
             }
-        }
-    }
-
-    /**
-     * 카드 결제 진행, 결제 완료 시 주문생성
-     *
-     * @param userId      결제 유저
-     * @param paymentType 결제 방식
-     * @param card        결제 카드
-     * @param orderType   주문 방식
-     */
-    @Transactional
-    public void startPayToOrderByCard(String userId, PaymentType paymentType, CardStrategy card, OrderType orderType) {
-        if (card.startPayProcess()) {
-            /*
-             * 결제 성공 후 주문생성
-             * */
-            ordersService.createOrder(userService.findUserById(userId), paymentType, card.getCardCompany().name(), orderType);
-        } else {
-            throw new IllegalArgumentException("결제를 진행하는 중에 오류가 발생했습니다. 잠시후 다시 시도해주세요.");
         }
     }
 
@@ -54,25 +42,79 @@ public class PaymentService {
      * 결제 승인 요청 후 주문 생성
      * 주문 생성 후 은행사에게 출금 요청
      *
-     * @param userId      결제 유저
-     * @param paymentType 결제 방식
-     * @param bank        계좌이체 은행
-     * @param orderType   주문 방식
+     * @param requestPaymentDto
+     * @param user
      */
     @Transactional
-    public void startPayToOrderByAccount(String userId, PaymentType paymentType, AccountStrategy bank, OrderType orderType) {
-        if (bank.startPayProcess()) {
+    private void startPayToOrderByAccount(RequestPaymentDto requestPaymentDto, UserEntity user) {
+        AccountStrategy accountPayment = (AccountStrategy) getPayment(requestPaymentDto);
+
+        if (accountPayment.startPayProcess()) {
             /*
-            * 결제승인 요청 후 주문생성
-            * */
-            ordersService.createOrder(userService.findUserById(userId), paymentType, bank.getBankCompany().name(), orderType);
+             * 결제승인 요청 후 주문생성
+             * */
+            ordersService.createOrder(user.getUserId(), requestPaymentDto.getPaymentType(), requestPaymentDto.getAccount().getBankCompany().name(), requestPaymentDto.getRequestOrderDto().getOrderType(), requestPaymentDto.getRequestOrderDto().getRequestOrderOptionDto());
 
             /*
-            * 주문생성 후 은행사에게 출금요청
-            * */
-            bank.responseResult();
+             * 주문생성 후 은행사에게 출금요청
+             * */
+            accountPayment.responseResult();
         } else {
             throw new IllegalArgumentException("결제를 진행하는 중에 오류가 발생했습니다. 잠시후 다시 시도해주세요.");
         }
+    }
+
+    /**
+     * 카드 결제 진행, 결제 완료 시 주문생성
+     *
+     * @param requestPaymentDto
+     * @param user
+     */
+    @Transactional
+    public void startPayToOrderByCard(RequestPaymentDto requestPaymentDto, UserEntity user) {
+        CardStrategy cardPayment = (CardStrategy) getPayment(requestPaymentDto);
+        if (cardPayment.startPayProcess()) {
+            /*
+             * 결제 성공 후 주문생성
+             * */
+            ordersService.createOrder(user.getUserId(), requestPaymentDto.getPaymentType(), requestPaymentDto.getCard().getCardCompany().name(), requestPaymentDto.getRequestOrderDto().getOrderType(), requestPaymentDto.getRequestOrderDto().getRequestOrderOptionDto());
+        } else {
+            throw new IllegalArgumentException("결제를 진행하는 중에 오류가 발생했습니다. 잠시후 다시 시도해주세요.");
+        }
+    }
+
+    private PaymentStrategy getPayment(RequestPaymentDto requestPaymentDto) {
+        /*
+        * 카드결제
+        * */
+        if(requestPaymentDto.getPaymentType() == PaymentType.CARD) {
+            if(requestPaymentDto.getCard().getCardCompany() == CardCompany.SHINHANCARD) {
+
+            } else if (requestPaymentDto.getCard().getCardCompany() == CardCompany.KAKAOPAY) {
+
+            }
+
+        /*
+        * 계좌이체
+        * */
+        } else if (requestPaymentDto.getPaymentType() == PaymentType.ACCOUNTTRANSFER) {
+            if(requestPaymentDto.getAccount().getBankCompany() == BankCompany.KOOKMINBANK) {
+                return KookminBank.builder()
+                        .userName(requestPaymentDto.getAccount().getUserName())
+                        .accountNumber(requestPaymentDto.getAccount().getAccountNumber())
+                        .accountPw(requestPaymentDto.getAccount().getAccountPw())
+                        .bank(requestPaymentDto.getAccount().getBankCompany())
+                        .build();
+            } else if (requestPaymentDto.getAccount().getBankCompany() == BankCompany.SHINHANBANK) {
+                return ShinhanBank.builder()
+                        .userName(requestPaymentDto.getAccount().getUserName())
+                        .accountNumber(requestPaymentDto.getAccount().getAccountNumber())
+                        .accountPw(requestPaymentDto.getAccount().getAccountPw())
+                        .bank(requestPaymentDto.getAccount().getBankCompany())
+                        .build();
+            }
+        }
+
+        throw new IllegalArgumentException("결제방법이 올바르지 않습니다. 다시 확인해주세요.");
     }
 }

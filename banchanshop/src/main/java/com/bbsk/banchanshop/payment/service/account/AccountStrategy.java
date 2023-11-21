@@ -11,10 +11,4 @@ public interface AccountStrategy extends PaymentStrategy {
      */
     void responseResult();
 
-    String getAccountNumber();
-
-    String getUserName();
-
-    BankCompany getBankCompany();
-
 }

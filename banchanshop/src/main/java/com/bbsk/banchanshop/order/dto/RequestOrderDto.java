@@ -14,14 +14,18 @@ import java.util.List;
 @Setter
 public class RequestOrderDto {
 
-    private String name;
-    private String address;
-    private String email;
-    private String phoneNumber;
+    private String name; // 주문자 이름
+    private String address; // 배송지
+    private String email; // 주문자 이메일
+    private String phoneNumber; // 주문자 전화번호
 
-    private PaymentType paymentType;
-    private OrderType orderType;
+    private PaymentType paymentType; // 결제방법
 
-    private List<RequestOrderOptionDto> requestOrderOptionDto;
+    private OrderType orderType; // 주문종류
+    private List<RequestOrderOptionDto> requestOrderOptionDto; // 주문 옵션
+
+    public void initOrderOption() {
+        requestOrderOptionDto.forEach(RequestOrderOptionDto::setInit);
+    }
 
 }

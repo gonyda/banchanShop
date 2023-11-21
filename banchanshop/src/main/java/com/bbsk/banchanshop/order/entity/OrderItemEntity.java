@@ -2,6 +2,7 @@ package com.bbsk.banchanshop.order.entity;
 
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.order.dto.OrderOptionDto;
+import com.bbsk.banchanshop.order.dto.RequestOrderOptionDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,4 +36,12 @@ public class OrderItemEntity {
 
 	@Embedded
 	private OrderOptionDto orderOption;
+
+	public void updateOrderOption(RequestOrderOptionDto orderOption) {
+		this.orderOption = OrderOptionDto.builder()
+							.spicy(orderOption.getSpicy())
+							.amount(orderOption.getAmount())
+							.pickUp(orderOption.getPickUp())
+							.build();
+	}
 }

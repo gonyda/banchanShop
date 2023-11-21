@@ -18,4 +18,11 @@ public class RequestOrderOptionDto {
     private OrderOption spicy;
     private LocalDateTime pickUp;
 
+    public void setInit() {
+        banchanId = null;
+        amount = null;
+        spicy = null;
+        pickUp = null;
+    }
+
 }

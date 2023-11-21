@@ -2,16 +2,17 @@ package com.bbsk.banchanshop.order.service;
 
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
+import com.bbsk.banchanshop.order.dto.RequestOrderOptionDto;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.repository.OrderItemRepository;
 import com.bbsk.banchanshop.order.repository.OrdersRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
+import com.bbsk.banchanshop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,16 +22,21 @@ public class OrdersService {
 
     private final OrdersRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final UserRepository userRepository;
 
     /**
      * 결제 완료 후 주문 생성
-     * @param user
-     * @param orderType
+     *
+     * @param userId
      * @param paymentType
      * @param paymentCompany
+     * @param orderType
+     * @param orderOption
      */
     @Transactional
-    public void createOrder(UserEntity user, PaymentType paymentType, String paymentCompany, OrderType orderType) {
+    public void createOrder(String userId, PaymentType paymentType, String paymentCompany, OrderType orderType, List<RequestOrderOptionDto> orderOption) {
+        UserEntity user = userRepository.findById(userId).orElse(null);
+
         /*
         * 주문 시 반찬재고 체크
         * */
@@ -42,7 +48,7 @@ public class OrdersService {
         * 1. Orders 테이블 저장
         * 2. Order_Item 테이블 저장
         * */
-        saveOrderItem(user, saveOrder(user, paymentType, paymentCompany, orderType));
+        saveOrderItem(user, saveOrder(user, paymentType, paymentCompany, orderType), orderOption);
 
         /*
          * 일반주문 시 재고차감
@@ -79,6 +85,7 @@ public class OrdersService {
      * @param orderType
      * @return
      */
+    @Transactional
     private OrdersEntity saveOrder(UserEntity user, PaymentType paymentType, String cardCompany, OrderType orderType) {
         return orderRepository.save(
                 OrdersEntity.builder()
@@ -94,19 +101,30 @@ public class OrdersService {
 
     /**
      * order_item 테이블 INSERT
+     *
      * @param user
      * @param saveOrder
+     * @param orderOptions
      */
-    private void saveOrderItem(UserEntity user, OrdersEntity saveOrder) {
+    @Transactional
+    private void saveOrderItem(UserEntity user, OrdersEntity saveOrder, List<RequestOrderOptionDto> orderOptions) {
         user.getCart().getCartItem().forEach(e -> {
-            orderItemRepository.save(
-                    OrderItemEntity.builder()
-                            .order(saveOrder)
-                            .banchan(e.getBanchan())
-                            .quantity(e.getBanchanQuantity())
-                            .totalPrice(e.getBanchanTotalPrice())
-                            .build()
-            );
+            OrderItemEntity orderItem = OrderItemEntity.builder()
+                    .order(saveOrder)
+                    .banchan(e.getBanchan())
+                    .quantity(e.getBanchanQuantity())
+                    .totalPrice(e.getBanchanTotalPrice())
+                    .build();
+
+            if(saveOrder.getOrderType() == OrderType.PREORDER) {
+                orderOptions.stream().forEach(orderOption -> {
+                    if (orderOption.getBanchanId().equals(orderItem.getBanchan().getBanchanId())) {
+                        orderItem.updateOrderOption(orderOption);
+                    }
+                });
+            }
+
+            orderItemRepository.save(orderItem);
         });
     }
 
