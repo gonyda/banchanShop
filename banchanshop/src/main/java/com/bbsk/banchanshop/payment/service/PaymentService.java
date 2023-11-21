@@ -2,8 +2,8 @@ package com.bbsk.banchanshop.payment.service;
 
 import com.bbsk.banchanshop.contant.BankCompany;
 import com.bbsk.banchanshop.contant.CardCompany;
-import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
+import com.bbsk.banchanshop.order.dto.CreateOrderDto;
 import com.bbsk.banchanshop.order.service.OrdersService;
 import com.bbsk.banchanshop.payment.dto.RequestPaymentDto;
 import com.bbsk.banchanshop.payment.service.account.AccountStrategy;
@@ -55,8 +55,13 @@ public class PaymentService {
             /*
              * 결제승인 요청 후 주문생성
              * */
-            //TODO 파라미터 -> 객체
-            ordersService.createOrder(user.getUserId(), requestPaymentDto.getPaymentType(), requestPaymentDto.getAccount().getBankCompany().name(), requestPaymentDto.getRequestOrderDto().getOrderType(), requestPaymentDto.getRequestOrderDto().getRequestOrderOptionDto());
+            ordersService.createOrder(CreateOrderDto.builder()
+                                        .userId(user.getUserId())
+                                        .paymentType(requestPaymentDto.getPaymentType())
+                                        .paymentCompanyName(requestPaymentDto.getAccount().getBankCompany().name())
+                                        .orderType(requestPaymentDto.getRequestOrderDto().getOrderType())
+                                        .requestOrderOptionDtoList(requestPaymentDto.getRequestOrderDto().getRequestOrderOptionDto())
+                                        .build());
 
             /*
              * 주문생성 후 은행사에게 출금요청
@@ -80,7 +85,13 @@ public class PaymentService {
             /*
              * 결제 성공 후 주문생성
              * */
-            ordersService.createOrder(user.getUserId(), requestPaymentDto.getPaymentType(), requestPaymentDto.getCard().getCardCompany().name(), requestPaymentDto.getRequestOrderDto().getOrderType(), requestPaymentDto.getRequestOrderDto().getRequestOrderOptionDto());
+            ordersService.createOrder(CreateOrderDto.builder()
+                                        .userId(user.getUserId())
+                                        .paymentType(requestPaymentDto.getPaymentType())
+                                        .paymentCompanyName(requestPaymentDto.getCard().getCardCompany().name())
+                                        .orderType(requestPaymentDto.getRequestOrderDto().getOrderType())
+                                        .requestOrderOptionDtoList(requestPaymentDto.getRequestOrderDto().getRequestOrderOptionDto())
+                                        .build());
         } else {
             throw new IllegalArgumentException("결제를 진행하는 중에 오류가 발생했습니다. 잠시후 다시 시도해주세요.");
         }

@@ -2,6 +2,7 @@ package com.bbsk.banchanshop.order.service;
 
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
+import com.bbsk.banchanshop.order.dto.CreateOrderDto;
 import com.bbsk.banchanshop.order.dto.RequestOrderOptionDto;
 import com.bbsk.banchanshop.order.dto.ResponseOrderDto;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
@@ -31,20 +32,16 @@ public class OrdersService {
     /**
      * 결제 완료 후 주문 생성
      *
-     * @param userId
-     * @param paymentType
-     * @param paymentCompany
-     * @param orderType
-     * @param orderOption
+     * @param dto
      */
     @Transactional
-    public void createOrder(String userId, PaymentType paymentType, String paymentCompany, OrderType orderType, List<RequestOrderOptionDto> orderOption) {
-        UserEntity user = userRepository.findById(userId).orElse(null);
+    public void createOrder(CreateOrderDto dto) {
+        UserEntity user = userRepository.findById(dto.getUserId()).orElse(null);
 
         /*
         * 주문 시 반찬재고 체크
         * */
-        if (OrderType.ORDER == orderType) {
+        if (OrderType.ORDER == dto.getOrderType()) {
             checkStockQuantity(user);
         }
 
@@ -52,13 +49,13 @@ public class OrdersService {
         * 1. Orders 테이블 저장
         * 2. Order_Item 테이블 저장
         * */
-        saveOrderItem(user, saveOrder(user, paymentType, paymentCompany, orderType), orderOption);
+        saveOrderItem(user, saveOrder(user, dto.getPaymentType(), dto.getPaymentCompanyName(), dto.getOrderType()), dto.getRequestOrderOptionDtoList());
 
         /*
          * 일반주문 시 재고차감
          * 예약주문은 주문들어온 뒤에 반찬을 만들기 때문에 재고관리가 필요없음
          * */
-        if (OrderType.ORDER == orderType) {
+        if (OrderType.ORDER == dto.getOrderType()) {
             subtractBanchanQuantity(user);
         }
     }
