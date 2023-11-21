@@ -1,33 +1,11 @@
 package com.bbsk.banchanshop.contant;
 
 public enum OrderOption {
-    /**
-     * 덜 맵게
-     */
-    MILD,
+    MILD, // 덜 맵게
+    MEDIUM, // 보통
+    SPICY, // 맵게
 
-    /**
-     * 보통맛
-     */
-    MEDIUM,
-
-    /**
-     * 맵게
-     */
-    SPICY,
-
-    /**
-     * 양 적게
-     */
-    SMALL,
-
-    /**
-     * 양 보통
-     */
-    REGULAR,
-
-    /**
-     * 양 많이
-     */
-    LARGE
+    SMALL, // 적게
+    REGULAR, // 보통
+    LARGE // 많이
 }

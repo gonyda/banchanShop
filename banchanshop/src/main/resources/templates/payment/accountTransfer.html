@@ -88,10 +88,11 @@
 
         <label for="bankCompany">은행사 선택:</label>
         <select id="bankCompany" name="account.bankCompany" required>
-            <!--TODO enum 활용-->
-            <option value="KOOKMINBANK">국민은행</option>
-            <option value="SHINHANBANK">신한은행</option>
+            <th:block th:each="e: ${companyList}">
+                <option th:value="${e}" th:text="${e.name}"></option>
+            </th:block>
         </select>
+
 
         <label for="accountNumber">계좌번호:</label>
         <input type="text" id="accountNumber" name="account.accountNumber" placeholder="- 제외하고 작성해주세요." required>

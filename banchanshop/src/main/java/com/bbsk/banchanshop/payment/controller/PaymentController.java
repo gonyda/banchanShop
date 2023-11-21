@@ -1,5 +1,7 @@
 package com.bbsk.banchanshop.payment.controller;
 
+import com.bbsk.banchanshop.contant.BankCompany;
+import com.bbsk.banchanshop.contant.CardCompany;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.order.dto.RequestOrderDto;
 import com.bbsk.banchanshop.payment.dto.RequestPaymentDto;
@@ -36,9 +38,11 @@ public class PaymentController {
 
         switch (requestOrderDto.getPaymentType()) {
             case CARD -> {
+                model.addAttribute("companyList", CardCompany.values());
                 return PAYMENT_CARD_URL;
             }
             case ACCOUNTTRANSFER -> {
+                model.addAttribute("companyList", BankCompany.values());
                 return PAYMENT_ACCOUNTTRANSFER_URL;
             }
             default -> {

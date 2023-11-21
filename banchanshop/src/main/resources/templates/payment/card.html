@@ -85,9 +85,9 @@
 
         <label for="cardCompany">카드사 선택:</label>
         <select id="cardCompany" name="card.cardCompany" required>
-            <!--TODO enum 활용-->
-            <option value="KAKAOPAY">카카오페이</option>
-            <option value="SHINHANCARD">신한카드</option>
+            <th:block th:each="e: ${companyList}">
+                <option th:value="${e}" th:text="${e.name}"></option>
+            </th:block>
         </select>
 
         <label for="cardNumber">카드번호:</label>
