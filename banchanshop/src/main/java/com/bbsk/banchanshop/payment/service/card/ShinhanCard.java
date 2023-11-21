@@ -12,10 +12,9 @@ import lombok.*;
 public class ShinhanCard extends CardProcess implements CardStrategy {
 
     private Long cardNumber;
+    private int cardPw;
     private int cardCvc;
-    private final CardCompany cardCompany = CardCompany.SHINHANCARD;
-
-    private String userName;
+    private CardCompany cardCompany;
 
     /**
      * 카드번호와 CVC를 카드사에게 넘겨 유효성 체크
@@ -26,7 +25,7 @@ public class ShinhanCard extends CardProcess implements CardStrategy {
     @Override
     protected boolean cardNumberAndCardCvcCheck(Long cardNumber, int cardCvs) {
         System.out.println("카드번호 : " + cardNumber + " / " + "CVC : " + cardCvs);
-        System.out.println("신한카드 - 카드번호, CVC 체크");
+        System.out.println(cardCompany + " - 카드번호, CVC 체크");
         return true;
     }
 
@@ -36,7 +35,7 @@ public class ShinhanCard extends CardProcess implements CardStrategy {
      */
     @Override
     protected boolean balanceCheck() {
-        System.out.println("신한카드 - 잔액체크 통과");
+        System.out.println(cardCompany + " - 잔액체크 통과");
         return true;
     }
 
@@ -46,7 +45,7 @@ public class ShinhanCard extends CardProcess implements CardStrategy {
      */
     @Override
     protected boolean requestPay() {
-        System.out.println("신한카드 - 결제요청");
+        System.out.println(cardCompany + " - 결제요청");
         return true;
     }
 
@@ -57,8 +56,8 @@ public class ShinhanCard extends CardProcess implements CardStrategy {
      */
     @Override
     public boolean startPayProcess() {
-        if(this.processPay(cardNumber, cardCvc)) {
-            System.out.println("신한카드 - 결제가 완료되었습니다.");
+        if(this.processPay(this.cardNumber, this.cardCvc)) {
+            System.out.println(cardCompany + " - 결제가 완료되었습니다.");
             return true;
         }
         return false;

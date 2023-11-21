@@ -108,6 +108,7 @@ public class OrdersService {
      */
     @Transactional
     private void saveOrderItem(UserEntity user, OrdersEntity saveOrder, List<RequestOrderOptionDto> orderOptions) {
+        // TODO 지저분한 로직 리팩토링 필요
         user.getCart().getCartItem().forEach(e -> {
             OrderItemEntity orderItem = OrderItemEntity.builder()
                     .order(saveOrder)

@@ -12,4 +12,8 @@ public class RequestCardDto {
 
     private CardCompany cardCompany; // 카드사
 
+    private Long cardNumber; // 카드번호
+    private int cardPw; // 카드비밀번호
+    private int cardCVC; // 카드 CVC
+
 }

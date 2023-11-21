@@ -80,27 +80,43 @@
 <div class="payment-container content">
     <h2>카드 결제</h2>
 
-    <form action="/process-payment" method="post">
-        <label for="cardIssuer">카드사 선택:</label>
-        <select id="cardIssuer" name="cardIssuer" required>
+    <form action="/payment/process" method="post">
+        <input type="hidden" name="paymentType" value="CARD">
+
+        <label for="cardCompany">카드사 선택:</label>
+        <select id="cardCompany" name="card.cardCompany" required>
             <!--TODO enum 활용-->
-            <option value="visa">Visa</option>
-            <option value="mastercard">MasterCard</option>
-            <option value="amex">American Express</option>
+            <option value="KAKAOPAY">카카오페이</option>
+            <option value="SHINHANCARD">신한카드</option>
         </select>
 
         <label for="cardNumber">카드번호:</label>
-        <input type="text" id="cardNumber" name="cardNumber" placeholder="카드번호" required>
+        <input type="text" id="cardNumber" name="card.cardNumber" placeholder="카드번호" required>
+
+        <label for="cardPw">카드 비밀번호:</label>
+        <input type="password" id="cardPw" name="card.cardPw" placeholder="카드 비밀번호" required>
 
         <label for="cardCVC">CVC:</label>
-        <input type="text" id="cardCVC" name="cardCVC" placeholder="CVC" required>
-
-        <input type="hidden" id="totalAmount" name="totalAmount" value="35000">
+        <input type="text" id="cardCVC" name="card.cardCVC" placeholder="CVC" required>
 
         <div class="total-amount">
-            <p>총 결제금액: 35,000원</p>
+            <p th:text="|총 결제금액: ${order.totalPrice}원|">총 결제금액: 35,000원</p>
         </div>
 
+        <!-- 주문 정보 -->
+        <input type="hidden" th:value="${order.name}" name="requestOrderDto.name">
+        <input type="hidden" th:value="${order.address}" name="requestOrderDto.address">
+        <input type="hidden" th:value="${order.email}" name="requestOrderDto.email">
+        <input type="hidden" th:value="${order.phoneNumber}" name="requestOrderDto.phoneNumber">
+        <input type="hidden" th:value="${order.paymentType}" name="requestOrderDto.paymentType">
+        <input type="hidden" th:value="${order.orderType}" name="requestOrderDto.orderType">
+        <th:block th:each="e, i : ${order.requestOrderOptionDto}">
+            <input type="hidden" th:value="${e.banchanId}" th:name="${'requestOrderDto.requestOrderOptionDto[' + i.index + '].banchanId'}">
+            <input type="hidden" th:value="${e.amount}" th:name="${'requestOrderDto.requestOrderOptionDto[' + i.index + '].amount'}">
+            <input type="hidden" th:value="${e.spicy}" th:name="${'requestOrderDto.requestOrderOptionDto[' + i.index + '].spicy'}">
+            <input type="hidden" th:value="${e.pickUp}" th:name="${'requestOrderDto.requestOrderOptionDto[' + i.index + '].pickUp'}">
+        </th:block>
+        <!-- 주문 정보 end-->
         <button type="submit">결제하기</button>
     </form>
 </div>

@@ -17,7 +17,6 @@ import lombok.ToString;
 public class RequestPaymentDto {
 
     private PaymentType paymentType; // 결제 방법
-    private int totalPrice; // 총 결제 금액
 
     private RequestAccountDto account; // 계좌이체 정보
     private RequestCardDto card; // 카드결제 정보

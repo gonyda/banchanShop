@@ -160,7 +160,7 @@ class PaymentServiceTests {
         // 카드 정보
         KakaoCard kakaoCard = KakaoCard.builder()
                 .cardNumber(1111L)
-                .cardCvc(444)
+                .cardPw(444)
                 .build();
         // 주문 종류
         OrderType orderType = OrderType.PREORDER;

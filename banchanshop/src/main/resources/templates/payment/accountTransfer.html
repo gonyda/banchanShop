@@ -99,10 +99,8 @@
         <label for="accountPw">계좌 비밀번호:</label>
         <input type="password" id="accountPw" name="account.accountPw" placeholder="비밀번호 4자리" required>
 
-        <input type="hidden" id="totalPrice" name="totalPrice" value="35000">
-
         <div class="total-amount">
-            <p>총 결제금액: 35,000원</p>
+            <p th:text="|총 결제금액: ${order.totalPrice}원|">총 결제금액: 35,000원</p>
         </div>
 
         <!-- 주문 정보 -->

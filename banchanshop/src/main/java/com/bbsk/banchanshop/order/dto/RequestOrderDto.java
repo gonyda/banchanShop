@@ -18,6 +18,7 @@ public class RequestOrderDto {
     private String address; // 배송지
     private String email; // 주문자 이메일
     private String phoneNumber; // 주문자 전화번호
+    private int totalPrice; // 총 주문금액
 
     private PaymentType paymentType; // 결제방법
 

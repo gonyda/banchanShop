@@ -10,6 +10,8 @@ import com.bbsk.banchanshop.payment.service.account.AccountStrategy;
 import com.bbsk.banchanshop.payment.service.account.KookminBank;
 import com.bbsk.banchanshop.payment.service.account.ShinhanBank;
 import com.bbsk.banchanshop.payment.service.card.CardStrategy;
+import com.bbsk.banchanshop.payment.service.card.KakaoCard;
+import com.bbsk.banchanshop.payment.service.card.ShinhanCard;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +55,7 @@ public class PaymentService {
             /*
              * 결제승인 요청 후 주문생성
              * */
+            //TODO 파라미터 -> 객체
             ordersService.createOrder(user.getUserId(), requestPaymentDto.getPaymentType(), requestPaymentDto.getAccount().getBankCompany().name(), requestPaymentDto.getRequestOrderDto().getOrderType(), requestPaymentDto.getRequestOrderDto().getRequestOrderOptionDto());
 
             /*
@@ -89,9 +92,18 @@ public class PaymentService {
         * */
         if(requestPaymentDto.getPaymentType() == PaymentType.CARD) {
             if(requestPaymentDto.getCard().getCardCompany() == CardCompany.SHINHANCARD) {
-
+                return ShinhanCard.builder()
+                        .cardNumber(requestPaymentDto.getCard().getCardNumber())
+                        .cardPw(requestPaymentDto.getCard().getCardPw())
+                        .cardCvc(requestPaymentDto.getCard().getCardCVC())
+                        .cardCompany(requestPaymentDto.getCard().getCardCompany())
+                        .build();
             } else if (requestPaymentDto.getCard().getCardCompany() == CardCompany.KAKAOPAY) {
-
+                return KakaoCard.builder()
+                        .cardNumber(requestPaymentDto.getCard().getCardNumber())
+                        .cardPw(requestPaymentDto.getCard().getCardPw())
+                        .cardCompany(requestPaymentDto.getCard().getCardCompany())
+                        .build();
             }
 
         /*

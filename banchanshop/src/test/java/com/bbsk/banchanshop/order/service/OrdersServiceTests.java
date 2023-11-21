@@ -59,7 +59,7 @@ public class OrdersServiceTests {
         // 카드 정보
         KakaoCard kakaoCard = KakaoCard.builder()
                 .cardNumber(111111111L)
-                .cardCvc(342)
+                .cardPw(342)
                 .build();
         // 주문 종류
         OrderType orderType = OrderType.PREORDER;
@@ -209,7 +209,7 @@ public class OrdersServiceTests {
         // 카드 정보
         KakaoCard kakaoCard = KakaoCard.builder()
                 .cardNumber(1111L)
-                .cardCvc(444)
+                .cardPw(444)
                 .build();
         // 주문 종류
         OrderType orderType = OrderType.PREORDER;

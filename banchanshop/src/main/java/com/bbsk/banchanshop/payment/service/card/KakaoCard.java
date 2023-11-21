@@ -20,13 +20,8 @@ public class KakaoCard extends CardProcess implements CardStrategy {
      * */
 
     private Long cardNumber;
-    private int cardCvc;
-    private final CardCompany cardCompany = CardCompany.KAKAOPAY;
-
-    private String userName;
-    private String userPhoneNumber;
-    private String userAddress;
-    private String requestCompany;
+    private int cardPw;
+    private CardCompany cardCompany;
 
     /**
      * 카드번호와 CVC를 카드사에게 넘겨 유효성 체크
@@ -35,9 +30,9 @@ public class KakaoCard extends CardProcess implements CardStrategy {
      * @return
      */
     @Override
-    protected boolean cardNumberAndCardCvcCheck(Long cardNumber, int cardCvs) {
-        System.out.println("카드번호 : " + cardNumber + " / " + "CVC : " + cardCvs);
-        System.out.println("카카오페이 - 카드번호, CVC 체크");
+    protected boolean cardNumberAndCardCvcCheck(Long cardNumber, int cardPw) {
+        System.out.println("카드번호 : " + cardNumber + " / " + "Password : " + cardPw);
+        System.out.println(cardCompany + " - 카드번호, 비밀번호 체크");
         return true;
     }
 
@@ -47,7 +42,7 @@ public class KakaoCard extends CardProcess implements CardStrategy {
      */
     @Override
     protected boolean balanceCheck() {
-        System.out.println("카카오페이 - 잔액체크 통과");
+        System.out.println(cardCompany + " - 잔액체크 통과");
         return true;
     }
 
@@ -57,14 +52,14 @@ public class KakaoCard extends CardProcess implements CardStrategy {
      */
     @Override
     protected boolean requestPay() {
-        System.out.println("카카오페이 - 결제요청");
+        System.out.println(cardCompany + " - 결제요청");
         return true;
     }
 
     @Override
     public boolean startPayProcess() {
-        if(this.processPay(cardNumber, cardCvc)) {
-            System.out.println("카카오페이 - 결제가 완료되었습니다.");
+        if(this.processPay(this.cardNumber, this.cardPw)) {
+            System.out.println(cardCompany + " - 결제가 완료되었습니다.");
             return true;
         }
         return false;
