@@ -3,6 +3,7 @@ package com.bbsk.banchanshop.order.service;
 import com.bbsk.banchanshop.contant.OrderType;
 import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.order.dto.RequestOrderOptionDto;
+import com.bbsk.banchanshop.order.dto.ResponseOrderDto;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.repository.OrderItemRepository;
@@ -10,14 +11,17 @@ import com.bbsk.banchanshop.order.repository.OrdersRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class OrdersService {
 
     private final OrdersRepository orderRepository;
@@ -73,8 +77,15 @@ public class OrdersService {
      * @param userId
      * @return
      */
-    public List<OrdersEntity> findAllByUserId(String userId) {
-        return orderRepository.findAllByUserUserId(userId);
+    public List<ResponseOrderDto> findAllByUserId(String userId) {
+        List<OrdersEntity> ordersEntityList = orderRepository.findAllByUserUserId(userId);
+
+        List<ResponseOrderDto> responseOrderDto = new ArrayList<>();
+        for (OrdersEntity order : ordersEntityList) {
+            responseOrderDto.add(new ResponseOrderDto(order));
+        }
+
+        return responseOrderDto;
     }
 
     /**
@@ -149,5 +160,14 @@ public class OrdersService {
         user.getCart().getCartItem().forEach(e -> {
             e.getBanchan().updateBanchanQuantity(e.getBanchan().getBanchanStockQuantity() - e.getBanchanQuantity());
         });
+    }
+
+    /**
+     * 사용자의 주문 총액 조회
+     * @param userId
+     * @return
+     */
+    public int getTotalPrice(String userId) {
+        return orderRepository.sumTotalPriceByUserUserId(userId);
     }
 }

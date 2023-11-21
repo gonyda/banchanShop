@@ -1,6 +1,7 @@
 package com.bbsk.banchanshop.order.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bbsk.banchanshop.contant.OrderType;
@@ -26,11 +27,12 @@ public class OrdersEntity {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
+	@ToString.Exclude
 	private UserEntity user;
 
 	@ToString.Exclude
 	@OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-	private List<OrderItemEntity> orderItems = null;
+	private List<OrderItemEntity> orderItems = new ArrayList<>();
 
 	@Enumerated(value = EnumType.STRING)
 	@Column(nullable = false)

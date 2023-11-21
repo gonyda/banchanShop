@@ -3,6 +3,9 @@ package com.bbsk.banchanshop.order.controller;
 import com.bbsk.banchanshop.cart.dto.ResponseCartDto;
 import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.contant.PaymentType;
+import com.bbsk.banchanshop.order.dto.ResponseOrderDto;
+import com.bbsk.banchanshop.order.entity.OrderItemEntity;
+import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.service.OrdersService;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/order")
@@ -30,5 +35,16 @@ public class OrdersController {
         model.addAttribute("paymentList", PaymentType.values());
 
         return "order/orderview";
+    }
+
+    @GetMapping("/myorder")
+    public String myOrder(@AuthenticationPrincipal UserEntity user, Model model) {
+        log.info("=== 나의 주문내역 ===");
+
+        log.info(ordersService.findAllByUserId(user.getUserId()).toString());
+        model.addAttribute("orderList", ordersService.findAllByUserId(user.getUserId()));
+        model.addAttribute("totalPrice", ordersService.getTotalPrice(user.getUserId()));
+
+        return "order/myorder";
     }
 }

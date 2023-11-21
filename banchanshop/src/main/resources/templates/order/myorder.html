@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 내역</title>
+
+    <link rel="stylesheet" th:href="@{/layout/sidebar.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .order-history-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .total {
+            text-align: right;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        td span {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        td hr {
+            margin: 10px 0;
+            border: none;
+            border-top: 1px solid #ddd;
+        }
+
+        .order-item {
+            margin-bottom: 20px;
+        }
+
+        .order-option span {
+            margin-right: 10px;
+            color: #666; /* 연한 회색 글씨 색상 */
+        }
+
+        .order-option strong {
+            font-weight: normal; /* strong 태그에 대한 기본 글씨 두께로 변경 */
+        }
+
+        .order-option::before {
+            content: "●";
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<!-- 네비게이션 바를 포함합니다. -->
+<div th:replace="layout/sidebar :: sidebar"></div>
+
+<div class="order-history-container content">
+    <h2>주문 내역</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>주문 번호</th>
+            <th>주문 일자</th>
+            <th>상품 목록 및 주문 옵션</th>
+            <th>총 결제 금액</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="e : ${orderList}">
+            <td th:text="|${e.orderId} / ${e.orderType.name}|">2023001</td>
+            <td th:text="${e.orderDate}">2023-11-15 14:30:00</td>
+            <td>
+                <th:block th:each="orderItem: ${e.orderItem}">
+                    <div class="order-item">
+                        <span><strong th:text="| ${orderItem.banchanName} ${orderItem.quantity}개|">김치찌게 </strong></span>
+                        <span class="order-option"><strong>가격: </strong><th:block th:text="|${orderItem.banchanTotalPrice}원|"></th:block></span>
+                        <th:block th:if="${orderItem.amount != null}">
+                            <span class="order-option"><strong>양: </strong><th:block th:text="${orderItem.amount}"></th:block></span>
+                        </th:block>
+                        <th:block th:if="${orderItem.spicy != null}">
+                            <span class="order-option"><strong>맵기: </strong><th:block th:text="${orderItem.spicy}"></th:block></span>
+                        </th:block>
+                        <th:block th:if="${orderItem.pickUp != null}">
+                            <span class="order-option"><strong>포장시간: </strong><th:block th:text="${orderItem.pickUp}"></th:block></span>
+                        </th:block>
+                    </div>
+                </th:block>
+
+            </td>
+            <td th:text="|${e.orderPrice}원|">35,000원</td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <div class="total">전체 주문 금액: <th:block th:text="|${totalPrice}원|"></th:block></div>
+</div>
+
+</body>
+</html>
