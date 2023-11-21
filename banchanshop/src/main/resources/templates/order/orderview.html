@@ -206,9 +206,9 @@
 
                 <label for="paymentType">결제방법:</label>
                 <select id="paymentType" name="paymentType" required>
-                    <!--TODO enum 활용-->
-                    <option value="CARD">신용카드</option>
-                    <option value="ACCOUNTTRANSFER">계좌이체</option>
+                    <th:block th:each="e: ${paymentList}">
+                        <option th:value="${e}" th:text="${e.name}"></option>
+                    </th:block>
                 </select>
 
                 <button type="submit">결제</button>

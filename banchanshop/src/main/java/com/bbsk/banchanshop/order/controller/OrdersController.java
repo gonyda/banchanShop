@@ -2,6 +2,7 @@ package com.bbsk.banchanshop.order.controller;
 
 import com.bbsk.banchanshop.cart.dto.ResponseCartDto;
 import com.bbsk.banchanshop.cart.service.CartService;
+import com.bbsk.banchanshop.contant.PaymentType;
 import com.bbsk.banchanshop.order.service.OrdersService;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class OrdersController {
 
         model.addAttribute("cart", new ResponseCartDto().toDto(cartService.findByCartId(user.getUserId())));
         model.addAttribute("user", user);
+        model.addAttribute("paymentList", PaymentType.values());
 
         return "order/orderview";
     }
