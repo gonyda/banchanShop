@@ -32,13 +32,13 @@ public class UserServiceTests {
 				.userEmail("bbsk3939@gmil.com")
 				.name("백승권")
 				.address("서울특별실 양천구")
-				.adminYn(UserType.N)
+				.role(UserType.ROLE_USER)
 				.phoneNumber("01064629657")
 				.build());
 
 		assertEquals("test", registEntity.getUserId());
 		assertEquals("백승권", registEntity.getName());
-		assertEquals(UserType.N, registEntity.getAdminYn());
+		assertEquals(UserType.ROLE_USER, registEntity.getRole());
 		assertEquals("test", registEntity.getCart().getCartId());
 	}
 

@@ -1,6 +1,7 @@
 package com.bbsk.banchanshop.user.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import com.bbsk.banchanshop.security.serivce.Sha512CustomPasswordEncoder;
@@ -28,6 +29,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @ToString
@@ -70,7 +72,7 @@ public class UserEntity implements UserDetails {
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private UserType adminYn;
+	private UserType role;
 	
 	public void changePw(String pw) {
 		this.userPw = new Sha512CustomPasswordEncoder().encode(pw);
@@ -101,7 +103,12 @@ public class UserEntity implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		Collection<GrantedAuthority> roles = new ArrayList<>();
+
+		for(String role : this.role.toString().split(",")){
+			roles.add(new SimpleGrantedAuthority(role));
+		}
+		return roles;
 	}
 
 	@Override
@@ -134,7 +141,7 @@ public class UserEntity implements UserDetails {
 		return true;
 	}
 
-	public void isAdmin(UserType userType) {
-		this.adminYn = userType;
+	public void updateRole(UserType role) {
+		this.role = role;
 	}
 }

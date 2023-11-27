@@ -4,5 +4,5 @@ public enum UserType {
 
 	// Y = Admin
 	// N = User
-	Y, N
+	ROLE_ADMIN, ROLE_USER
 }

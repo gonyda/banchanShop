@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 대시보드</title>
+
+    <link rel="stylesheet" href="/path/to/your/css/file.css"> <!-- 필요한 경우 스타일 시트 링크 추가 -->
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 800px;
+            text-align: center;
+        }
+
+        .notification,
+        .order-status,
+        .banchan-inventory {
+            margin-top: 20px;
+        }
+
+        .notification table,
+        .order-status table,
+        .banchan-inventory table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .table-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .table-container table {
+            width: 48%; /* 각 테이블이 화면의 절반을 차지하도록 설정 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="notification">
+        <h2>알림</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>알림 종류</th>
+                <th>수량</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>신규 주문</td>
+                <td>4건</td>
+            </tr>
+            <tr>
+                <td>주문 취소</td>
+                <td>2건</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="order-status">
+        <h2>주문 현황</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>일별</th>
+                    <!-- 예시 데이터, 실제로는 서버에서 받아와야 합니다. -->
+                    <th>건수</th>
+                    <!-- 추가 주문 내역을 여기에 동적으로 추가할 수 있습니다. -->
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>2023-01-01</td>
+                    <td>10건</td>
+                </tr>
+                <tr>
+                    <td>2023-01-02</td>
+                    <td>0건</td>
+                </tr>
+                <tr>
+                    <td>2023-01-03</td>
+                    <td>8건</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>월별</th>
+                    <!-- 예시 데이터, 실제로는 서버에서 받아와야 합니다. -->
+                    <th>건수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>2023년 11월</td>
+                    <td>100건</td>
+                </tr>
+                <tr>
+                    <td>2023년 10월</td>
+                    <td>4건</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="banchan-inventory">
+        <h2>반찬 재고</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>반찬</th>
+                <th>현재 수량</th>
+                <th>요리 일자</th>
+                <th>유통기한</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>김치찌게</td>
+                <td>50</td>
+                <td>2023-11-15</td>
+                <td>2023-12-15</td>
+            </tr>
+            <tr>
+                <td>된장찌게</td>
+                <td>30</td>
+                <td>2023-11-10</td>
+                <td>2023-12-10</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

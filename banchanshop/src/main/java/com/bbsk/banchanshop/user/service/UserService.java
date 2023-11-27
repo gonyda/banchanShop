@@ -33,7 +33,7 @@ public class UserService {
 										.userEmail(user.getUserEmail())
 										.name(user.getName())
 										.address(user.getAddress())
-										.adminYn(user.getAdminYn())
+										.role(user.getRole())
 										.cart(cartRepo.save(CartEntity.builder().cartId(user.getUserId()).build()))
 										.phoneNumber(user.getPhoneNumber())
 										.build());

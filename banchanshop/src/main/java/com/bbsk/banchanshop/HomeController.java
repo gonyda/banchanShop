@@ -42,7 +42,7 @@ public class HomeController {
     @PostMapping("/signup-process")
     public String signupprocess(UserEntity user) {
         log.error("회원가입 로직 실행");
-        user.isAdmin(UserType.N);
+        user.updateRole(UserType.ROLE_USER);
 
         log.error(user.toString());
 

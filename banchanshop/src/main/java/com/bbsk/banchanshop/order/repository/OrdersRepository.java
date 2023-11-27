@@ -12,6 +12,6 @@ public interface OrdersRepository extends JpaRepository<OrdersEntity, Long> {
 
     List<OrdersEntity> findAllByUserUserIdOrderByOrderIdDesc(String userId);
 
-    @Query(value = "select sum(total_price) from orders where user_id = :userId", nativeQuery = true)
+    @Query(value = "select ifnull(sum(total_price), 0) from orders where user_id = :userId", nativeQuery = true)
     int sumTotalPriceByUserUserId(String userId);
 }

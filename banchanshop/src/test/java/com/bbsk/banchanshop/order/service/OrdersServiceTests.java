@@ -122,7 +122,7 @@ public class OrdersServiceTests {
                 .userEmail("bbsk3939@gmil.com")
                 .name("백승권")
                 .address("서울특별실 양천구")
-                .adminYn(UserType.N)
+                .role(UserType.ROLE_USER)
                 .phoneNumber("01064629657")
                 .build());
     }

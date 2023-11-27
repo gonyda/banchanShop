@@ -1,5 +1,6 @@
 package com.bbsk.banchanshop.security.config;
 
+import com.bbsk.banchanshop.contant.UserType;
 import com.bbsk.banchanshop.security.serivce.Sha512CustomPasswordEncoder;
 import com.bbsk.banchanshop.security.serivce.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ class SecurityConfig {
                         .requestMatchers("/").permitAll() // 메인페이지
                         .requestMatchers("/banchan/**").permitAll() // 반찬 상세페이지
                         .requestMatchers("/layout/**", "/img/**", "/css/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
