@@ -1,6 +1,7 @@
 package com.bbsk.banchanshop.user.service;
 
 import com.bbsk.banchanshop.security.serivce.Sha512CustomPasswordEncoder;
+import com.bbsk.banchanshop.user.dto.RequestUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,13 @@ public class UserService {
 	 */
 	public UserEntity findUserById(String userId) {
 		return userRepo.findById(userId).orElse(null);
+	}
+
+	@Transactional
+	public void updateUser(RequestUserDto requestUserDto) {
+		UserEntity user = userRepo.findById(requestUserDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("아이디를 확인해주세요"));
+
+		user.updateUser(requestUserDto);
 	}
 
 	//TODO 유저 전체조회 (운영자)

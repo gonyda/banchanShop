@@ -3,6 +3,8 @@ package com.bbsk.banchanshop.user.entity;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+import com.bbsk.banchanshop.security.serivce.Sha512CustomPasswordEncoder;
+import com.bbsk.banchanshop.user.dto.RequestUserDto;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -71,14 +73,30 @@ public class UserEntity implements UserDetails {
 	private UserType adminYn;
 	
 	public void changePw(String pw) {
-		this.userPw = pw;
+		this.userPw = new Sha512CustomPasswordEncoder().encode(pw);
 	}
 
 	public void setCart(CartEntity findCart) {
 		this.cart = findCart;
 	}
 
+	/**
+	 * 유저정보 수정
+	 * @param requestUserDto
+	 */
+	public void updateUser(RequestUserDto requestUserDto) {
+		if(requestUserDto.getUserPw() != null) {
+			changePw(requestUserDto.getUserPw());
+		}
+		this.name = requestUserDto.getName();
+		this.userEmail = requestUserDto.getUserEmail();
+		this.phoneNumber = requestUserDto.getPhoneNumber();
+		this.address = requestUserDto.getAddress();
+
+	}
+
 	/* ============================ security ============================ */
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return null;
