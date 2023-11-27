@@ -29,10 +29,6 @@ class SecurityConfig {
     SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        /*
-                        * TODO 메인페이지, 상품디테일페이지 permitall()
-                        *  그에 따른 사이드바 수정
-                        * */
                         .requestMatchers("/sign-up").permitAll() // 회원가입 페이지
                         .requestMatchers("/signup-process").permitAll() // 회원가입 로직 url
                         .requestMatchers("/").permitAll() // 메인페이지

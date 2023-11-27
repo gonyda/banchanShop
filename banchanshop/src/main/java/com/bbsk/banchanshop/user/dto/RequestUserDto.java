@@ -11,6 +11,7 @@ public class RequestUserDto {
 
     private String userId;
     private String userPw;
+    private String confirmPassword;
     private String name;
     private String userEmail;
     private String phoneNumber;

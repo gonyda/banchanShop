@@ -33,6 +33,7 @@ public class UserController {
     @PostMapping("/{id}")
     public String updateUser(RequestUserDto requestUserDto, RedirectAttributes ra) {
 
+        log.info(requestUserDto.toString());
         userService.updateUser(requestUserDto);
 
         ra.addFlashAttribute("isUpdate", true);

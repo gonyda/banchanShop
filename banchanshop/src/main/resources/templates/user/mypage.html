@@ -62,6 +62,7 @@
 
         }
 
+        <!-- 개인정보 수정 시 alert창 출력 -->
         function isUpdate() {
             var isUpdate = [[${isUpdate}]]
 
@@ -69,6 +70,26 @@
                 alert("수정이 완료되었습니다");
             }
         }
+
+        <!-- 비밀번호 변경시 입력값 체크 -->
+        function checkPasswordMatch() {
+                var password = document.getElementById("userPw").value;
+                var confirmPassword = document.getElementById("confirmPassword").value;
+                var statusElement = document.getElementById("passwordMatchStatus");
+                var submitButton = document.getElementById("submitButton");
+
+                if (password === confirmPassword) {
+                    statusElement.innerHTML = "비밀번호가 일치합니다.";
+                    statusElement.style.color = "green";
+                    submitButton.disabled = false; // 비밀번호가 일치하면 버튼 활성화
+                    submitButton.style.backgroundColor = "#4caf50";
+                } else {
+                    statusElement.innerHTML = "비밀번호가 일치하지 않습니다.";
+                    statusElement.style.color = "red";
+                    submitButton.disabled = true; // 비밀번호가 일치하지 않으면 버튼 비활성화
+                    submitButton.style.backgroundColor = "gray";
+                }
+            }
     </script>
 </head>
 <body>
@@ -97,12 +118,14 @@
         <input type="text" id="phoneNumber" name="phoneNumber" th:value="${user.phoneNumber}" required>
 
         <label for="userPw">새로운 비밀번호:</label>
-        <input type="password" id="userPw" name="userPw">
+        <input type="password" id="userPw" name="userPw" oninput="checkPasswordMatch()">
 
         <label for="confirmPassword">비밀번호 확인:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword">
+        <input type="password" id="confirmPassword" name="confirmPassword" oninput="checkPasswordMatch()">
 
-        <button type="submit">수정 완료</button>
+        <div id="passwordMatchStatus"></div>
+
+        <button type="submit" id="submitButton">수정 완료</button>
     </form>
 </div>
 

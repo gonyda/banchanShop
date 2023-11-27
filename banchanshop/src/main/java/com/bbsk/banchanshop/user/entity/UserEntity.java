@@ -85,8 +85,10 @@ public class UserEntity implements UserDetails {
 	 * @param requestUserDto
 	 */
 	public void updateUser(RequestUserDto requestUserDto) {
-		if(requestUserDto.getUserPw() != null) {
-			changePw(requestUserDto.getUserPw());
+		if(requestUserDto.getUserPw() != null && !requestUserDto.getUserPw().isEmpty()) {
+			if(requestUserDto.getUserPw().equals(requestUserDto.getConfirmPassword())) {
+				changePw(requestUserDto.getUserPw());
+			}
 		}
 		this.name = requestUserDto.getName();
 		this.userEmail = requestUserDto.getUserEmail();
