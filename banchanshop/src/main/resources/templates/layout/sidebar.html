@@ -8,6 +8,7 @@
 </head>
 <body>
 
+    <!-- 로그인 완료 -->
     <div th:if="${#authorization.expression('isAuthenticated()')}" th:fragment="sidebar" class="nav-bar">
         <div>
             <h2>우리들 반찬가게</h2>
@@ -17,15 +18,35 @@
         <div class="user-welcome" th:text="|${#authentication.name}님 환영합니다.|">OOO님 환영합니다.</div>
         <br/>
 
-        <a class="nav-link" href="/">반찬보기</a>
-        <br/>
+        <!-- 일반유저 -->
+        <th:block th:if="${#authorization.expression('hasRole(''USER'')')}">
+            <a class="nav-link" href="/">반찬보기</a>
+            <br/>
 
-        <a class="nav-link" href="/cart/cart-list">장바구니 보기</a>
-        <a class="nav-link" href="/order/myorder">나의 주문 내역</a>
-        <a class="nav-link" href="/user/mypage">개인정보수정</a>
+            <a class="nav-link" href="/cart/cart-list">장바구니 보기</a>
+            <a class="nav-link" href="/order/myorder">나의 주문 내역</a>
+            <a class="nav-link" href="/user/mypage">개인정보수정</a>
+        </th:block>
+
+        <!-- 관리자 -->
+        <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+            <a class="nav-link" href="/admin/dashboard">대시보드</a>
+            <a class="nav-link" href="#">주문현황</a>
+            <a class="nav-link" href="#">재고관리</a>
+            <br/>
+
+            <p> ==============</p>
+            <a class="nav-link" href="/">반찬보기</a>
+            <a class="nav-link" href="/cart/cart-list">장바구니 보기</a>
+            <a class="nav-link" href="/order/myorder">나의 주문 내역</a>
+            <a class="nav-link" href="/user/mypage">개인정보수정</a>
+        </th:block>
+
         <a class="logout-btn" href="/logout">로그아웃</a>
+
     </div>
 
+    <!-- 로그인 미완료 -->
     <div th:unless="${#authorization.expression('isAuthenticated()')}" th:fragment="sidebar" class="nav-bar" sec:authorize="!isAuthenticated()">
         <div>
             <h2>우리들 반찬가게</h2>
@@ -37,6 +58,5 @@
 
         <a class="logout-btn" href="/login">로그인 하기</a>
     </div>
-
 </body>
 </html>
