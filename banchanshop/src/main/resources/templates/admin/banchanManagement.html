@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반찬 관리</title>
+
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .inventory-management-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 800px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+    <script>
+        function updateName(id) {
+            var newName = document.getElementById("banchan-name-" + id).value;
+
+            fetch("/admin/banchan/" + id + "/name/" + newName, {
+              method: "PUT",
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then((errorText) => {
+                        throw new Error(errorText);
+                    });
+                }
+                return response.text();
+            })
+            .then((data) => {
+                alert("반찬 이름을 변경하였습니다.");
+                window.location.reload();
+            })
+            .catch((error) => {
+                alert(error)
+                window.location.reload();
+            });
+        }
+
+        function updateQuantity(id) {
+            var newQuantity = document.getElementById("banchan-quantity-" + id).value;
+
+            fetch("/admin/banchan/" + id + "/quantity/" + newQuantity, {
+              method: "PUT",
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then((errorText) => {
+                        throw new Error(errorText);
+                    });
+                }
+                return response.text();
+            })
+            .then((data) => {
+                alert("반찬 재고를 변경하였습니다.");
+                window.location.reload();
+            })
+            .catch((error) => {
+                alert(error)
+                window.location.reload();
+            });
+        }
+
+        function updatePrice(id) {
+            var newPrice = document.getElementById("banchan-price-" + id).value;
+
+            fetch("/admin/banchan/" + id + "/price/" + newPrice, {
+              method: "PUT",
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    return response.text().then((errorText) => {
+                        throw new Error(errorText);
+                    });
+                }
+                return response.text();
+            })
+            .then((data) => {
+                alert("반찬 가격을 변경하였습니다.");
+                window.location.reload();
+            })
+            .catch((error) => {
+                alert(error)
+                window.location.reload();
+            });
+        }
+    </script>
+</head>
+<body>
+
+<!-- 네비게이션 바를 포함합니다. -->
+<div th:replace="layout/sidebar :: sidebar"></div>
+
+<div class="inventory-management-container content">
+    <h2>반찬 관리</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>상품코드</th>
+                <th>상품명</th>
+                <th>재고</th>
+                <th>가격</th>
+                <th>요리일</th>
+                <th>유통 기한</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="e: ${banchanList}">
+                <td th:text="${e.id}">1</td>
+                <td>
+                    <input type="text" th:id="|banchan-name-${e.id}|" name="banchanName" th:value="${e.name}">
+                    <button th:attr="onclick=|updateName('${e.id}')|">반찬명변경</button>
+                </td>
+                <td>
+                    <input type="text" th:id="|banchan-quantity-${e.id}|" name="banchanQuantity" th:value="${e.quantity}">
+                    <button th:attr="onclick=|updateQuantity('${e.id}')|">재고변경</button>
+                </td>
+                <td>
+                    <input type="text" th:id="|banchan-price-${e.id}|" name="banchanPrice" th:value="${e.price}">
+                    <button th:attr="onclick=|updatePrice('${e.id}')|">가격변경</button>
+                </td>
+                <td th:text="${e.createDate}">2023-11-15</td>
+                <td th:text="${e.expirationDate}">2023-12-01</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

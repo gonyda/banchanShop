@@ -72,4 +72,20 @@ public class BanchanEntity {
 		this.banchanStockQuantity = newQuantity;
 		return this;
 	}
+
+	/**
+	 * 반찬 이름 변경
+	 * @param newName
+	 */
+	public void updateName(String newName) {
+		this.banchanName = newName;
+	}
+
+	/**
+	 * 반찬 가격 변경
+	 * @param newPrice
+	 */
+	public void updateBanchanPrice(int newPrice) {
+		this.banchanPrice = newPrice;
+	}
 }

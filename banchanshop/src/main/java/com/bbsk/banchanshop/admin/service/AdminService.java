@@ -1,7 +1,9 @@
 package com.bbsk.banchanshop.admin.service;
 
+import com.bbsk.banchanshop.admin.dto.ResponseBanchanDto;
 import com.bbsk.banchanshop.admin.dto.ResponseDashboardDto;
 import com.bbsk.banchanshop.admin.dto.ResponseOrdersDto;
+import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.banchan.repository.BanchanRepository;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.repository.OrdersRepository;
@@ -49,4 +51,50 @@ public class AdminService {
         return orders;
     }
 
+    /**
+     * 반찬관리 - 반찬리스트
+     * @return
+     */
+    public List<ResponseBanchanDto> findAllBanchan() {
+        List<ResponseBanchanDto> banchanList = new ArrayList<>();
+
+        for (BanchanEntity e : banchanRepository.findAll()) {
+            banchanList.add(new ResponseBanchanDto(e));
+        }
+
+        return banchanList;
+    }
+
+    /**
+     * 반찬 이름 변경
+     * @param banchanId
+     * @param newName
+     */
+    @Transactional
+    public void updateBanchanName(Long banchanId, String newName) {
+        BanchanEntity banchan = banchanRepository.findById(banchanId).orElseThrow(() -> new IllegalArgumentException("입력값이 잘못되었습니다"));
+        banchan.updateName(newName);
+    }
+
+    /**
+     * 반찬 재고 변경
+     * @param banchanId
+     * @param newQuantity
+     */
+    @Transactional
+    public void updateBanchanQuantity(Long banchanId, int newQuantity) {
+        BanchanEntity banchan = banchanRepository.findById(banchanId).orElseThrow(() -> new IllegalArgumentException("입력값이 잘못되었습니다"));
+        banchan.updateBanchanQuantity(newQuantity);
+    }
+
+    /**
+     * 반찬 가격 변경
+     * @param banchanId
+     * @param newPrice
+     */
+    @Transactional
+    public void updateBanchanPrice(Long banchanId, int newPrice) {
+        BanchanEntity banchan = banchanRepository.findById(banchanId).orElseThrow(() -> new IllegalArgumentException("입력값이 잘못되었습니다"));
+        banchan.updateBanchanPrice(newPrice);
+    }
 }
