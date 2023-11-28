@@ -40,4 +40,11 @@ public interface OrdersRepository extends JpaRepository<OrdersEntity, Long> {
                 "limit 6"
             , nativeQuery = true)
     List<Recently6MonthsOrderCountMapping> findOrderCountBy6Months();
+
+    @Query(value = "select o " +
+                     "from OrdersEntity o " +
+                    "where (:orderId is null or o.orderId = :orderId) " +
+                      "and (:userId is null or o.user.userId = :userId) " +
+                      "and (:orderDate is null or function('date_format', o.orderDate, '%Y-%m-%d') = function('date_format', :orderDate, '%Y-%m-%d'))")
+    List<OrdersEntity> findAllOrders(Long orderId, String userId, String orderDate);
 }

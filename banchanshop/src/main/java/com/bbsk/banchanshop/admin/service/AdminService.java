@@ -20,6 +20,10 @@ public class AdminService {
     private final OrdersRepository ordersRepository;
     private final BanchanRepository banchanRepository;
 
+    /**
+     * 통계성 대시보드
+     * @return
+     */
     public ResponseDashboardDto getFindDashboardInfo() {
 
         ResponseDashboardDto dto = new ResponseDashboardDto();
@@ -31,13 +35,18 @@ public class AdminService {
         return dto;
     }
 
-    public List<ResponseOrdersDto> findAllOrders() {
+    /**
+     * 주문현황
+     * @return
+     */
+    public List<ResponseOrdersDto> findAllOrders(Long orderId, String userId, String orderDate) {
         List<ResponseOrdersDto> orders = new ArrayList<>();
 
-        for (OrdersEntity order : ordersRepository.findAll()) {
+        for (OrdersEntity order : ordersRepository.findAllOrders(orderId, userId, orderDate)) {
             orders.add(new ResponseOrdersDto().updateOrders(order));
         }
 
         return orders;
     }
+
 }

@@ -15,7 +15,6 @@ public class ResponseOrderItemDto {
 
     private String banchanName;
     private int quantity;
-    private int banchanTotalPrice;
 
     private String amount = null;
     private String spicy = null;
@@ -24,7 +23,6 @@ public class ResponseOrderItemDto {
     public ResponseOrderItemDto(OrderItemEntity orderItem) {
         this.banchanName = orderItem.getBanchan().getBanchanName();
         this.quantity = orderItem.getQuantity();
-        this.banchanTotalPrice = orderItem.getTotalPrice();
         if(orderItem.getOrderOption() != null) {
             this.amount = orderItem.getOrderOption().getAmount().getName();
             this.spicy = orderItem.getOrderOption().getSpicy().getName();
