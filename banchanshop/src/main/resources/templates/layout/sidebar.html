@@ -31,7 +31,7 @@
         <!-- 관리자 -->
         <th:block th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
             <a class="nav-link" href="/admin/dashboard">대시보드</a>
-            <a class="nav-link" href="#">주문현황</a>
+            <a class="nav-link" href="/admin/orders">주문현황</a>
             <a class="nav-link" href="#">재고관리</a>
             <a class="nav-link" href="#">반찬등록</a>
             <p>==============</p>

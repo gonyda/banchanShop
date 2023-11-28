@@ -1,13 +1,15 @@
 package com.bbsk.banchanshop.admin.service;
 
 import com.bbsk.banchanshop.admin.dto.ResponseDashboardDto;
-import com.bbsk.banchanshop.admin.dto.ResponseRecently7DaysOrderCount;
+import com.bbsk.banchanshop.admin.dto.ResponseOrdersDto;
 import com.bbsk.banchanshop.banchan.repository.BanchanRepository;
+import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,5 +29,15 @@ public class AdminService {
         dto.updateBanchanInfoDtoList(banchanRepository.findAll());
 
         return dto;
+    }
+
+    public List<ResponseOrdersDto> findAllOrders() {
+        List<ResponseOrdersDto> orders = new ArrayList<>();
+
+        for (OrdersEntity order : ordersRepository.findAll()) {
+            orders.add(new ResponseOrdersDto().updateOrders(order));
+        }
+
+        return orders;
     }
 }
