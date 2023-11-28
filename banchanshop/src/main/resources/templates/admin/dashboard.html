@@ -82,11 +82,12 @@
             <tbody>
             <tr>
                 <td>신규 주문</td>
-                <td>4건</td>
+                <td th:text="|${info.todayOrderCount}건|">4건</td>
             </tr>
+            <!-- TODO 주문취소기능은 추후 추가 -->
             <tr>
                 <td>주문 취소</td>
-                <td>2건</td>
+                <td>0건 (미구현)</td>
             </tr>
             </tbody>
         </table>
@@ -98,66 +99,31 @@
         <div class="table-container">
             <table>
                 <thead>
-                <tr>
-                    <th>일별 (최근 5일)</th>
-                    <!-- 예시 데이터, 실제로는 서버에서 받아와야 합니다. -->
-                    <th>건수</th>
-                    <!-- 추가 주문 내역을 여기에 동적으로 추가할 수 있습니다. -->
-                </tr>
+                    <tr>
+                        <th>일별 (최근 7일)</th>
+                        <th>건수</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>2023-01-01</td>
-                    <td>10건</td>
-                </tr>
-                <tr>
-                    <td>2023-01-02</td>
-                    <td>0건</td>
-                </tr>
-                <tr>
-                    <td>2023-01-03</td>
-                    <td>8건</td>
-                </tr>
-                <tr>
-                    <td>2023-01-03</td>
-                    <td>8건</td>
-                </tr>
-                <tr>
-                    <td>2023-01-03</td>
-                    <td>8건</td>
-                </tr>
+                    <tr th:each="e: ${info.recently7DaysOrderCount}">
+                        <td th:text="${e.day}">2023-01-03</td>
+                        <td th:text="|${e.orderCount}건|">8건</td>
+                    </tr>
                 </tbody>
             </table>
 
             <table>
                 <thead>
-                <tr>
-                    <th>월별 (최근 5개월)</th>
-                    <!-- 예시 데이터, 실제로는 서버에서 받아와야 합니다. -->
-                    <th>건수</th>
-                </tr>
+                    <tr>
+                        <th>월별 (최근 6개월)</th>
+                        <th>건수</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>2023년 11월</td>
-                    <td>100건</td>
-                </tr>
-                <tr>
-                    <td>2023년 10월</td>
-                    <td>4건</td>
-                </tr>
-                <tr>
-                    <td>2023년 10월</td>
-                    <td>4건</td>
-                </tr>
-                <tr>
-                    <td>2023년 10월</td>
-                    <td>4건</td>
-                </tr>
-                <tr>
-                    <td>2023년 10월</td>
-                    <td>4건</td>
-                </tr>
+                    <tr th:each="e: ${info.recently6MonthsOrderCount}">
+                        <td th:text="${e.month}">2023년 10월</td>
+                        <td th:text="|${e.orderCount}건|">4건</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -168,44 +134,20 @@
 
         <table>
             <thead>
-            <tr>
-                <th>반찬</th>
-                <th>현재 수량</th>
-                <th>요리 일자</th>
-                <th>유통기한</th>
-            </tr>
+                <tr>
+                    <th>반찬</th>
+                    <th>현재 수량</th>
+                    <th>요리 일자</th>
+                    <th>유통기한</th>
+                </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>김치찌게</td>
-                <td>50</td>
-                <td>2023-11-15</td>
-                <td>2023-12-15</td>
-            </tr>
-            <tr>
-                <td>된장찌게</td>
-                <td>30</td>
-                <td>2023-11-10</td>
-                <td>2023-12-10</td>
-            </tr>
-            <tr>
-                <td>된장찌게</td>
-                <td>30</td>
-                <td>2023-11-10</td>
-                <td>2023-12-10</td>
-            </tr>
-            <tr>
-                <td>된장찌게</td>
-                <td>30</td>
-                <td>2023-11-10</td>
-                <td>2023-12-10</td>
-            </tr>
-            <tr>
-                <td>된장찌게</td>
-                <td>30</td>
-                <td>2023-11-10</td>
-                <td>2023-12-10</td>
-            </tr>
+                <tr th:each="e: ${info.banchanInfoDtoList}">
+                    <td th:text="${e.name}">김치찌게</td>
+                    <td th:text="|${e.quantity}개|">50</td>
+                    <td th:text="${e.createDate}">2023-11-15</td>
+                    <td th:text="${e.expirationDate}">2023-12-15</td>
+                </tr>
             </tbody>
         </table>
     </div>
