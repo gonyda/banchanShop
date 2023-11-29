@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반찬 관리</title>
+
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .inventory-management-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 800px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 네비게이션 바를 포함합니다. -->
+<div th:replace="layout/sidebar :: sidebar"></div>
+
+<div class="inventory-management-container content">
+    <form action="/admin/banchan" method="post">
+        <h2>반찬 등록</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>반찬이름</th>
+                    <th>재고</th>
+                    <th>가격</th>
+                    <th>요리일</th>
+                    <th>유통기한</th>
+                </tr>
+            </thead>
+            <tbody id="banchanTableBody">
+                <tr class="banchanList">
+                    <td>
+                        <input type="text" name="name">
+                    </td>
+                    <td>
+                        <input type="text" name="quantity">
+                    </td>
+                    <td>
+                        <input type="text" name="price">
+                    </td>
+                    <td>
+                        <input type="datetime-local" name="createDate">
+                    </td>
+                    <td>
+                        <input type="datetime-local" name="expirationDate">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>반찬재료 등록</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>반찬재료</th>
+                    <th>재고</th>
+                    <th>입고일</th>
+                    <th>유통기한</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="banchanIngredientTableBody">
+                <tr class="banchanIngredientList">
+                    <td>
+                        <input type="text" name="ingredientList[0].ingredientName">
+                    </td>
+                    <td>
+                        <input type="text" name="ingredientList[0].ingredientQuantity">
+                    </td>
+                    <td>
+                        <input type="datetime-local" name="ingredientList[0].ingredientInputDate">
+                    </td>
+                    <td>
+                        <input type="datetime-local" name="ingredientList[0].ingredientExpirationDate">
+                    </td>
+                    <td>
+                        <button onclick="deleteForm(this)">삭제</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" onclick="addNewForm('banchanIngredientTableBody')">반찬재료 추가</button>
+        <button type="submit">반찬등록</button>
+    </form>
+
+    <input type="hidden" id="rowCount" value="0">
+</div>
+
+<script>
+    function addNewForm(tableBodyId) {
+        var newRow = document.querySelector('.banchanIngredientList').cloneNode(true);
+        var rowCount = document.getElementById('rowCount');
+        rowCount.value++;
+
+        var inputs = newRow.querySelectorAll('input');
+        inputs.forEach(function (input) {
+            input.value = '';
+            input.name = 'ingredientList[' + rowCount.value + '].' + input.name.split('.')[1]
+        });
+
+        document.getElementById(tableBodyId).appendChild(newRow);
+    }
+
+    function deleteForm(button) {
+        var row = button.parentNode.parentNode;
+        var tableBody = row.parentNode;
+
+        if (tableBody.childElementCount > 1) {
+            tableBody.removeChild(row);
+
+            var rowCount = document.getElementById('rowCount');
+            rowCount.value--;
+        } else {
+            alert("최소 한 개의 재료는 등록 해야 합니다.");
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,14 +1,15 @@
 package com.bbsk.banchanshop.admin.controller;
 
+import com.bbsk.banchanshop.admin.dto.RequestBancanDto;
+import com.bbsk.banchanshop.admin.dto.RequestBanchanIngredienDto;
 import com.bbsk.banchanshop.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -69,5 +70,19 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/banchan")
+    public String banchan() {
+
+        return "admin/banchan";
+    }
+
+    @PostMapping("/banchan")
+    public String postBanchan(@ModelAttribute RequestBancanDto bancanDto) {
+
+        adminService.saveBanchan(bancanDto);
+
+        return "redirect:/admin/management";
     }
 }

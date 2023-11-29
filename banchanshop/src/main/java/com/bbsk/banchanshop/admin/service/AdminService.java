@@ -1,10 +1,10 @@
 package com.bbsk.banchanshop.admin.service;
 
-import com.bbsk.banchanshop.admin.dto.ResponseBanchanDto;
-import com.bbsk.banchanshop.admin.dto.ResponseDashboardDto;
-import com.bbsk.banchanshop.admin.dto.ResponseOrdersDto;
+import com.bbsk.banchanshop.admin.dto.*;
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
+import com.bbsk.banchanshop.banchan.entity.BanchanIngredientEntity;
 import com.bbsk.banchanshop.banchan.repository.BanchanRepository;
+import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,7 @@ public class AdminService {
 
     private final OrdersRepository ordersRepository;
     private final BanchanRepository banchanRepository;
+    private final BanchanService banchanService;
 
     /**
      * 통계성 대시보드
@@ -96,5 +97,34 @@ public class AdminService {
     public void updateBanchanPrice(Long banchanId, int newPrice) {
         BanchanEntity banchan = banchanRepository.findById(banchanId).orElseThrow(() -> new IllegalArgumentException("입력값이 잘못되었습니다"));
         banchan.updateBanchanPrice(newPrice);
+    }
+
+    /**
+     * 반찬 및 반찬재료 등록
+     * @param bancanDto
+     */
+    @Transactional
+    public void saveBanchan(RequestBancanDto bancanDto) {
+        BanchanEntity banchan = BanchanEntity.builder()
+                .banchanName(bancanDto.getName())
+                .banchanPrice(bancanDto.getPrice())
+                .banchanStockQuantity(bancanDto.getQuantity())
+                .createDate(bancanDto.getCreateDate())
+                .expirationDate(bancanDto.getExpirationDate())
+                .build();
+
+        List<BanchanIngredientEntity> ingredientList = new ArrayList<>();
+        for (RequestBanchanIngredienDto e : bancanDto.getIngredientList()) {
+            ingredientList.add(
+                    BanchanIngredientEntity.builder()
+                            .ingredientName(e.getIngredientName())
+                            .quantity(e.getIngredientQuantity())
+                            .inputDate(e.getIngredientInputDate())
+                            .expirationDate(e.getIngredientExpirationDate())
+                            .build()
+            );
+        }
+
+        banchanService.registBanchan(banchan, ingredientList);
     }
 }

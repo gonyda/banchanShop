@@ -137,10 +137,12 @@
                 <th>가격</th>
                 <th>요리일</th>
                 <th>유통 기한</th>
+                <!-- TODO 반찬재료 어떤식으로 출력할지 고민 좀... -->
+                <th>재료</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="e: ${banchanList}">
+            <tr th:each="e: ${banchanList}" class="banchanList" th:id="|banchan-${e.id}|">
                 <td th:text="${e.id}">1</td>
                 <td>
                     <input type="text" th:id="|banchan-name-${e.id}|" name="banchanName" th:value="${e.name}">
@@ -156,6 +158,9 @@
                 </td>
                 <td th:text="${e.createDate}">2023-11-15</td>
                 <td th:text="${e.expirationDate}">2023-12-01</td>
+                <td>
+                    미구현
+                </td>
             </tr>
         </tbody>
     </table>

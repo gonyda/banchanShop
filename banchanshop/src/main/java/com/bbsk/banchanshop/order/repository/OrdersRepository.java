@@ -18,8 +18,7 @@ public interface OrdersRepository extends JpaRepository<OrdersEntity, Long> {
 
     @Query(value = "select count(1) " +
                      "from orders " +
-                    "where date_format(order_date, '%Y%m%d') = date_format(now(), '%Y%m%d') " +
-                 "group by date_format(order_date, '%Y%m%d')"
+                    "where date_format(order_date, '%Y%m%d') = date_format(now(), '%Y%m%d')"
             , nativeQuery = true)
     int findOrderCountByToday();
 
