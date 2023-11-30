@@ -33,6 +33,10 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom{
                 .fetchOne(), "쿼리의 결과값이 null입니다.");
     }
 
+    /**
+     * 당일 주문건수 조회
+     * @return
+     */
     @Override
     public Long findOrderCountByToday() {
         /*"select count(1) " +
@@ -49,6 +53,10 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom{
                 .fetchOne();
     }
 
+    /**
+     * 최근 7일 주문건수 조회
+     * @return
+     */
     @Override
     public List<Tuple> findOrderCountBy7Day() {
         /*"select date_format(order_date, '%Y%m%d') as day" +
@@ -60,12 +68,13 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom{
 
         return queryFactory
                 .select(
-                        dateTemplate(String.class, "DATE_FORMAT({0}, '%Y%m%d')", ordersEntity.orderDate).as("day")
-                        , ordersEntity.orderDate.count().as("orderCount")
+                        dateTemplate(String.class, "DATE_FORMAT({0}, '%Y-%m-%d')", ordersEntity.orderDate)
+                        , ordersEntity.orderDate.count()
                 )
                 .from(ordersEntity)
-                .groupBy(dateTemplate(String.class, "DATE_FORMAT({0}, '%Y%m%d')", ordersEntity.orderDate))
-                .orderBy(dateTemplate(String.class, "DATE_FORMAT({0}, '%Y%m%d')", ordersEntity.orderDate).desc())
+                .groupBy(dateTemplate(String.class, "DATE_FORMAT({0}, '%Y-%m-%d')", ordersEntity.orderDate))
+                .orderBy(dateTemplate(String.class, "DATE_FORMAT({0}, '%Y-%m-%d')", ordersEntity.orderDate).desc())
+                .limit(7)
                 .fetch();
     }
 }
