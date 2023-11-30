@@ -1,9 +1,8 @@
 package com.bbsk.banchanshop.admin.dto;
 
 import com.bbsk.banchanshop.admin.mapping.Recently6MonthsOrderCountMapping;
-import com.bbsk.banchanshop.admin.mapping.Recently7DaysOrderCountMapping;
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
-import com.bbsk.banchanshop.cart.dto.ResponseBanchanDto;
+import com.querydsl.core.Tuple;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 @ToString
 public class ResponseDashboardDto {
 
-    private int todayOrderCount; // 당일 주문건수
+    private Long todayOrderCount; // 당일 주문건수
 
     private List<ResponseRecently7DaysOrderCount> recently7DaysOrderCount = new ArrayList<>(); // 최근 7일 주문건수
     private List<ResponseRecently6MonthsOrderCount> recently6MonthsOrderCount = new ArrayList<>(); // 최근 6개월 주문건수
@@ -24,7 +23,7 @@ public class ResponseDashboardDto {
      * 당일 주문건수
      * @param orderCount
      */
-    public void updateTodayOrderCount(int orderCount) {
+    public void updateTodayOrderCount(Long orderCount) {
         this.todayOrderCount = orderCount;
     }
 
@@ -32,9 +31,10 @@ public class ResponseDashboardDto {
      * 최근 7일 주문건수
      * @param list
      */
-    public void updateRecently7DaysOrderCount(List<Recently7DaysOrderCountMapping> list) {
-        for (Recently7DaysOrderCountMapping e : list) {
-            recently7DaysOrderCount.add(new ResponseRecently7DaysOrderCount(e.getDay(), e.getOrderCount()));
+    public void updateRecently7DaysOrderCount(List<Tuple> list) {
+        for (Tuple e : list) {
+
+            recently7DaysOrderCount.add(new ResponseRecently7DaysOrderCount(e.get(0, String.class), e.get(1, Long.class)));
         }
     }
 

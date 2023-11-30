@@ -11,5 +11,5 @@ import java.time.LocalDate;
 public class ResponseRecently7DaysOrderCount {
 
     private String day;
-    private int orderCount;
+    private Long orderCount;
 }
