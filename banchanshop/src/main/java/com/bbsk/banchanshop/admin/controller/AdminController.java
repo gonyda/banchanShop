@@ -25,12 +25,13 @@ public class AdminController {
     }
 
     @GetMapping("/orders")
-    public String orders(Model model, Long orderId, String userId, String orderDate) {
+    public String orders(Model model, Long orderId, String userId, String orderDate, String banchanName) {
 
         model.addAttribute("orders", adminService.findAllOrders(orderId
                                                                             // 쿼리에서 사용하기 위해 null 세팅
                                                                             , "".equals(userId) ? null : userId
-                                                                            , "".equals(orderDate) ? null : orderDate));
+                                                                            , "".equals(orderDate) ? null : orderDate
+                                                                            , "".equals(banchanName) ? null : banchanName));
 
         return "admin/orders";
     }

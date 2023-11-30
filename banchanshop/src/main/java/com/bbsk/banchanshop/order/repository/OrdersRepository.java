@@ -29,6 +29,7 @@ public interface OrdersRepository extends JpaRepository<OrdersEntity, Long>, Ord
                     "where (:orderId is null or o.orderId = :orderId) " +
                       "and (:userId is null or o.user.userId = :userId) " +
                       "and (:orderDate is null or function('date_format', o.orderDate, '%Y-%m-%d') = function('date_format', :orderDate, '%Y-%m-%d')) " +
+                      "and (:banchanName is null or o.orderId in (SELECT oi.order.id FROM OrderItemEntity oi JOIN oi.banchan b where b.banchanName = :banchanName))" +
                  "order by o.orderDate desc")
-    List<OrdersEntity> findAllOrders(Long orderId, String userId, String orderDate);
+    List<OrdersEntity> findAllOrders(Long orderId, String userId, String orderDate, String banchanName);
 }

@@ -42,10 +42,10 @@ public class AdminService {
      * 주문현황
      * @return
      */
-    public List<ResponseOrdersDto> findAllOrders(Long orderId, String userId, String orderDate) {
+    public List<ResponseOrdersDto> findAllOrders(Long orderId, String userId, String orderDate, String banchanName) {
         List<ResponseOrdersDto> orders = new ArrayList<>();
 
-        for (OrdersEntity order : ordersRepository.findAllOrders(orderId, userId, orderDate)) {
+        for (OrdersEntity order : ordersRepository.findAllOrders(orderId, userId, orderDate, banchanName)) {
             orders.add(new ResponseOrdersDto().updateOrders(order));
         }
 
