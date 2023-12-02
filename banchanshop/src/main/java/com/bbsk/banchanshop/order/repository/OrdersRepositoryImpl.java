@@ -1,12 +1,20 @@
 package com.bbsk.banchanshop.order.repository;
 
+import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
+import com.bbsk.banchanshop.banchan.entity.QBanchanEntity;
+import com.bbsk.banchanshop.order.entity.OrdersEntity;
+import com.bbsk.banchanshop.order.entity.QOrderItemEntity;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
 import java.util.Objects;
 
+import static com.bbsk.banchanshop.banchan.entity.QBanchanEntity.*;
+import static com.bbsk.banchanshop.order.entity.QOrderItemEntity.*;
 import static com.bbsk.banchanshop.order.entity.QOrdersEntity.*;
 import static com.querydsl.core.types.dsl.Expressions.*;
 
@@ -76,5 +84,98 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom{
                 .orderBy(dateTemplate(String.class, "DATE_FORMAT({0}, '%Y-%m-%d')", ordersEntity.orderDate).desc())
                 .limit(7)
                 .fetch();
+    }
+
+    /**
+     * 최근 6개월 주문건수 조회
+     * @return
+     */
+    @Override
+    public List<Tuple> findOrderCountBy6Months() {
+        /*"select date_format(order_date, '%Y%m') as month" +
+                        ", count(1) as orderCount " +
+                    "from orders " +
+                "group by date_format(order_date, '%Y%m') " +
+                "order by date_format(order_date, '%Y%m') desc " +
+                "limit 6"*/
+
+        return queryFactory
+                .select(
+                        dateTemplate(String.class, "DATE_FORMAT({0}, '%Y%m')", ordersEntity.orderDate)
+                        , ordersEntity.orderDate.count()
+                )
+                .from(ordersEntity)
+                .groupBy(dateTemplate(String.class, "DATE_FORMAT({0}, '%Y%m')", ordersEntity.orderDate))
+                .orderBy(dateTemplate(String.class, "DATE_FORMAT({0}, '%Y%m')", ordersEntity.orderDate).desc())
+                .limit(6)
+                .fetch();
+    }
+
+    /**
+     * 주문현황 - 검색기능
+     * @param orderId
+     * @param userId
+     * @param orderDate
+     * @param banchanName
+     * @return
+     */
+    @Override
+    public List<OrdersEntity> findAllOrders(Long orderId, String userId, String orderDate, String banchanName) {
+        /*"select o " +
+                     "from OrdersEntity o " +
+                    "where (:orderId is null or o.orderId = :orderId) " +
+                      "and (:userId is null or o.user.userId = :userId) " +
+                      "and (:orderDate is null or function('date_format', o.orderDate, '%Y-%m-%d') = function('date_format', :orderDate, '%Y-%m-%d')) " +
+                      "and (:banchanName is null or o.orderId in (SELECT oi.order.id FROM OrderItemEntity oi JOIN oi.banchan b where b.banchanName = :banchanName))" +
+                 "order by o.orderDate desc"*/
+
+        return queryFactory
+                .selectFrom(ordersEntity)
+                .where(
+                        eqOrderId(orderId),
+                        eqUserId(userId),
+                        eqOrderDate(orderDate),
+                        eqBanchanName(banchanName)
+                )
+                .orderBy(ordersEntity.orderDate.desc())
+                .fetch();
+    }
+
+    private BooleanExpression eqBanchanName(String banchanName) {
+        if (banchanName == null) {
+            return null;
+        }
+
+        return ordersEntity.orderId.in(
+                queryFactory
+                        .select(orderItemEntity.order.orderId)
+                        .from(orderItemEntity)
+                        .join(orderItemEntity.banchan, banchanEntity)
+                        .where(banchanEntity.banchanName.eq(banchanName))
+        );
+    }
+
+    private BooleanExpression eqOrderDate(String orderDate) {
+        if (orderDate == null) {
+            return null;
+        }
+        return dateTemplate(String.class, "DATE_FORMAT({0}, '%Y-%m-%d')", ordersEntity.orderDate)
+                .eq(dateTemplate(String.class, "DATE_FORMAT({0}, '%Y-%m-%d')", orderDate));
+    }
+
+    private BooleanExpression eqUserId(String userId) {
+        if (userId == null) {
+            return null;
+        }
+
+        return ordersEntity.user.userId.eq(userId);
+    }
+
+    private BooleanExpression eqOrderId(Long orderId) {
+        if (orderId == null) {
+            return null;
+        }
+
+        return ordersEntity.orderId.eq(orderId);
     }
 }

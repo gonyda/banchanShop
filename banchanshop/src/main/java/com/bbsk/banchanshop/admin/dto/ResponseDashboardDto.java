@@ -1,6 +1,5 @@
 package com.bbsk.banchanshop.admin.dto;
 
-import com.bbsk.banchanshop.admin.mapping.Recently6MonthsOrderCountMapping;
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.querydsl.core.Tuple;
 import lombok.*;
@@ -38,9 +37,9 @@ public class ResponseDashboardDto {
         }
     }
 
-    public void updateRecently6MonthsOrderCount(List<Recently6MonthsOrderCountMapping> list) {
-        for (Recently6MonthsOrderCountMapping e : list) {
-            recently6MonthsOrderCount.add(new ResponseRecently6MonthsOrderCount(e.getMonth(), e.getOrderCount()));
+    public void updateRecently6MonthsOrderCount(List<Tuple> list) {
+        for (Tuple e : list) {
+            recently6MonthsOrderCount.add(new ResponseRecently6MonthsOrderCount(e.get(0, String.class), e.get(1, Long.class)));
         }
     }
 

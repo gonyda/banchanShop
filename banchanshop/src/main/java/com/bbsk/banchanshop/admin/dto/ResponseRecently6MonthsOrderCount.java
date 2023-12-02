@@ -9,5 +9,5 @@ import lombok.*;
 public class ResponseRecently6MonthsOrderCount {
 
     private String month;
-    private int orderCount;
+    private Long orderCount;
 }
