@@ -19,7 +19,6 @@ import static com.bbsk.banchanshop.cart.entity.QCartEntity.*;
 import static com.bbsk.banchanshop.cart.entity.QCartItemEntity.*;
 
 public class CartRepositoryImpl implements CartRepositoryCustom {
-    private static final int LIMIT = 5;
 
     private final JPAQueryFactory queryFactory;
 
@@ -33,6 +32,7 @@ public class CartRepositoryImpl implements CartRepositoryCustom {
         List<CartItemEntity> cartItems = queryFactory
                 .selectFrom(cartItemEntity)
                 .join(cartItemEntity.banchan, banchanEntity)
+                .fetchJoin()
                 .where(cartItemEntity.cart.cartId.eq(userId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -42,7 +42,6 @@ public class CartRepositoryImpl implements CartRepositoryCustom {
         Long totalCount = queryFactory
                 .select(cartItemEntity.count())
                 .from(cartItemEntity)
-                .join(cartItemEntity.banchan, banchanEntity)
                 .where(cartItemEntity.cart.cartId.eq(userId))
                 .fetchOne();
 
