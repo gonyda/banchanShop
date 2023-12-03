@@ -54,8 +54,4 @@ public class OrdersEntity {
 	@CreationTimestamp
 	@Column(nullable = false)
 	private LocalDateTime orderDate;
-
-	public void setOrderItems(List<OrderItemEntity> orderItems) {
-		this.orderItems = orderItems;
-	}
 }

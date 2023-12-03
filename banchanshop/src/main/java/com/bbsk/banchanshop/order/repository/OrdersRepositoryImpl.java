@@ -2,6 +2,7 @@ package com.bbsk.banchanshop.order.repository;
 
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.banchan.entity.QBanchanEntity;
+import com.bbsk.banchanshop.order.entity.OrderItemEntity;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.bbsk.banchanshop.order.entity.QOrderItemEntity;
 import com.querydsl.core.Tuple;
@@ -9,6 +10,9 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +28,31 @@ public class OrdersRepositoryImpl implements OrdersRepositoryCustom{
 
     public OrdersRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
+    }
+
+    /**
+     * 유저의 주문내역
+     * @param userId
+     * @param pageable
+     * @return
+     */
+    @Override
+    public Page<OrdersEntity> findAllByPaging(String userId, Pageable pageable) {
+        List<OrdersEntity> orders = queryFactory
+                .selectFrom(ordersEntity)
+                .where(ordersEntity.user.userId.eq(userId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(ordersEntity.orderId.desc())
+                .fetch();
+
+        Long totalCount = queryFactory
+                .select(ordersEntity.count())
+                .from(ordersEntity)
+                .where(ordersEntity.user.userId.eq(userId))
+                .fetchOne();
+
+        return new PageImpl<>(orders, pageable, totalCount == null ? 0 : totalCount);
     }
 
     /**

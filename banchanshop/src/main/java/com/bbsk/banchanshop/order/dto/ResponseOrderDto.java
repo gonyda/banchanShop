@@ -1,8 +1,10 @@
 package com.bbsk.banchanshop.order.dto;
 
 import com.bbsk.banchanshop.contant.OrderType;
+import com.bbsk.banchanshop.order.entity.OrderItemEntity;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class ResponseOrderDto {
         this.orderType = order.getOrderType();
         this.orderDate = order.getOrderDate();
         this.orderPrice = order.getTotalPrice();
-        order.getOrderItems().stream().forEach(e -> {
+        order.getOrderItems().forEach(e -> {
             this.orderItem.add(new ResponseOrderItemDto(e));
         });
     }

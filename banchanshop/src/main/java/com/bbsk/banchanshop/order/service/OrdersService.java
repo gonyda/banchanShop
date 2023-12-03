@@ -11,12 +11,14 @@ import com.bbsk.banchanshop.order.repository.OrderItemRepository;
 import com.bbsk.banchanshop.order.repository.OrdersRepository;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import com.bbsk.banchanshop.user.repository.UserRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class OrdersService {
+
+    private static final int LIMIT = 5;
 
     private final OrdersRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
@@ -71,18 +75,19 @@ public class OrdersService {
 
     /**
      * 해당 유저의 주문 내역 전체 조회
+     *
      * @param userId
      * @return
      */
-    public List<ResponseOrderDto> findAllByUserId(String userId) {
-        List<OrdersEntity> ordersEntityList = orderRepository.findAllByUserUserIdOrderByOrderIdDesc(userId);
+    public MyOrderDto findAllByPaging(String userId, int pageNum) {
+        Page<OrdersEntity> paging = orderRepository.findAllByPaging(userId, PageRequest.of(pageNum - 1, LIMIT));
 
-        List<ResponseOrderDto> responseOrderDto = new ArrayList<>();
-        for (OrdersEntity order : ordersEntityList) {
-            responseOrderDto.add(new ResponseOrderDto(order));
-        }
-
-        return responseOrderDto;
+        return new MyOrderDto(
+                paging.getTotalPages(),
+                paging.getContent().stream()
+                                   .map(ResponseOrderDto::new)
+                                   .toList()
+        );
     }
 
     /**
@@ -166,5 +171,19 @@ public class OrdersService {
      */
     public int getTotalPrice(String userId) {
         return orderRepository.sumTotalPriceByUserUserId(userId);
+    }
+
+    /**
+     * 나의주문내역 - return용
+     */
+    @Getter
+    public class MyOrderDto {
+        private int totalPage;
+        private List<ResponseOrderDto> list;
+
+        public MyOrderDto(int totalPage, List<ResponseOrderDto> list) {
+            this.totalPage = totalPage;
+            this.list = list;
+        }
     }
 }

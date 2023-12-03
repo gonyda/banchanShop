@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/order")
@@ -33,10 +34,12 @@ public class OrdersController {
     }
 
     @GetMapping("/myorder")
-    public String myOrder(@AuthenticationPrincipal UserEntity user, Model model) {
+    public String myOrder(@AuthenticationPrincipal UserEntity user, Model model, @RequestParam(required = false, defaultValue = "1") int page) {
         log.info("=== 나의 주문내역 ===");
 
-        model.addAttribute("orderList", ordersService.findAllByUserId(user.getUserId()));
+        OrdersService.MyOrderDto dto = ordersService.findAllByPaging(user.getUserId(), page);
+        model.addAttribute("orderList", dto.getList());
+        model.addAttribute("totalPage", dto.getTotalPage());
         model.addAttribute("totalPrice", ordersService.getTotalPrice(user.getUserId()));
 
         return "order/myorder";
