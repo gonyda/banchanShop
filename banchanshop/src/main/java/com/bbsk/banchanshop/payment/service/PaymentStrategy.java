@@ -1,7 +1,5 @@
 package com.bbsk.banchanshop.payment.service;
 
-import com.bbsk.banchanshop.payment.service.card.CardStrategy;
-
 public interface PaymentStrategy {
 
     /**

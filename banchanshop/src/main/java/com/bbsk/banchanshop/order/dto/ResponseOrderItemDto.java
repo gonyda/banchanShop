@@ -1,11 +1,9 @@
 package com.bbsk.banchanshop.order.dto;
 
-import com.bbsk.banchanshop.contant.OrderOption;
 import com.bbsk.banchanshop.order.entity.OrderItemEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

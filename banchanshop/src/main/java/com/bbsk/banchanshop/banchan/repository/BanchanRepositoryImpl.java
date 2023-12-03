@@ -14,8 +14,6 @@ import static com.bbsk.banchanshop.banchan.entity.QBanchanEntity.*;
 
 public class BanchanRepositoryImpl implements PagingRepositoryCustom {
 
-    private static final int LIMIT = 5;
-
     private final JPAQueryFactory queryFactory;
 
     public BanchanRepositoryImpl(EntityManager em) {

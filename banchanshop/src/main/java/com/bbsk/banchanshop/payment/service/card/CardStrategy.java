@@ -1,6 +1,5 @@
 package com.bbsk.banchanshop.payment.service.card;
 
-import com.bbsk.banchanshop.contant.CardCompany;
 import com.bbsk.banchanshop.payment.service.PaymentStrategy;
 
 /**

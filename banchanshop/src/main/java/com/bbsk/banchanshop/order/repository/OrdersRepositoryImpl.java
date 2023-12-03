@@ -1,12 +1,7 @@
 package com.bbsk.banchanshop.order.repository;
 
-import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
-import com.bbsk.banchanshop.banchan.entity.QBanchanEntity;
-import com.bbsk.banchanshop.order.entity.OrderItemEntity;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
-import com.bbsk.banchanshop.order.entity.QOrderItemEntity;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

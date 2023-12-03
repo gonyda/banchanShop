@@ -21,13 +21,4 @@ public class OrderItemService {
     public List<OrderItemEntity> findAllOrderItemsByOrderId(Long orderId) {
         return orderItemRepository.findAllOrderItemsByOrderOrderId(orderId);
     }
-
-    /**
-     * order_item 단건 조회
-     * @param orderItemId
-     * @return
-     */
-    public OrderItemEntity findByOrderItemId(long orderItemId) {
-        return orderItemRepository.findById(orderItemId).orElse(null);
-    }
 }

@@ -2,8 +2,6 @@ package com.bbsk.banchanshop.admin.dto;
 
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Getter
 @ToString
 @AllArgsConstructor

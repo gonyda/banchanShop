@@ -8,6 +8,4 @@ import com.bbsk.banchanshop.banchan.entity.BanchanIngredientEntity;
 
 public interface BanchanIngredientRepository extends JpaRepository<BanchanIngredientEntity, Long>{
 	List<BanchanIngredientEntity> findByIngredientName(String name);
-
-	void deleteByBanchanBanchanId(Long banchanId);
 }

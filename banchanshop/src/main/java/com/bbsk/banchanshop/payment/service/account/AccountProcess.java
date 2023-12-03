@@ -1,9 +1,5 @@
 package com.bbsk.banchanshop.payment.service.account;
 
-import com.bbsk.banchanshop.contant.BankCompany;
-import com.bbsk.banchanshop.payment.service.PaymentStrategy;
-import com.bbsk.banchanshop.payment.service.card.CardStrategy;
-
 public abstract class AccountProcess {
 
     /**

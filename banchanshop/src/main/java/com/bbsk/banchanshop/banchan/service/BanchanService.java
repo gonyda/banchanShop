@@ -1,14 +1,10 @@
 package com.bbsk.banchanshop.banchan.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.bbsk.banchanshop.banchan.dto.ResponseBanchanDto;
-import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +21,6 @@ public class BanchanService {
 	
 	private final BanchanRepository banchanRepository;
 	private final BanchanIngredientRepository banchanIngredientRepository;
-	private final CartItemRepository cartItemRepository;
 
 	/**
 	 * 반찬 및 반찬재료 등록

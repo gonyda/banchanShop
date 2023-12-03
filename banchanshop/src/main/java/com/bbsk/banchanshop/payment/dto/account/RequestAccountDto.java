@@ -1,7 +1,6 @@
 package com.bbsk.banchanshop.payment.dto.account;
 
 import com.bbsk.banchanshop.contant.BankCompany;
-import com.bbsk.banchanshop.payment.dto.RequestPaymentDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

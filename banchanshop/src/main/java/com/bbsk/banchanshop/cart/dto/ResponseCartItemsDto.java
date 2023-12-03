@@ -1,6 +1,5 @@
 package com.bbsk.banchanshop.cart.dto;
 
-import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
 import com.bbsk.banchanshop.cart.entity.CartItemEntity;
 import lombok.*;
 

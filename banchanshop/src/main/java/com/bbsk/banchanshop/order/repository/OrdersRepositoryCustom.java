@@ -1,6 +1,5 @@
 package com.bbsk.banchanshop.order.repository;
 
-import com.bbsk.banchanshop.order.entity.OrderItemEntity;
 import com.bbsk.banchanshop.order.entity.OrdersEntity;
 import com.querydsl.core.Tuple;
 import org.springframework.data.domain.Page;

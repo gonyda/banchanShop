@@ -1,9 +1,6 @@
 package com.bbsk.banchanshop.payment.service.card;
 
 import com.bbsk.banchanshop.contant.CardCompany;
-import com.bbsk.banchanshop.payment.service.PaymentStrategy;
-import com.bbsk.banchanshop.payment.service.card.CardProcess;
-import com.bbsk.banchanshop.payment.service.card.CardStrategy;
 import lombok.*;
 
 @Getter
@@ -26,7 +23,7 @@ public class KakaoCard extends CardProcess implements CardStrategy {
     /**
      * 카드번호와 CVC를 카드사에게 넘겨 유효성 체크
      * @param cardNumber
-     * @param cardCvs
+     * @param cardPw
      * @return
      */
     @Override

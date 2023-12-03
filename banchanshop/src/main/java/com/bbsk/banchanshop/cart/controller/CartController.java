@@ -3,7 +3,6 @@ package com.bbsk.banchanshop.cart.controller;
 import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.cart.dto.RequestCartItemDto;
 import com.bbsk.banchanshop.cart.dto.ResponseCartDto;
-import com.bbsk.banchanshop.cart.dto.ResponseCartItemsDto;
 import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/cart")
