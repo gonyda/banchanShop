@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -80,10 +81,15 @@ public class AdminController {
     }
 
     @PostMapping("/banchan")
-    public String postBanchan(@ModelAttribute RequestBancanDto bancanDto) {
+    public String postBanchan(@ModelAttribute RequestBancanDto bancanDto, RedirectAttributes ra) {
 
         adminService.saveBanchan(bancanDto);
 
-        return "redirect:/admin/management";
+        /*
+        * 반찬 등록 성공
+        * */
+        ra.addFlashAttribute("isSuccsee", true);
+
+        return "redirect:/admin/banchan";
     }
 }

@@ -45,6 +45,20 @@
             background-color: #f2f2f2;
         }
     </style>
+
+    <script th:inline="javascript">
+        function registBanchan() {
+            var isSuccess = [[${isSuccsee}]];
+
+            if(isSuccess) {
+                alert("반찬이 등록되었습니다.");
+            }
+        }
+
+        window.onload = function() {
+            registBanchan();
+        }
+    </script>
 </head>
 <body>
 
