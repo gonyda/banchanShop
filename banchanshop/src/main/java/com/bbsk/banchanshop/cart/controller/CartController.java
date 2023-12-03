@@ -3,6 +3,7 @@ package com.bbsk.banchanshop.cart.controller;
 import com.bbsk.banchanshop.banchan.service.BanchanService;
 import com.bbsk.banchanshop.cart.dto.RequestCartItemDto;
 import com.bbsk.banchanshop.cart.dto.ResponseCartDto;
+import com.bbsk.banchanshop.cart.dto.ResponseCartItemsDto;
 import com.bbsk.banchanshop.cart.service.CartService;
 import com.bbsk.banchanshop.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/cart")
 @RequiredArgsConstructor
@@ -24,9 +27,11 @@ public class CartController {
     private final BanchanService banchanService;
     
     @GetMapping("/cart-list")
-    public String getCart(@AuthenticationPrincipal UserEntity user, Model model) {
-        model.addAttribute("cart", new ResponseCartDto().toDto(cartService.findByCartId(user.getUserId())));
+    public String getCart(@AuthenticationPrincipal UserEntity user, Model model, @RequestParam(defaultValue = "1") int page) {
 
+        ResponseCartDto dto = cartService.findAllByPaging(user.getUserId(), page);
+        model.addAttribute("cart", dto);
+        model.addAttribute("totalPage", dto.getPaging().getTotalPages());
         return "cart/cart";
     }
 

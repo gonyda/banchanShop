@@ -84,7 +84,6 @@
             background-color: #c0392b;
         }
 
-        /* 추가한 스타일 */
         .product-name {
             display: flex;
             align-items: center;
@@ -102,6 +101,46 @@
 
         .change-quantity-btn:hover {
             background-color: #2980b9;
+        }
+
+        <!-- 페이징 -->
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .pagination ul {
+            display: flex;
+            flex-direction: row; /* 수정된 부분 */
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            justify-content: center;
+        }
+
+        .pagination li {
+            margin-left: 5px; /* 수정된 부분 */
+        }
+
+        .pagination a {
+            display: block;
+            padding: 8px;
+            background-color: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .pagination a:hover {
+            background-color: #45a049;
+        }
+
+        .pagination .active a {
+            background-color: #45a049;
         }
     </style>
 
@@ -192,12 +231,19 @@
             </tbody>
         </table>
 
+        <div class="pagination" style="margin-top: 20px;">
+            <ul>
+                <th:block th:each="e: ${#numbers.sequence(1, totalPage)}">
+                    <li><a th:href="@{/cart/cart-list(page=${e})}" th:text="${e}">1</a></li>
+                </th:block>
+            </ul>
+        </div>
+
         <div class="total">
             <p><strong>총 갯수:</strong> <span th:text="|${cart.cartTotalQuantity}개|"></span></p>
             <p><strong>총 금액:</strong> <span th:text="|${cart.cartTotalPrice}원|">35,000원</span></p>
             <button onclick="location.href='/order/form'">주문하기</button>
         </div>
     </div>
-
 </body>
 </html>

@@ -65,4 +65,8 @@ public class CartEntity {
 		this.cartTotalPrice = price;
 		this.cartTotalQuantity = quantity;
 	}
+
+	public void updateCartItem(List<CartItemEntity> cartItems) {
+		this.cartItem = cartItems;
+	}
 }

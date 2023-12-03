@@ -1,8 +1,11 @@
 package com.bbsk.banchanshop.cart.service;
 
+import com.bbsk.banchanshop.cart.dto.ResponseCartDto;
 import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class CartService {
+
+	private static final int LIMIT = 5;
 
 	private final CartRepository cartRepository;
 	private final CartItemRepository cartItemRepository;
@@ -149,5 +154,20 @@ public class CartService {
 	 */
 	private int getSubstrctedPirce(CartEntity findCart, CartItemEntity findCartItem) {
 		return findCart.getCartTotalPrice() - findCartItem.getBanchanTotalPrice();
+	}
+
+	/**
+	 * 유저 장바구니 조회, 페이징
+	 *
+	 * @param userId
+	 * @param page
+	 * @return
+	 */
+	public ResponseCartDto findAllByPaging(String userId, int page) {
+		CartEntity cart = cartRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+		Page<CartItemEntity> paging = cartRepository.findAllByPaging(userId, PageRequest.of(page - 1, LIMIT));
+		cart.updateCartItem(paging.getContent());
+
+		return new ResponseCartDto().toDto(cart, paging);
 	}
 }

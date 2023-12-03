@@ -31,7 +31,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(@AuthenticationPrincipal UserEntity user, Model model, @RequestParam(defaultValue = "1") int page) {
 
-        Page<BanchanEntity> paging = banchanService.findAllByPaging(page - 1); // 페이징
+        Page<BanchanEntity> paging = banchanService.findAllByPaging(page); // 페이징
 
         List<ResponseBanchanDto> contents = new ArrayList<>();
         paging.getContent().forEach(e -> {

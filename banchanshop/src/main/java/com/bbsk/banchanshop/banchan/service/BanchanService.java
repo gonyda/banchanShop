@@ -81,6 +81,6 @@ public class BanchanService {
 	 * @return
 	 */
 	public Page<BanchanEntity> findAllByPaging(int pageNum) {
-		return banchanRepository.findAllByPaging(PageRequest.of(pageNum, PAGESIZE));
+		return banchanRepository.findAllByPaging(PageRequest.of(pageNum - 1, PAGESIZE));
 	}
 }
