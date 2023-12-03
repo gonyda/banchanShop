@@ -1,7 +1,7 @@
 package com.bbsk.banchanshop.banchan.repository;
 
 import com.bbsk.banchanshop.banchan.entity.BanchanEntity;
-import com.querydsl.jpa.impl.JPAQuery;
+import com.bbsk.banchanshop.common.repository.PagingRepositoryCustom;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static com.bbsk.banchanshop.banchan.entity.QBanchanEntity.*;
 
-public class BanchanRepositoryImpl implements BanchanRepositoryCustom{
+public class BanchanRepositoryImpl implements PagingRepositoryCustom {
 
     private static final int LIMIT = 5;
 
