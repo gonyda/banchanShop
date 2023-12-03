@@ -6,6 +6,9 @@ import java.util.List;
 import com.bbsk.banchanshop.banchan.dto.ResponseBanchanDto;
 import com.bbsk.banchanshop.cart.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,7 @@ import com.bbsk.banchanshop.banchan.repository.BanchanRepository;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class BanchanService {
+	private static final int PAGESIZE = 5;
 	
 	private final BanchanRepository banchanRepository;
 	private final BanchanIngredientRepository banchanIngredientRepository;
@@ -71,13 +75,12 @@ public class BanchanService {
 		return banchanRepository.findById(banchanId).orElse(null).updateBanchanQuantity(newQuantity);
 	}
 
-	public List<ResponseBanchanDto> findAll() {
-
-		List<ResponseBanchanDto> responseBanchanDtoList = new ArrayList<>();
-		banchanRepository.findAll().stream().forEach(e -> {
-			responseBanchanDtoList.add(new ResponseBanchanDto(e.getBanchanId(), e.getBanchanName(), e.getBanchanPrice(), e.getBanchanStockQuantity()));
-		});
-
-		return responseBanchanDtoList;
+	/**
+	 * 반찬 리스트 조회 (페이징)
+	 * @param pageNum
+	 * @return
+	 */
+	public Page<BanchanEntity> findAllByPaging(int pageNum) {
+		return banchanRepository.findAllByPaging(PageRequest.of(pageNum, PAGESIZE));
 	}
 }

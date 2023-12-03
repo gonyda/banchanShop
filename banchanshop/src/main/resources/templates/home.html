@@ -42,20 +42,55 @@
         .product p {
             margin: 0;
         }
-    </style>
 
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .pagination li {
+            margin-right: 5px;
+        }
+
+        .pagination a {
+            display: block;
+            padding: 8px;
+            background-color: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .pagination a:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- 네비게이션 바를 포함합니다. -->
-    <div th:replace="layout/sidebar :: sidebar"></div>
+<!-- 네비게이션 바를 포함합니다. -->
+<div th:replace="layout/sidebar :: sidebar"></div>
 
-    <div class="content grid-container">
+<div class="content">
+    <div class="grid-container">
         <div class="product" th:each="banchan: ${banchanList}">
             <a th:href="|/banchan/${banchan.banchanId}|"><h2 th:text="|상품명 : ${banchan.banchanName}|">가격: 10,000원</h2></a>
             <p th:text="|상품가격 : ${banchan.banchanPrice}원|">가격: 10,000원</p>
             <p th:text="|재고 : ${banchan.banchanStockQuantity}개|">재고: 50개</p>
         </div>
     </div>
+
+    <ul class="pagination">
+        <th:block th:each="e: ${#numbers.sequence(1, totalPage)}">
+            <li>
+                <a th:href="@{/(page=${e})}" th:text="${e}">1</a>
+            </li>
+        </th:block>
+    </ul>
+</div>
+
 </body>
 </html>
