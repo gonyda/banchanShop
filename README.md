@@ -1,7 +1,7 @@
 # 반찬가게 쇼핑몰
 
 <strong>프로젝트 소개 바로가기</strong><br/>
-<img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white"><a href="https://www.notion.so/e4c5481d2bcb4501b7431c4356e9eb06"></a>
+<a href="https://www.notion.so/e4c5481d2bcb4501b7431c4356e9eb06"><img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white"></a>
 
 <strong>사용기술</strong><br/>
 <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white">
