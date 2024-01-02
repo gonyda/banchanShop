@@ -1,6 +1,15 @@
 # 반찬가게 쇼핑몰
 
-[프로젝트 소개 바로가기](https://www.notion.so/e4c5481d2bcb4501b7431c4356e9eb06)
+<strong>프로젝트 소개 바로가기</strong><br/>
+<img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white"><a href="https://www.notion.so/e4c5481d2bcb4501b7431c4356e9eb06"></a>
 
-[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=gonyda)](https://github.com/anuraghazra/github-readme-stats)
+<strong>사용기술</strong><br/>
+<img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white">
+<img src="https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white">
+<img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
+<img src="https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=Spring-Security&logoColor=white">
+<img src="https://img.shields.io/badge/HTML-239120?style=for-the-badge&logo=html5&logoColor=white">
+<img src="https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white">
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white">
 
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=gonyda">
