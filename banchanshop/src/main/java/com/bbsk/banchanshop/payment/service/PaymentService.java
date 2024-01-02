@@ -13,7 +13,6 @@ import com.bbsk.banchanshop.payment.service.card.CardStrategy;
 import com.bbsk.banchanshop.payment.service.card.KakaoCard;
 import com.bbsk.banchanshop.payment.service.card.ShinhanCard;
 import com.bbsk.banchanshop.user.entity.UserEntity;
-import com.bbsk.banchanshop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaymentService {
 
     private final OrdersService ordersService;
-    private final UserService userService;
 
     @Transactional
     public void startPayToOrder(RequestPaymentDto requestPaymentDto, UserEntity user) {
